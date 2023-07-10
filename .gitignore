@@ -1,0 +1,136 @@
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+
+## User settings
+xcuserdata/
+
+## Compatibility with Xcode 11 and earlier (swift package manager)
+*.swiftpm/
+*.xcodeproj/
+!*.xcodeproj/project.pbxproj
+
+## Compatibility with Xcode 8 and earlier (ignoring not required starting Xcode 9)
+*.xcworkspace/
+
+## Build products
+build/
+DerivedData/
+
+## Pods - for those who use CocoaPods
+Pods/
+
+## SPM dependencies
+# Comment the next line if you're not using Swift Package Manager
+# Packages/
+# Package.pins
+# Package.resolved
+
+## Swift Package Manager (Xcode 11 and above)
+# .build/
+
+## CocoaPods
+# Pods/
+# .bundle
+# .framework
+# .xcframework
+# # Uncomment this line if you're using SwiftPM and/or CocoaPods
+# # Pods/**
+
+## Carthage
+# Carthage/Build/
+
+## Accio dependency manager
+# .accio/
+
+## fastlane
+# fastlane/report.xml
+# fastlane/Preview.html
+# fastlane/screenshots
+# fastlane/test_output
+# fastlane/README.md
+
+## Code Injection
+# .injected/
+
+## Various settings
+*.xcconfig
+*.moved-aside
+*.xcuserstate
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+# .build/
+
+## Swift Package Manager (Xcode 11 and above)
+#.swiftpm/
+
+# CocoaPods
+# /Pods/
+
+# Carthage
+# /Carthage/Build/
+# /Carthage/Checkouts/
+
+# Accio dependency manager
+# /.accio/
+
+## fastlane
+# /fastlane/report.xml
+# /fastlane/Preview.html
+# /fastlane/screenshots/
+# /fastlane/test_output/
+# /fastlane/readme.md
+
+## Code Injection
+# /.injected/
+
+## Xcode
+# .xcodeproj/
+# !.xcodeproj/project.pbxproj
+# !.xcodeproj/xcshareddata/
+# !.xcodeproj/xcuserdata/
+
+# Playgrounds
+# timeline.xctimeline
+# playground.xcworkspace
+
+# Swift Package Manager
+# .build/
+
+## SwiftPM Package Dependencies
+# *.swiftpm
+# Package.resolved
+# Package.pins
+
+# CocoaPods
+# /Pods/
+
+# Carthage
+# /Carthage/Build/
+
+# Accio dependency manager
+# /.accio/
+
+## fastlane
+# /fastlane/report.xml
+# /fastlane/Preview.html
+# /fastlane/screenshots/
+# /fastlane/test_output/
+# /fastlane/readme.md
+
+## Code Injection
+# /.injected/
+
+## Xcode
+# .xcodeproj/
+# !.xcodeproj/project.pbxproj
+# !.xcodeproj/xcshareddata/
+# !.xcodeproj/xcuserdata/
+
+# Playgrounds
+# timeline.xctimeline
+# playground.xcworkspace
