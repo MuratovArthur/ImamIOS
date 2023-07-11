@@ -111,6 +111,7 @@ struct ChatScreen: View {
                 }
             }
             .padding()
+            .navigationBarHidden(true)
         }
     }
 
