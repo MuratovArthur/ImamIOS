@@ -137,9 +137,9 @@ struct HomeView: View {
                     }
                 }
             }
-            .sheet(isPresented: $isChatOpen) {
-                ChatScreen()
-            }
+//            .sheet(isPresented: $isChatOpen) {
+//                ChatScreen()
+//            }
             .preferredColorScheme(.light)
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)

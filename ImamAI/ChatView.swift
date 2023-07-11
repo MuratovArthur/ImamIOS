@@ -23,98 +23,144 @@ struct ChatScreen: View {
     @State private var isMenuOpen = false
     private var maxHeight: CGFloat = 250
     @State private var isEditing: Bool = false
-
+    @Environment(\.presentationMode) var presentationMode
+    @Binding var selectedTab: ContentView.Tab
+    
+    internal init(selectedTab: Binding<ContentView.Tab>) {
+        _selectedTab = selectedTab
+    }
+    
     
     var body: some View {
         GeometryReader { geometry in
-            VStack {
-                HStack {
-                    Image("imam")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 50, height: 50)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                        .shadow(radius: 3)
-                    
-                    VStack(alignment: .leading) {
-                        Text("Имам")
-                            .font(.headline)
-                            .fontWeight(.bold)
-                        Text("last seen recently")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                    }
-                    .padding(.leading, 10)
-                    
-                    Spacer()
-                }
-                .padding()
-                
-                ScrollViewReader { scrollViewProxy in
-                    ScrollView(showsIndicators: false) {
-                        VStack {
-                            ForEach(chatMessages, id: \.id) { message in
-                                messageView(message: message)
-                                    .id(message.id)
-                                    .font(.system(size: 17))
-                            }
-                            .onChange(of: chatMessages.count) { _ in
-                                if scrollToBottom {
-                                    scrollToLastMessage(scrollViewProxy: scrollViewProxy)
+            NavigationView {
+                VStack {
+                    customNavBar.padding(geometry.safeAreaInsets.top)
+                    ScrollViewReader { scrollViewProxy in
+                        ScrollView(showsIndicators: false) {
+                            VStack {
+                                ForEach(chatMessages, id: \.id) { message in
+                                    messageView(message: message)
+                                        .id(message.id)
+                                        .font(.system(size: 17))
+                                }
+                                .onChange(of: chatMessages.count) { _ in
+                                    if scrollToBottom {
+                                        scrollToLastMessage(scrollViewProxy: scrollViewProxy)
+                                    }
                                 }
                             }
                         }
-                    }
-                    .onAppear {
-                        scrollToLastMessage(scrollViewProxy: scrollViewProxy)
-                    }
-                    .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
-                        scrollToBottom = true
-                    }
-                    .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
-                        scrollToBottom = false
-                    }
-                }
-                .onTapGesture {
-                    hideKeyboard()
-                }
-                
-                if isTyping {
-                    withAnimation(.easeInOut) {
-                        HStack {
-                            Text("Имам печатает...")
-                            Spacer()
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle())
+                        .onAppear {
+                            scrollToLastMessage(scrollViewProxy: scrollViewProxy)
                         }
-                        .padding(.horizontal)
+                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+                            scrollToBottom = true
+                        }
+                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+                            scrollToBottom = false
+                        }
                     }
-                }
-
-                
-                HStack {
-                    ResizableTextView(text: $textViewValue, height: $textViewHeight, placeholderText: "Type a message")
-                        .frame(height: textViewHeight < 160 ? self.textViewHeight : 160)
-                        .cornerRadius(16)
+                    .onTapGesture {
+                        hideKeyboard()
+                    }
                     
-                    Button(action: {
-                        sendMessage()
-                    }) {
-                        Image(systemName: "paperplane.fill")
-                            .font(.system(size: 20))
-                            .frame(width: 40, height: 40)
-                            .background(Color.white)
-                            .foregroundColor(.black)
-                            .clipShape(Circle())
+                    if isTyping {
+                        withAnimation(.easeInOut) {
+                            HStack {
+                                Text("Имам печатает...")
+                                Spacer()
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle())
+                            }
+                            .padding(.horizontal)
+                        }
                     }
+                    
+                    
+                    HStack {
+                        ResizableTextView(text: $textViewValue, height: $textViewHeight, placeholderText: "Type a message")
+                            .frame(height: textViewHeight < 160 ? self.textViewHeight : 160)
+                            .cornerRadius(16)
+                        
+                        Button(action: {
+                            sendMessage()
+                        }) {
+                            Image(systemName: "paperplane.fill")
+                                .font(.system(size: 20))
+                                .frame(width: 40, height: 40)
+                                .background(Color.white)
+                                .foregroundColor(.black)
+                                .clipShape(Circle())
+                        }
+                    }
+                    .padding(.bottom) // Add bottom padding to the HStack
+                    
                 }
+                
             }
-            .padding()
-            .navigationBarHidden(true)
+            
+            .padding(.horizontal)
+            .toolbar {
+                ToolbarItemGroup { }
+            }
         }
     }
-
+    
+    var backButton: some View {
+        Button(action: {
+            selectedTab = .home
+        }) {
+            Image(systemName: "chevron.left")
+                .font(.title)
+                .foregroundColor(.black)
+                .imageScale(.medium)
+        }
+    }
+    
+    var customNavBar: some View {
+        HStack {
+            backButton
+            
+            Spacer()
+            
+            avatarTitle
+            
+            Spacer()
+            
+            // Add other elements for your navigation bar here...
+        }
+        .padding()
+        // Use this for side padding or adjust as needed.
+        .background(Color.white) // Change this to the desired background color of your nav bar.
+        //            .shadow(color: Color.black.opacity(0.1), radius: 1, x: 0, y: 1) // Optional shadow for a bit of depth.
+        .navigationBarHidden(true) // Hide the default navigation bar
+    }
+    
+    
+    var avatarTitle: some View {
+        HStack {
+            Image("imam")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 50, height: 50)
+                .clipShape(Circle())
+                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                .shadow(radius: 3)
+            
+            VStack(alignment: .leading) {
+                Text("Имам")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                Text("last seen recently")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+            }
+            .padding(.leading, 10)
+            
+            Spacer()
+        }
+    }
     
     func messageView(message: ChatMessage) -> some View {
         HStack {
@@ -160,9 +206,9 @@ struct ChatScreen: View {
             }
         }.resume()
     }
-
-
-
+    
+    
+    
     
     func sendMessage() {
         let trimmedMessage = textViewValue.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -233,11 +279,11 @@ struct ChatScreen: View {
             }
         }
     }
-
-
-
-
-
+    
+    
+    
+    
+    
     
     func scrollToLastMessage(scrollViewProxy: ScrollViewProxy) {
         withAnimation {
@@ -250,11 +296,11 @@ struct ChatScreen: View {
     }
 }
 
-struct ChatScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        ChatScreen()
-    }
-}
+//struct ChatScreen_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ChatScreen()
+//    }
+//}
 
 
 

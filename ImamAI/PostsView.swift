@@ -63,27 +63,36 @@ struct PostDetailView: View {
     let post: Post
     
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(alignment: .leading, spacing: 8) {
             Image(post.imageName)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(maxWidth: .infinity, maxHeight: 200)
+                .cornerRadius(10) // Apply corner radius to create rounded borders
                 .clipped()
             
             Text(post.title)
-                .font(.headline)
-                .padding()
+                .multilineTextAlignment(.leading)
+                .font(.title2)
+//                .fontWeight(.bold)
+                .padding(.vertical)
+                .padding(.top, 16)
             
             Text(post.description)
                 .font(.body)
                 .multilineTextAlignment(.leading)
-                .padding()
             
             Spacer()
         }
         .navigationBarTitle(Text(post.title), displayMode: .inline)
+        .padding()
+        .multilineTextAlignment(.leading)
     }
+        
+        
 }
+   
+
 
 
 

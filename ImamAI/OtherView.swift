@@ -1,28 +1,17 @@
+//
+//  OtherView.swift
+//  ImamAI
+//
+//  Created by Muratov Arthur on 04.07.2023.
+//
+
 import SwiftUI
 
 struct OtherView: View {
     var body: some View {
-//        NavigationView {
-//            VStack {
-//                Spacer()
-//
-//                NavigationLink(destination: ChatScreen()) {
-//                    Text("Open Chat Screen")
-//                        .font(.title)
-//                        .fontWeight(.bold)
-//                        .foregroundColor(.white)
-//                        .padding()
-//                        .background(Color.blue)
-//                        .cornerRadius(10)
-//                }
-//                .padding()
-//
-//                Spacer()
-//            }
-//            .navigationTitle("Other View")
-//        }
         Text("Other")
             .font(.largeTitle)
+            .padding()
     }
 }
 

@@ -14,7 +14,7 @@ class ScrollPositionStore: ObservableObject {
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let locationManager = CLLocationManager()
     @Published var location: CLLocation?
-
+    
     override init() {
         super.init()
         locationManager.delegate = self
@@ -22,14 +22,14 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
     }
-
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         // Check the timestamp of the location, only accept it if it's recent (less than 15 seconds old in this example)
         if location.timestamp.timeIntervalSinceNow < -15 {
             return
         }
-
+        
         self.location = location
         manager.stopUpdatingLocation()
     }
@@ -60,7 +60,7 @@ struct ContentView: View {
                                     .environmentObject(scrollStore)
                                     .navigationBarHidden(true)
                             case .other:
-                                OtherView()
+                                ChatScreen(selectedTab: $selectedTab)
                                     .navigationBarHidden(true)
                             case .settings:
                                 SettingsView()
@@ -72,37 +72,39 @@ struct ContentView: View {
                         }
                         Spacer()
                         
-                        Divider()
-                        
-                        HStack() {
-                            Spacer()
-                            TabBarButton(tab: .home, imageName: "house.fill", selectedTab: $selectedTab)
-                            Spacer()
-                            TabBarButton(tab: .other, imageName: "message", selectedTab: $selectedTab)
-                            Spacer()
-                            TabBarButton(tab: .settings, imageName: "gear", selectedTab: $selectedTab)
-                            Spacer()
-                        }
-                        .padding()
-                        .padding(.bottom, 20)
-                        .background(Color.white)
+//                        if selectedTab != .other {
+                            Divider()
+                            
+                            HStack() {
+                                Spacer()
+                                TabBarButton(tab: .home, imageName: "house.fill", selectedTab: $selectedTab)
+                                Spacer()
+                                TabBarButton(tab: .other, imageName: "message", selectedTab: $selectedTab)
+                                Spacer()
+                                TabBarButton(tab: .settings, imageName: "gear", selectedTab: $selectedTab)
+                                Spacer()
+                            }
+                            .padding()
+                            .padding(.bottom, 20)
+                            .background(Color.white)
+//                        }
                     }
                     .edgesIgnoringSafeArea(.bottom)
                 }
                 
                 // Floating action button
-//                Button(action: {
-//                    // Button action
-//                }) {
-//                    Image(systemName: "message.circle")
-//                        .resizable()
-//                        .aspectRatio(contentMode: .fit)
-//                        .frame(width: 56, height: 56)
-//                        .foregroundColor(Color.blue)
-//                        .shadow(radius: 4)
-//                }
-//                .padding()
-//                .offset(x: -geometry.size.width * 0.03, y: -geometry.size.height * 0.07) // Adjust offset as needed
+                //                Button(action: {
+                //                    // Button action
+                //                }) {
+                //                    Image(systemName: "message.circle")
+                //                        .resizable()
+                //                        .aspectRatio(contentMode: .fit)
+                //                        .frame(width: 56, height: 56)
+                //                        .foregroundColor(Color.blue)
+                //                        .shadow(radius: 4)
+                //                }
+                //                .padding()
+                //                .offset(x: -geometry.size.width * 0.03, y: -geometry.size.height * 0.07) // Adjust offset as needed
             }
         }
     }
@@ -112,7 +114,7 @@ struct TabBarButton: View {
     let tab: ContentView.Tab
     let imageName: String
     @Binding var selectedTab: ContentView.Tab
-
+    
     var body: some View {
         Button(action: {
             selectedTab = tab
