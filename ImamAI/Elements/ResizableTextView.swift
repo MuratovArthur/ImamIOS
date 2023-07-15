@@ -46,20 +46,28 @@ struct ResizableTextView: UIViewRepresentable {
 
         func textViewDidBeginEditing(_ textView: UITextView) {
             DispatchQueue.main.async {
+                // Turn off autocorrection when editing starts
+                textView.autocorrectionType = .no
                 self.parent.editing = true
-            }
-        }
-
-        func textViewDidEndEditing(_ textView: UITextView) {
-            DispatchQueue.main.async {
-                self.parent.editing = false
             }
         }
 
         func textViewDidChange(_ textView: UITextView) {
             DispatchQueue.main.async {
+                // Enable autocorrection when user starts typing
+                if !textView.text.isEmpty {
+                    textView.autocorrectionType = .yes
+                }
                 self.parent.height = textView.contentSize.height
                 self.parent.text = textView.text
+            }
+        }
+
+        func textViewDidEndEditing(_ textView: UITextView) {
+            DispatchQueue.main.async {
+                // Reset autocorrection and placeholder text when editing ends
+                textView.autocorrectionType = .no
+                self.parent.editing = false
             }
         }
     }

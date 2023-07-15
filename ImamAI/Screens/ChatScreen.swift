@@ -17,8 +17,8 @@ struct ChatScreen: View {
     @State var listCount: Int = 0
     @State var scrollToBottom: Bool = false
     @State var textViewValue = String()
-    @State var textViewHeight: CGFloat = 50.0
-    @State private var editorHeight: CGFloat = 40
+    @State var textViewHeight: CGFloat = 10.0
+    @State private var editorHeight: CGFloat = 10
     @State private var text = "Testing text"
     @State private var isMenuOpen = false
     private var maxHeight: CGFloat = 250
@@ -35,7 +35,7 @@ struct ChatScreen: View {
         GeometryReader { geometry in
             NavigationView {
                 VStack {
-                    customNavBar.padding(geometry.safeAreaInsets.top)
+                    customNavBar
                     ScrollViewReader { scrollViewProxy in
                         ScrollView(showsIndicators: false) {
                             VStack {
@@ -66,15 +66,11 @@ struct ChatScreen: View {
                     }
                     
                     if isTyping {
-                        withAnimation(.easeInOut) {
-                            HStack {
-                                Text("Имам печатает...")
-                                Spacer()
-                                ProgressView()
-                                    .progressViewStyle(CircularProgressViewStyle())
-                            }
-                            .padding(.horizontal)
-                        }
+                        HStack {
+                               TypingAnimationView()
+                               Spacer() // Add spacer to align to the left
+                           }
+                           .padding(.horizontal)
                     }
                     
                     
@@ -94,35 +90,19 @@ struct ChatScreen: View {
                                 .clipShape(Circle())
                         }
                     }
-                    .padding(.bottom) // Add bottom padding to the HStack
                     
                 }
                 
             }
             
             .padding(.horizontal)
-            .toolbar {
-                ToolbarItemGroup { }
-            }
         }
     }
     
-    var backButton: some View {
-        Button(action: {
-            selectedTab = .home
-        }) {
-            Image(systemName: "chevron.left")
-                .font(.title)
-                .foregroundColor(.black)
-                .imageScale(.medium)
-        }
-    }
+  
     
     var customNavBar: some View {
-        HStack {
-            backButton
-            
-            Spacer()
+        HStack {    
             
             avatarTitle
             
@@ -296,11 +276,11 @@ struct ChatScreen: View {
     }
 }
 
-//struct ChatScreen_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ChatScreen()
-//    }
-//}
+struct ChatScreen_Previews: PreviewProvider {
+    static var previews: some View {
+        ChatScreen(selectedTab: .constant(.home))
+    }
+}
 
 
 
@@ -322,3 +302,29 @@ extension ChatMessage {
         ChatMessage(id: UUID().uuidString, content: "Ассаламу Алейкум! Как я могу вам помочь?", dataCreated: Date(), sender: .gpt)
     ]
 }
+
+struct TypingAnimationView: View {
+    @State private var dotCount = 1
+    private let maxDotCount = 3
+    private let animationDuration = 0.5
+    
+    var body: some View {
+        HStack {
+            
+            Text("Имам печатает" + String(repeating: ".", count: dotCount))
+                .animation(Animation.easeInOut(duration: animationDuration).repeatForever())
+                .onAppear {
+                    startAnimation()
+                }
+            Spacer()
+        }
+    }
+    
+    private func startAnimation() {
+        Timer.scheduledTimer(withTimeInterval: animationDuration, repeats: true) { timer in
+            dotCount = (dotCount % maxDotCount) + 1
+        }
+    }
+}
+
+

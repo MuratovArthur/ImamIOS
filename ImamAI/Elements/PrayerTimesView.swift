@@ -2,13 +2,13 @@ import SwiftUI
 
 struct PrayerTimesView: View {
     let prayerTimes: [String: String] = [
-        "Fajr": "04:30",
-        "Dhuhr": "13:00",
-        "Asr": "17:00",
-        "Maghrib": "20:30",
-        "Isha": "22:00"
+        "Фаджр": "04:30",
+        "Зухр": "13:00",
+        "Аср": "17:00",
+        "Магриб": "20:30",
+        "Иша": "22:00"
     ]
-    let order = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"]
+    let order = ["Фаджр", "Зухр", "Аср", "Магриб", "Иша"]
     let country = "Казахстан"
     let city = "Алматы"
 
@@ -24,7 +24,7 @@ struct PrayerTimesView: View {
             .padding(.top, 16)
 
             Text("Время намаза")
-                .font(.largeTitle)
+                .font(.title)
                 .fontWeight(.bold)
 
             ForEach(order.indices, id: \.self) { index in
@@ -33,12 +33,10 @@ struct PrayerTimesView: View {
                 
                 HStack {
                     Text(key)
-                        .font(.headline)
-                        .fontWeight(.bold)
+                        .font(.subheadline)
                     Spacer()
                     Text(prayerTimes[key]!)
                         .font(.subheadline)
-                        .fontWeight(.bold)
                     Button(action: {
                         isMutedForPrayerTime.wrappedValue.toggle()
                     }) {
