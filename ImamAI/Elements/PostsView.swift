@@ -46,7 +46,7 @@ struct PostsView: View {
 
                                 
                                 
-                                VStack(alignment: .leading, spacing: 4) {
+                                VStack(alignment: .leading, spacing: 16) {
                                     Text(post.title)
                                         .font(.headline)
                                         .foregroundColor(Color.black)
@@ -154,21 +154,32 @@ struct PostDetailView: View {
             
             ScrollView(showsIndicators: false) {
                 
-                Image(post.imageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(maxWidth: .infinity, maxHeight: 200)
-                    .cornerRadius(10)
-                    .clipped()
+                AsyncImage(
+                    url: URL(string: post.imageName),
+                    content: { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(maxWidth: .infinity, maxHeight: 200)
+                            .cornerRadius(10)
+                            .clipped()
+                    },
+                    placeholder: {
+                        ProgressView()
+                            .padding()
+                    }
+                )
+                 
                 
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    ForEach(splitIntoParagraphs(post.description), id: \.self) { paragraph in
-                        Text(paragraph)
+            
+                    Text(post.description)
                             .font(.body)
                             .fixedSize(horizontal: false, vertical: true)
                             .padding(.bottom)
-                    }
+                            .multilineTextAlignment(.leading)
+                    
                 }
                 .padding(.top)
             }
