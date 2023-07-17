@@ -68,15 +68,13 @@ struct ContentView: View {
     }
 
     func makeRequest() {
+        print("making time request")
         guard let location = locationManager.location else {
             return
         }
         
         let latitude = String(location.coordinate.latitude)
         let longitude = String(location.coordinate.longitude)
-        
-//        let latitude = "42"
-//        let longitude = "69"
 
         let url = URL(string: "https://fastapi-s53t.onrender.com/imam/get_time")!
         var request = URLRequest(url: url)

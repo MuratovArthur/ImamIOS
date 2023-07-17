@@ -6,21 +6,13 @@
 //
 import SwiftUI
 
-struct Post: Identifiable {
-    let id = UUID()
-    let title: String
-    let imageName: String
-    let description: String
-}
-
-
-
 struct PostsView: View {
+    // Properties
     let maxDescriptionLength = 50
     let postHeight: CGFloat = 130
-    let posts: [Post] // Add this line to receive the array of posts as a parameter
-    
-    // Add a new state variable to track the selected post
+    @State private var posts: [Post] = []
+    @State private var offset: Int = 0
+    @State private var totalPosts: Int = 0
     @State private var selectedPost: Post?
     
     var body: some View {
@@ -34,15 +26,25 @@ struct PostsView: View {
                 VStack(spacing: 8) {
                     ForEach(posts) { post in
                         Button(action: {
-                            selectedPost = post // Set the selected post when the button is tapped
+                            selectedPost = post
                         }) {
                             HStack(spacing: 8) {
-                                Image(post.imageName)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: UIScreen.main.bounds.width / 3)
-                                    .cornerRadius(10)
-                                    .clipped()
+                                AsyncImage(
+                                    url: URL(string: post.imageName),
+                                    content: { image in
+                                        image
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fill)
+                                            .frame(maxWidth: 150)
+                                            .cornerRadius(10)
+                                            .clipped()
+                                    },
+                                    placeholder: {
+                                        ProgressView()
+                                    }
+                                )
+
+                                
                                 
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(post.title)
@@ -66,9 +68,17 @@ struct PostsView: View {
                     HStack {
                         Spacer()
                         Button(action: {
-                            print("loading more posts") // Call the loadMorePosts function when the button is tapped
+                            
+                            print("click on button")
+                            if self.posts.count < self.totalPosts {
+                                self.offset += 3
+                                loadPosts()
+                            } else {
+                                print("All posts have been loaded")
+                            }
+                            
                         }) {
-                            Text("Загрузить еще") // Customize the button label as needed
+                            Text("Загрузить еще")
                                 .font(.headline)
                                 .foregroundColor(.black)
                                 .padding()
@@ -80,12 +90,55 @@ struct PostsView: View {
                 }
                 .padding(.top, 8)
             }
-            .sheet(item: $selectedPost) { post in // Present the PostDetailView as a sheet
+            .onAppear {
+                print("PostsView appeared") // Check if the view is appearing
+                loadPosts()
+            }
+            .sheet(item: $selectedPost) { post in
                 PostDetailView(post: post)
             }
         }
     }
+    
+    // This method should be here
+    private func loadPosts() {
+        print("loadPosts() called") // Check if this function is being called
+        
+        let urlString = "http://localhost:8000/posts/get_posts?limit=3&offset=\(offset)"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let request = URLRequest(url: url)
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            print("Received response from server") // Check if the server response is received
+            
+            if let data = data {
+                print("Received data from server:", data)
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("Server Response: \(responseString)")
+                } else {
+                    print("Could not decode server response to String")
+                }
+                do {
+                    let decodedResponse = try JSONDecoder().decode(PostServerResponse.self, from: data)
+                    DispatchQueue.main.async {
+                        self.posts += decodedResponse.objects.map { Post(postObject: $0) }
+                        self.totalPosts = decodedResponse.total
+                    }
+                } catch let decodingError {
+                    print("Decoding error:", decodingError)
+                }
+            } else if let error = error {
+                print("Error: \(error.localizedDescription)")
+            }
+        }.resume()
+    }
+    
 }
+
 
 struct PostDetailView: View {
     @State private var isChatSheetPresented = false
@@ -93,12 +146,6 @@ struct PostDetailView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Image(post.imageName)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(maxWidth: .infinity, maxHeight: 200)
-                .cornerRadius(10)
-                .clipped()
             
             
             Text(post.title)
@@ -106,6 +153,14 @@ struct PostDetailView: View {
                 .fontWeight(.bold)
             
             ScrollView(showsIndicators: false) {
+                
+                Image(post.imageName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(maxWidth: .infinity, maxHeight: 200)
+                    .cornerRadius(10)
+                    .clipped()
+                
                 
                 VStack(alignment: .leading, spacing: 8) {
                     ForEach(splitIntoParagraphs(post.description), id: \.self) { paragraph in
@@ -115,6 +170,7 @@ struct PostDetailView: View {
                             .padding(.bottom)
                     }
                 }
+                .padding(.top)
             }
             
             Spacer()
@@ -131,17 +187,52 @@ struct PostDetailView: View {
     }
 }
 
-struct PostsView_Previews: PreviewProvider {
-    static var previews: some View {
-        PostsView(posts: posts)
+
+//struct PostsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PostsView(posts: posts)
+//    }
+//}
+//
+//
+//
+//
+//struct PostsView_Preview_Detailed: PreviewProvider {
+//    static var previews: some View {
+//        PostDetailView(post:posts[0])
+//    }
+//}
+
+struct PostServerResponse: Codable {
+    var total: Int
+    var objects: [PostObject]
+}
+
+struct PostObject: Codable, Identifiable {
+    var id: String
+    var title: String
+    var imageURL: String
+    var description: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case title
+        case imageURL
+        case description
     }
 }
 
 
-
-
-struct PostsView_Preview_Detailed: PreviewProvider {
-    static var previews: some View {
-        PostDetailView(post:posts[0])
+struct Post: Identifiable {
+    let id: UUID
+    let title: String
+    let imageName: String
+    let description: String
+    
+    init(postObject: PostObject) {
+        id = UUID()
+        title = postObject.title
+        imageName = postObject.imageURL
+        description = postObject.description
     }
 }

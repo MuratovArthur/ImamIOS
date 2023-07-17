@@ -1,25 +1,41 @@
-//
-//  CalendarButtonView.swift
-//  ImamAI
-//
-//  Created by Muratov Arthur on 15.07.2023.
-//
-
 import SwiftUI
 
 struct CalendarButtonView: View {
+    @State var isIslamic = false
+
     let currentDate: Date
-    let isEventListVisible: Binding<Bool>
-    let dateFormatter: DateFormatter = {
+    
+    let islamicDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .islamicUmmAlQura)
+        return formatter
+    }()
+    
+    let gregorianDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ru_RU")
         formatter.dateStyle = .medium
         return formatter
     }()
     
+    let islamicMonths = [
+        1: "Muharram",
+        2: "Safar",
+        3: "Rabi' al-Awwal",
+        4: "Rabi' al-Thani",
+        5: "Jumada al-Awwal",
+        6: "Jumada al-Thani",
+        7: "Rajab",
+        8: "Sha'ban",
+        9: "Ramadan",
+        10: "Shawwal",
+        11: "Dhu al-Qi'dah",
+        12: "Dhu al-Hijjah"
+    ]
+
     var body: some View {
         Button(action: {
-            isEventListVisible.wrappedValue.toggle()
+            self.isIslamic.toggle()
         }) {
             ZStack {
                 RoundedRectangle(cornerRadius: 20)
@@ -32,7 +48,7 @@ struct CalendarButtonView: View {
                         .font(.subheadline)
                         .padding(.leading)
                     
-                    Text(dateFormatter.string(from: currentDate))
+                    Text(isIslamic ? formatIslamicDate(date: currentDate) : gregorianDateFormatter.string(from: currentDate))
                         .font(.body)
                         .padding(.trailing)
                 }
@@ -41,10 +57,13 @@ struct CalendarButtonView: View {
             .foregroundColor(Color.black)
         }
     }
+    
+    func formatIslamicDate(date: Date) -> String {
+        let components = islamicDateFormatter.calendar.dateComponents([.year, .month, .day], from: date)
+        if let day = components.day, let month = components.month, let year = components.year, let monthName = islamicMonths[month] {
+            return "\(monthName) \(day), \(year) AH"
+        } else {
+            return "Date formatting error"
+        }
+    }
 }
-
-//struct CalendarButtonView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        CalendarButtonView()
-//    }
-//}

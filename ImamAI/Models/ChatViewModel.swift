@@ -19,7 +19,7 @@ class ChatViewModel: ObservableObject {
         self.isTyping = true
 
         print("isTyping is now \(self.isTyping)") // debug print
-        
+
         if let conversationID = conversationID {
             sendMessageToConversation(conversationID: conversationID, message: trimmedMessage)
         } else {
@@ -28,7 +28,7 @@ class ChatViewModel: ObservableObject {
                     self?.showError()
                     return
                 }
-                
+
                 self?.conversationID = conversationID // Store the conversation ID
                 self?.sendMessageToConversation(conversationID: conversationID, message: trimmedMessage)
             }
@@ -74,9 +74,10 @@ class ChatViewModel: ObservableObject {
                 
                 if let responseString = String(data: data, encoding: .utf8) {
                     print("Response: \(responseString)")
+                    let correctedString = responseString.replacingOccurrences(of: "\\n", with: "\n").replacingOccurrences(of: "\\\"", with: "\"").trimQuotes()
                     
                     // Create a new ChatMessage object and append it to chatMessages
-                    let receivedMessage = ChatMessage(id: UUID().uuidString, content: responseString, dataCreated: Date(), sender: .gpt)
+                    let receivedMessage = ChatMessage(id: UUID().uuidString, content: correctedString, dataCreated: Date(), sender: .gpt)
                     DispatchQueue.main.async {
                         self?.chatMessages.append(receivedMessage)
                     }
