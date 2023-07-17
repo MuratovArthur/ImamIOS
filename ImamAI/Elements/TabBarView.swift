@@ -12,7 +12,7 @@ struct TabBarView: View {
                 Spacer()
                 TabBarButton(tab: .other, imageName: "message", selectedTab: $selectedTab)
                 Spacer()
-                TabBarButton(tab: .settings, imageName: "moon", selectedTab: $selectedTab)
+                TabBarButton(tab: .settings, imageName: "safari", selectedTab: $selectedTab)
                 Spacer()
             }
             .padding(.horizontal)

@@ -1,18 +1,12 @@
 import SwiftUI
 
 struct PrayerTimesView: View {
-    let prayerTimes: [String: String] = [
-        "Фаджр": "04:30",
-        "Зухр": "13:00",
-        "Аср": "17:00",
-        "Магриб": "20:30",
-        "Иша": "22:00"
-    ]
-    let order = ["Фаджр", "Зухр", "Аср", "Магриб", "Иша"]
+    let prayerTimes: [String: String]
+    let order = ["Фаджр","Восход", "Зухр", "Аср", "Магриб", "Иша"]
     let country = "Казахстан"
-    let city = "Алматы"
+    let city: String
 
-    @State private var isMuted: [Bool] = Array(repeating: false, count: 5)
+    @State private var isMuted: [Bool] = Array(repeating: false, count: 6)
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -27,15 +21,14 @@ struct PrayerTimesView: View {
                 .font(.title)
                 .fontWeight(.bold)
 
-            ForEach(order.indices, id: \.self) { index in
-                let key = order[index]
-                let isMutedForPrayerTime = $isMuted[index]
-                
+            ForEach(order, id: \.self) { key in
+                let isMutedForPrayerTime = $isMuted[order.firstIndex(of: key) ?? 0]
+
                 HStack {
                     Text(key)
                         .font(.subheadline)
                     Spacer()
-                    Text(prayerTimes[key]!)
+                    Text(prayerTimes[key] ?? "")
                         .font(.subheadline)
                     Button(action: {
                         isMutedForPrayerTime.wrappedValue.toggle()
@@ -45,20 +38,18 @@ struct PrayerTimesView: View {
                             .foregroundColor(Color.black)
                     }
                 }
-//                .padding(.horizontal, 16)
             }
 
             Spacer()
         }
-        
         .padding(.horizontal)
-//        .navigationBarTitle("Prayer Times", displayMode: .inline)
     }
 }
 
-struct PrayerTimesView_Previews: PreviewProvider {
-    static var previews: some View {
-        PrayerTimesView()
-    }
-}
+
+//struct PrayerTimesView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PrayerTimesView()
+//    }
+//}
 

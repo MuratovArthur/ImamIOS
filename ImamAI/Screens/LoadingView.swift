@@ -13,7 +13,8 @@ struct LoadingView: View {
             Image("imam")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 200, height: 200) // Set the desired size of the frame
+                .frame(width: 200, height: 200)
+ 
             
             Text("Ассаламу Алейкум!")
                 .font(.title)

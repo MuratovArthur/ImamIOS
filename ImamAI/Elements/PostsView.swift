@@ -63,18 +63,29 @@ struct PostsView: View {
                             .padding(.horizontal)
                         }
                     }
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            print("loading more posts") // Call the loadMorePosts function when the button is tapped
+                        }) {
+                            Text("Загрузить еще") // Customize the button label as needed
+                                .font(.headline)
+                                .foregroundColor(.black)
+                                .padding()
+                                .background(Color(UIColor.systemGray6))
+                                .cornerRadius(10)
+                        }
+                        .padding(.horizontal)
+                    }
                 }
                 .padding(.top, 8)
             }
-            .padding(.bottom)
             .sheet(item: $selectedPost) { post in // Present the PostDetailView as a sheet
                 PostDetailView(post: post)
             }
         }
     }
 }
-
-
 
 struct PostDetailView: View {
     @State private var isChatSheetPresented = false
@@ -89,48 +100,36 @@ struct PostDetailView: View {
                 .cornerRadius(10)
                 .clipped()
             
+            
             Text(post.title)
                 .font(.title)
                 .fontWeight(.bold)
             
-            Text(post.description)
-                .font(.body)
+            ScrollView(showsIndicators: false) {
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(splitIntoParagraphs(post.description), id: \.self) { paragraph in
+                        Text(paragraph)
+                            .font(.body)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.bottom)
+                    }
+                }
+            }
             
             Spacer()
-            
-            
-            
-            HStack {
-                Spacer()
-                Button(action: {
-                    isChatSheetPresented = true
-                }) {
-                    Image("imam")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .foregroundColor(.white)
-                        .background(Color.blue)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                        .shadow(radius: 3)
-                        .frame(width: 50, height: 50)
-                        .padding(.trailing)
-            }
-            }
-//            .padding(.bottom, 16)
-//            .padding(.trailing, 16)
         }
         .padding()
         .multilineTextAlignment(.leading)
         .sheet(isPresented: $isChatSheetPresented) {
-            ChatScreen(selectedTab: .constant(.other))
+            ChatScreen(viewModel: ChatViewModel(), selectedTab: .constant(.other))
         }
     }
+    
+    private func splitIntoParagraphs(_ text: String) -> [String] {
+        return text.components(separatedBy: "\n")
+    }
 }
-
-
-   
-
 
 struct PostsView_Previews: PreviewProvider {
     static var previews: some View {
@@ -143,6 +142,6 @@ struct PostsView_Previews: PreviewProvider {
 
 struct PostsView_Preview_Detailed: PreviewProvider {
     static var previews: some View {
-        PostDetailView(post:posts[1])
+        PostDetailView(post:posts[0])
     }
 }

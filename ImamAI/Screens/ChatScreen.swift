@@ -1,17 +1,18 @@
 import SwiftUI
 import Combine
 import UIKit
+import Foundation
 
-struct ViewHeightKey: PreferenceKey {
-    static var defaultValue: CGFloat { 0 }
-    static func reduce(value: inout Value, nextValue: () -> Value) {
-        value = value + nextValue()
-    }
-}
+//struct ViewHeightKey: PreferenceKey {
+//    static var defaultValue: CGFloat { 0 }
+//    static func reduce(value: inout Value, nextValue: () -> Value) {
+//        value = value + nextValue()
+//    }
+//}
+
 
 struct ChatScreen: View {
-    @State private var isTyping: Bool = false
-    @State var chatMessages: [ChatMessage] = ChatMessage.sampleMessages
+    @ObservedObject private var viewModel = ChatViewModel.shared
     @State var messageText: String = ""
     @State var cancellables = Set<AnyCancellable>()
     @State var listCount: Int = 0
@@ -25,31 +26,37 @@ struct ChatScreen: View {
     @State private var isEditing: Bool = false
     @Environment(\.presentationMode) var presentationMode
     @Binding var selectedTab: ContentView.Tab
+    @State private var isTyping = false
     
-    internal init(selectedTab: Binding<ContentView.Tab>) {
+    internal init(viewModel: ChatViewModel, selectedTab: Binding<ContentView.Tab>) {
+        self.viewModel = viewModel
         _selectedTab = selectedTab
+        _isTyping = State(initialValue: viewModel.isTyping)
     }
     
     
     var body: some View {
-        GeometryReader { geometry in
-            NavigationView {
+        NavigationView {
+            GeometryReader { geometry in
                 VStack {
                     customNavBar
                     ScrollViewReader { scrollViewProxy in
                         ScrollView(showsIndicators: false) {
                             VStack {
-                                ForEach(chatMessages, id: \.id) { message in
+                                ForEach(viewModel.chatMessages, id: \.id) { message in
                                     messageView(message: message)
                                         .id(message.id)
                                         .font(.system(size: 17))
                                 }
-                                .onChange(of: chatMessages.count) { _ in
+                                .onChange(of: viewModel.chatMessages.count) { _ in
                                     if scrollToBottom {
                                         scrollToLastMessage(scrollViewProxy: scrollViewProxy)
                                     }
                                 }
                             }
+                        }
+                        .onChange(of: viewModel.isTyping) { newValue in
+                            print("isTyping changed to: \(newValue)")
                         }
                         .onAppear {
                             scrollToLastMessage(scrollViewProxy: scrollViewProxy)
@@ -57,21 +64,43 @@ struct ChatScreen: View {
                         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
                             scrollToBottom = true
                         }
-                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
-                            scrollToBottom = false
+                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { notification in
+                            guard let userInfo = notification.userInfo else { return }
+                            guard let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+                            
+                            let keyboardHeight = keyboardFrame.height
+                            
+                            // Find the active window scene
+                            if let windowScene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                                // Calculate the adjusted visible height
+                                let tabBarHeight = windowScene.windows.first?.safeAreaInsets.bottom ?? 0
+                                _ = UIScreen.main.bounds.height - keyboardHeight - tabBarHeight
+                                
+                                // Check if the last message is visible
+                                if let lastMessageID = viewModel.chatMessages.last?.id {
+                                    withAnimation {
+                                        scrollViewProxy.scrollTo(lastMessageID, anchor: .center)
+                                    }
+                                }
+                            }
                         }
+                        
                     }
                     .onTapGesture {
                         hideKeyboard()
                     }
                     
+                    
                     if isTyping {
-                        HStack {
-                               TypingAnimationView()
-                               Spacer() // Add spacer to align to the left
-                           }
-                           .padding(.horizontal)
+                        withAnimation {
+                                HStack {
+                                    TypingAnimationView()
+                                    Spacer() // Add spacer to align to the left
+                                }
+                                .padding(.horizontal)
+                            }
                     }
+                    
                     
                     
                     HStack {
@@ -80,7 +109,9 @@ struct ChatScreen: View {
                             .cornerRadius(16)
                         
                         Button(action: {
-                            sendMessage()
+                            viewModel.textViewValue = textViewValue
+                            viewModel.sendMessage()
+                            textViewValue = "" // Clear the local textViewValue
                         }) {
                             Image(systemName: "paperplane.fill")
                                 .font(.system(size: 20))
@@ -89,20 +120,22 @@ struct ChatScreen: View {
                                 .foregroundColor(.black)
                                 .clipShape(Circle())
                         }
+                        
                     }
-                    
                 }
-                
-            }
-            
-            .padding(.horizontal)
+                .padding(.horizontal)
+                .onReceive(viewModel.$isTyping) { typing in
+                    self.isTyping = typing
+                }
+            } // end of GeometryReader
         }
     }
     
-  
+    
+    
     
     var customNavBar: some View {
-        HStack {    
+        HStack {
             
             avatarTitle
             
@@ -110,7 +143,7 @@ struct ChatScreen: View {
             
             // Add other elements for your navigation bar here...
         }
-        .padding()
+        .padding(.horizontal)
         // Use this for side padding or adjust as needed.
         .background(Color.white) // Change this to the desired background color of your nav bar.
         //            .shadow(color: Color.black.opacity(0.1), radius: 1, x: 0, y: 1) // Optional shadow for a bit of depth.
@@ -140,191 +173,49 @@ struct ChatScreen: View {
             
             Spacer()
         }
+        .padding(.top)
     }
     
     func messageView(message: ChatMessage) -> some View {
-        HStack {
+        let paragraphs = message.content.components(separatedBy: "\n\n")
+        
+        return HStack {
             if message.sender == .user { Spacer() }
             
-            Text(message.content)
-                .foregroundColor(message.sender == .user ? .white : .black)
-                .padding()
-                .background(message.sender == .user ? Color.blue : Color.gray.opacity(0.1))
-                .cornerRadius(16)
+            VStack(alignment: message.sender == .user ? .trailing : .leading, spacing: 8) {
+                ForEach(paragraphs, id: \.self) { paragraph in
+                    let lines = paragraph.components(separatedBy: "\n")
+                    VStack(alignment: message.sender == .user ? .trailing : .leading, spacing: 4) {
+                        ForEach(lines, id: \.self) { line in
+                            Text(line)
+                                .foregroundColor(message.sender == .user ? .white : .black)
+                        }
+                    }
+                    .padding()
+                    .background(message.sender == .user ? Color.blue : Color.gray.opacity(0.1))
+                    .cornerRadius(16)
+                }
+            }
             
             if message.sender == .gpt { Spacer() }
         }
     }
     
-    func fetchConversationID(completion: @escaping (String?) -> Void) {
-        guard let url = URL(string: "https://fastapi-s53t.onrender.com/messages/") else {
-            print("Invalid URL")
-            completion(nil)
-            return
-        }
-        
-        let request = URLRequest(url: url)
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Error: \(error)")
-                completion(nil)
-                return
-            }
-            
-            guard let data = data else {
-                print("No data received")
-                completion(nil)
-                return
-            }
-            
-            if let conversationID = String(data: data, encoding: .utf8) {
-                completion(conversationID)
-            } else {
-                print("Failed to convert data to string")
-                completion(nil)
-            }
-        }.resume()
-    }
-    
-    
-    
-    
-    func sendMessage() {
-        let trimmedMessage = textViewValue.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !trimmedMessage.isEmpty {
-            let myMessage = ChatMessage(id: UUID().uuidString, content: trimmedMessage, dataCreated: Date(), sender: .user)
-            chatMessages.append(myMessage)
-            textViewValue = "" // Clear the input text view
-            
-            // Show typing animation
-            isTyping = true
-            
-            fetchConversationID { conversationID in
-                if let id_conv = conversationID?.trimmingCharacters(in: .whitespaces).replacingOccurrences(of: "\"", with: "") {
-                    print(id_conv)
-                    
-                    let question = trimmedMessage
-                    let requestData: [String: Any] = ["question": question]
-                    
-                    guard let baseURL = URL(string: "https://fastapi-s53t.onrender.com/messages/") else {
-                        print("Invalid base URL")
-                        return
-                    }
-                    
-                    let url = baseURL.appendingPathComponent(id_conv)
-                    print(url.absoluteString)
-                    
-                    var request = URLRequest(url: url)
-                    request.httpMethod = "POST"
-                    request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-                    request.addValue("application/json", forHTTPHeaderField: "Accept")
-                    
-                    do {
-                        let requestData = try JSONSerialization.data(withJSONObject: requestData, options: [])
-                        request.httpBody = requestData
-                    } catch {
-                        print("Error encoding JSON: \(error)")
-                        return
-                    }
-                    
-                    URLSession.shared.dataTask(with: request) { data, response, error in
-                        if let error = error {
-                            print("Error: \(error)")
-                            return
-                        }
-                        
-                        guard let data = data else {
-                            print("No data received")
-                            return
-                        }
-                        
-                        if let responseString = String(data: data, encoding: .utf8) {
-                            // Remove quotes from the response string
-                            let cleanedResponseString = responseString.replacingOccurrences(of: "\"", with: "")
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                // Hide typing animation and display bot message
-                                isTyping = false
-                                let botMessage = ChatMessage(id: UUID().uuidString, content: cleanedResponseString, dataCreated: Date(), sender: .gpt)
-                                chatMessages.append(botMessage)
-                            }
-                        } else {
-                            print("Failed to convert response data to string")
-                        }
-                    }.resume()
-                } else {
-                    print("oooooops...")
-                }
-            }
-        }
-    }
-    
-    
-    
-    
-    
     
     func scrollToLastMessage(scrollViewProxy: ScrollViewProxy) {
         withAnimation {
-            scrollViewProxy.scrollTo(chatMessages.last?.id, anchor: .bottom)
+            scrollViewProxy.scrollTo(viewModel.chatMessages.last?.id, anchor: .bottom)
         }
     }
     
-    private func hideKeyboard() {
+    func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 
+
 struct ChatScreen_Previews: PreviewProvider {
     static var previews: some View {
-        ChatScreen(selectedTab: .constant(.home))
+        ChatScreen(viewModel: ChatViewModel(), selectedTab: .constant(.home))
     }
 }
-
-
-
-struct ChatMessage {
-    let id: String
-    let content: String
-    let dataCreated: Date
-    let sender: MessageSender
-}
-
-enum MessageSender {
-    case user
-    case gpt
-}
-
-extension ChatMessage {
-    
-    static let sampleMessages = [
-        ChatMessage(id: UUID().uuidString, content: "Ассаламу Алейкум! Как я могу вам помочь?", dataCreated: Date(), sender: .gpt)
-    ]
-}
-
-struct TypingAnimationView: View {
-    @State private var dotCount = 1
-    private let maxDotCount = 3
-    private let animationDuration = 0.5
-    
-    var body: some View {
-        HStack {
-            
-            Text("Имам печатает" + String(repeating: ".", count: dotCount))
-                .animation(Animation.easeInOut(duration: animationDuration).repeatForever())
-                .onAppear {
-                    startAnimation()
-                }
-            Spacer()
-        }
-    }
-    
-    private func startAnimation() {
-        Timer.scheduledTimer(withTimeInterval: animationDuration, repeats: true) { timer in
-            dotCount = (dotCount % maxDotCount) + 1
-        }
-    }
-}
-
-
