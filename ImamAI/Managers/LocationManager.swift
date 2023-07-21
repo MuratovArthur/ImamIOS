@@ -16,14 +16,16 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var qiblaDirection: Double = 0.0
     private let kaabaLatitude = 21.4225
     private let kaabaLongitude = 39.8262
+    @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
     
     override init() {
-        super.init()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
-    }
+           super.init()
+           locationManager.delegate = self
+           locationManager.desiredAccuracy = kCLLocationAccuracyBest
+           locationManager.requestWhenInUseAuthorization()
+           authorizationStatus = locationManager.authorizationStatus
+           locationManager.startUpdatingLocation()
+       }
     
     func startUpdating() {
         locationManager.startUpdatingHeading()
@@ -65,14 +67,14 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         // Check the timestamp of the location, only accept it if it's recent (less than 15 seconds old in this example)
-        if location.timestamp.timeIntervalSinceNow < -15 {
-            print("Location data is too old.")
-            return
-        }
+//        if location.timestamp.timeIntervalSinceNow < -15 {
+//            print("Location data is too old.")
+//            return
+//        }
 
         self.location = location
         self.qiblaDirection = calculateQiblaDirection(from: location)
-        manager.stopUpdatingLocation()
+//        manager.stopUpdatingLocation()
         print("Location updated: \(location)")
     }
 
@@ -85,4 +87,10 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             self.deviceHeading = newHeading.trueHeading // This is the device heading.
         }
     }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+           DispatchQueue.main.async {
+               self.authorizationStatus = status
+           }
+       }
 }

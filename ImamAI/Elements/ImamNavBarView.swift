@@ -20,9 +20,12 @@ struct ImamNavBarView: View {
         .padding(.horizontal)
         // Use this for side padding or adjust as needed.
         .background(Color.white) // Change this to the desired background color of your nav bar.
-        //            .shadow(color: Color.black.opacity(0.1), radius: 1, x: 0, y: 1) // Optional shadow for a bit of depth.
         .navigationBarHidden(true) // Hide the default navigation bar
+
+        Spacer()
+           
     }
+        
 }
 
 struct ImamNavBarView_Previews: PreviewProvider {
@@ -53,5 +56,5 @@ var avatarTitle: some View {
         
         Spacer()
     }
-    .padding(.top)
+    .padding(.vertical, 8)
 }

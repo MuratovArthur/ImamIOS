@@ -34,36 +34,44 @@ struct CalendarButtonView: View {
     ]
 
     var body: some View {
-        Button(action: {
-            self.isIslamic.toggle()
-        }) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 20)
-                    .foregroundColor(Color(UIColor.systemGray6))
-                    .frame(width: UIScreen.main.bounds.width * 0.6,
-                           height: UIScreen.main.bounds.height * 0.05)
-                
-                HStack {
-                    Image(systemName: "calendar")
-                        .font(.subheadline)
-                        .padding(.leading)
-                    
-                    Text(isIslamic ? formatIslamicDate(date: currentDate) : gregorianDateFormatter.string(from: currentDate))
-                        .font(.body)
-                        .padding(.trailing)
-                }
-            }
-            .padding(8)
-            .foregroundColor(Color.black)
-        }
-    }
+          Button(action: {
+              self.isIslamic.toggle()
+          }) {
+              ZStack {
+                  RoundedRectangle(cornerRadius: 20)
+                      .foregroundColor(Color(UIColor.systemGray6))
+                      .frame(width: calculateButtonWidth()+UIScreen.main.bounds.width*0.15,
+                             height: UIScreen.main.bounds.height * 0.05)
+                  
+                  HStack {
+                      Image(systemName: "calendar")
+                          .font(.subheadline)
+                          .padding(.leading)
+                      
+                      Text(isIslamic ? formatIslamicDate(date: currentDate) : gregorianDateFormatter.string(from: currentDate))
+                          .font(.body)
+                          .padding(.trailing)
+                  }
+              }
+              .padding(8)
+              .foregroundColor(Color.black)
+          }
+      }
     
     func formatIslamicDate(date: Date) -> String {
         let components = islamicDateFormatter.calendar.dateComponents([.year, .month, .day], from: date)
         if let day = components.day, let month = components.month, let year = components.year, let monthName = islamicMonths[month] {
-            return "\(monthName) \(day), \(year) AH"
+            return "\(monthName) \(day), \(year)"
         } else {
             return "Date formatting error"
         }
     }
+    
+    private func calculateButtonWidth() -> CGFloat {
+          let text = isIslamic ? formatIslamicDate(date: currentDate) : gregorianDateFormatter.string(from: currentDate)
+          let textWidth = text.size(withAttributes: [.font: UIFont.systemFont(ofSize: UIFont.systemFontSize)]).width
+          let horizontalPadding: CGFloat = 40 // Adjust the padding value as needed
+          
+          return textWidth + horizontalPadding
+      }
 }

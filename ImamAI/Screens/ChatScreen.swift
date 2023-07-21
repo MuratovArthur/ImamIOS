@@ -19,101 +19,104 @@ struct ChatScreen: View {
     }
     
     var body: some View {
-            GeometryReader { geometry in
-                VStack {
-                    ImamNavBarView()
-                    ScrollViewReader { scrollViewProxy in
-                        ScrollView(showsIndicators: false) {
-                            VStack {
-                                ForEach(viewModel.chatMessages, id: \.id) { message in
-                                    messageView(message: message)
-                                        .id(message.id)
-                                        .font(.system(size: 17))
-                                }
-                                .onChange(of: viewModel.chatMessages.count) { _ in
-                                    if scrollToBottom {
-                                        scrollToLastMessage(scrollViewProxy: scrollViewProxy)
-                                    }
+        GeometryReader { geometry in
+            VStack {
+                ImamNavBarView()
+                ScrollViewReader { scrollViewProxy in
+                    ScrollView(showsIndicators: false) {
+                        VStack {
+                            ForEach(viewModel.chatMessages, id: \.id) { message in
+                                messageView(message: message)
+                                    .id(message.id)
+                                    .font(.system(size: 17))
+                            }
+                            .onChange(of: viewModel.chatMessages.count) { _ in
+                                if scrollToBottom {
+                                    scrollToLastMessage(scrollViewProxy: scrollViewProxy)
                                 }
                             }
                         }
-                        .onAppear {
-                            scrollToBottom = true
-                        }
-                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { notification in
-                            guard let userInfo = notification.userInfo else { return }
-                            guard let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
-
-                            let keyboardHeight = keyboardFrame.height
-
-                            // Find the active window scene
-                            if let windowScene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
-                                // Calculate the adjusted visible height
-                                let tabBarHeight = windowScene.windows.first?.safeAreaInsets.bottom ?? 0
-                                _ = UIScreen.main.bounds.height - keyboardHeight - tabBarHeight
-
-                                // Check if the last message is visible
+                    }
+                    .onAppear {
+                        scrollToBottom = true
+                    }
+                    
+                    .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            withAnimation {
+                                scrollToBottom = true
                                 if let lastMessageID = viewModel.chatMessages.last?.id {
-                                    withAnimation {
-                                        scrollViewProxy.scrollTo(lastMessageID, anchor: .center)
-                                    }
+                                    scrollViewProxy.scrollTo(lastMessageID, anchor: .bottom)
                                 }
                             }
                         }
-                        
                     }
-                    .onTapGesture {
-                        hideKeyboard()
-                    }
-                    
-                    
-                    if isTyping {
-                        withAnimation {
-                                HStack {
-                                    TypingAnimationView()
-                                    Spacer() // Add spacer to align to the left
+                    .onChange(of: textViewHeight) { _ in
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            withAnimation {
+                                if let lastMessageID = viewModel.chatMessages.last?.id {
+                                    scrollViewProxy.scrollTo(lastMessageID, anchor: .bottom)
                                 }
-                                .padding(.horizontal)
                             }
-                    }
-                    
-                    
-                    
-                    HStack {
-                        ResizableTextView(text: $textViewValue, height: $textViewHeight, placeholderText: "Type a message")
-                            .frame(height: textViewHeight < 160 ? self.textViewHeight : 160)
-                            .cornerRadius(16)
-                        
-                        Button(action: {
-                            viewModel.textViewValue = textViewValue
-                            viewModel.sendMessage()
-                            textViewValue = "" // Clear the local textViewValue
-                        }) {
-                            Image(systemName: "paperplane.fill")
-                                .font(.system(size: 20))
-                                .frame(width: 40, height: 40)
-                                .background(Color.white)
-                                .foregroundColor(.black)
-                                .clipShape(Circle())
                         }
-                        
+                    }
+
+                    
+                    
+                    
+                }
+                .onTapGesture {
+                    hideKeyboard()
+                }
+                
+                
+                if isTyping {
+                    withAnimation {
+                        HStack {
+                            TypingAnimationView()
+                            Spacer() // Add spacer to align to the left
+                        }
+                        .padding(.horizontal)
                     }
                 }
-                .padding(.horizontal)
-                .onReceive(viewModel.$isTyping) { typing in
-                    self.isTyping = typing
+                
+                
+                
+                HStack {
+                    ResizableTextView(text: $textViewValue, height: $textViewHeight, placeholderText: "Type a message")
+                        .frame(height: textViewHeight < 160 ? self.textViewHeight : 160)
+                        .cornerRadius(16)
+                    
+                    Button(action: {
+                        viewModel.textViewValue = textViewValue
+                        viewModel.sendMessage()
+                        textViewValue = "" // Clear the local textViewValue
+                    }) {
+                        Image(systemName: "paperplane.fill")
+                            .font(.system(size: 20))
+                            .frame(width: 40, height: 40)
+                            .background(Color.white)
+                            .foregroundColor(.black)
+                            .clipShape(Circle())
+                    }
+                    
                 }
             }
+            .padding(.horizontal)
+            .onReceive(viewModel.$isTyping) { typing in
+                self.isTyping = typing
+            }
+        }
     }
     
     
     
     func messageView(message: ChatMessage) -> some View {
         print("message content: ", message.content)
-
+        
         return HStack {
             if message.sender == .user { Spacer() }
-
+            
             VStack(alignment: .leading, spacing: 8) {
                 let lines = splitLines(message.content)
                 VStack(alignment: .leading, spacing: 4) {
@@ -128,11 +131,11 @@ struct ChatScreen: View {
                 .background(message.sender == .user ? Color.blue : Color.gray.opacity(0.1))
                 .cornerRadius(16)
             }
-
+            
             if message.sender == .gpt { Spacer() }
         }
     }
-
+    
     func splitLines(_ content: String) -> [String] {
         var lines = content.split(separator: "\n", omittingEmptySubsequences: false).map(String.init)
         // Convert empty strings to strings with a space to represent empty lines
@@ -143,11 +146,11 @@ struct ChatScreen: View {
         }
         return lines
     }
-
-
-
-
-
+    
+    
+    
+    
+    
     
     
     func scrollToLastMessage(scrollViewProxy: ScrollViewProxy) {

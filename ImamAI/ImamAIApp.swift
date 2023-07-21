@@ -1,18 +1,30 @@
-//
-//  ImamAIApp.swift
-//  ImamAI
-//
-//  Created by Muratov Arthur on 03.07.2023.
-//
-
 import SwiftUI
+import UserNotifications
 
 @main
 struct ImamAIApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    let center = UNUserNotificationCenter.current()
+    let notificationDelegate = NotificationDelegate()
+
+    init() {
+        center.delegate = notificationDelegate
+        center.requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
+            if let error = error {
+                print("Notification authorization error: \(error.localizedDescription)")
+            } else if granted {
+                print("Notification authorization granted.")
+            } else {
+                print("Notification authorization denied.")
+            }
+        }
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .preferredColorScheme(.light)
+                .navigationBarHidden(true)
         }
     }
 }

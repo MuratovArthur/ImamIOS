@@ -8,17 +8,10 @@ struct CompassView: View {
     var body: some View {
         VStack(alignment: .leading) {
             
-            
-            HStack{
-                Spacer()
-                CalendarButtonView(currentDate: currentDate)
-                Spacer()
-            }
-            
             Text("Поиск Киблы")
                 .font(.title)
                 .fontWeight(.bold)
-                .padding()
+//                .padding()
             
             Spacer()
             
@@ -28,7 +21,7 @@ struct CompassView: View {
                 Image("compass")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 200, height: 200)
+                    .frame(width: 250, height: 250)
                     .rotationEffect(Angle(degrees: locationManager.qiblaDirection - locationManager.deviceHeading))
                 
                 Spacer()

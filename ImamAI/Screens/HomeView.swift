@@ -14,40 +14,55 @@ struct HomeView: View {
     
     
     var body: some View {
-        GeometryReader { geometry in
-            VStack(alignment: .center) {
-                CalendarButtonView(currentDate: currentDate)
+        NavigationView {
+            GeometryReader { geometry in
+                VStack(alignment: .center) {
+                    CalendarButtonView(currentDate: currentDate)
                     
-                
-                ScrollViewReader { scrollViewProxy in
-                    ScrollView (showsIndicators: false) {
-                        ImamChatPreview(selectedTab: $selectedTab)
-
-                        PrayerTimesView(prayerTimes: prayerTimes, city: city)
-                        
-//                        AyahGreetingView()
-                        
-                        PostsView()
+                    
+                    ScrollViewReader { scrollViewProxy in
+                        ScrollView (showsIndicators: false) {
+                            ImamChatPreview(selectedTab: $selectedTab)
                             
-                        
-                        Spacer()
-                        
-                    }
-                    .onChange(of: scrollToBottom) { newValue in
-                        if newValue {
-                            scrollViewProxy.scrollTo(imageNames.last, anchor: .trailing)
-                            scrollToBottom = false
+//                                                        PrayerTimesView(
+//                                                            prayerTimes: [
+//                                                                "Фаджр": "11:33",
+//                                                                "Восход": "11:34",
+//                                                                "Зухр": "11:35",
+//                                                                "Аср": "11:36",
+//                                                                "Магриб": "11:37",
+//                                                                "Иша": "11:38"
+//                                                            ],
+//                                                            city: "Алматы"
+//
+//                                                    )
+                            
+                            PrayerTimesView(prayerTimes: prayerTimes, city: city)
+
+                            PostsView()
+                            
+                            
+                            Spacer()
+                            
                         }
+                        .onChange(of: scrollToBottom) { newValue in
+                            if newValue {
+                                scrollViewProxy.scrollTo(imageNames.last, anchor: .trailing)
+                                scrollToBottom = false
+                            }
+                        }
+                        .onAppear {
+                            scrollToBottom = true
+                            scrollViewProxy.scrollTo(scrollPosition)
+                        }
+                        
                     }
-                    .onAppear {
-                        scrollToBottom = true
-                        scrollViewProxy.scrollTo(scrollPosition)
-                    }
-                    
                 }
             }
+            .navigationBarHidden(true)
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
+        
     }
 }
 
