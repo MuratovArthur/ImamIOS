@@ -1,34 +1,14 @@
-//
-//  WeeklyFetch.swift
-//  ImamAI
-//
-//  Created by Muratov Arthur on 21.07.2023.
-//
-
 import Foundation
-import CoreData // Add this import statement to access PrayingTime entity
+import CoreData
 
 extension CodingUserInfoKey {
     static let managedObjectContext = CodingUserInfoKey(rawValue: "managedObjectContext")!
 }
 
-struct PrayerTimesData: Codable {
-    let cityName: String
-    let fajrTime: String
-    let sunriseTime: String
-    let dhuhrTime: String
-    let asrTime: String
-    let maghribTime: String
-    let ishaTime: String
-}
-
-
-
 func makeRequestAndUpdateCoreData() {
-    
-    let locationManager = LocationManager()
-    
-    // Create the API request
+    print("core data function called")
+    let locationManager = LocationManager.shared
+
     guard let location = locationManager.location else {
         print("No location available")
         return
@@ -49,68 +29,61 @@ func makeRequestAndUpdateCoreData() {
         return
     }
     
-    // Create a weekly repeating timer for making the API request
-        let oneWeekInSeconds: TimeInterval = 7 * 24 * 60 * 60
-        let timer = Timer.scheduledTimer(withTimeInterval: oneWeekInSeconds, repeats: true) { _ in
-            // Make the API request
-            let task = URLSession.shared.dataTask(with: request) { data, response, error in
-                if let error = error {
-                    print("Error making API request: \(error)")
-                    return
-                }
+    let oneWeekInSeconds: TimeInterval = 7 * 24 * 60 * 60
+    let timer = Timer.scheduledTimer(withTimeInterval: oneWeekInSeconds, repeats: true) { _ in
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error making API request: \(error)")
+                return
+            }
+            
+            guard let data = data else {
+                print("Empty response data")
+                return
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                decoder.userInfo[.managedObjectContext] = PersistenceManager.shared.persistentContainer.viewContext
+                let prayerTimes = try decoder.decode([PrayerTime].self, from: data)
+                print("Prayer times: \(prayerTimes)")
                 
-                guard let data = data else {
-                    print("Empty response data")
-                    return
-                }
-                
-                do {
-                    let decoder = JSONDecoder()
-                    decoder.userInfo[.managedObjectContext] = PersistenceManager.shared.persistentContainer.viewContext
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    let prayerTimesData = try decoder.decode(PrayerTimesData.self, from: data)
-                    
-                    // Update CoreData with the received data
-                    let context = PersistenceManager.shared.persistentContainer.viewContext
-                    
-                    // Fetch the existing record, if any
+                let context = PersistenceManager.shared.persistentContainer.viewContext
+
+                for prayerTime in prayerTimes {
                     let fetchRequest: NSFetchRequest<PrayingTime> = PrayingTime.fetchRequest()
-                    fetchRequest.predicate = NSPredicate(format: "cityName = %@", prayerTimesData.cityName)
+                    fetchRequest.predicate = NSPredicate(format: "cityName = %@", prayerTime.cityName ?? "")
                     do {
                         let existingPrayingTimes = try context.fetch(fetchRequest)
                         if let existingPrayingTime = existingPrayingTimes.first {
-                            // Update existing record
-                            existingPrayingTime.fajrTime = prayerTimesData.fajrTime
-                            existingPrayingTime.sunriseTime = prayerTimesData.sunriseTime
-                            existingPrayingTime.dhuhrTime = prayerTimesData.dhuhrTime
-                            existingPrayingTime.asrTime = prayerTimesData.asrTime
-                            existingPrayingTime.maghribTime = prayerTimesData.maghribTime
-                            existingPrayingTime.ishaTime = prayerTimesData.ishaTime
+                            existingPrayingTime.fajrTime = prayerTime.fajrTime
+                            existingPrayingTime.sunriseTime = prayerTime.sunriseTime
+                            existingPrayingTime.dhuhrTime = prayerTime.dhuhrTime
+                            existingPrayingTime.asrTime = prayerTime.asrTime
+                            existingPrayingTime.maghribTime = prayerTime.maghribTime
+                            existingPrayingTime.ishaTime = prayerTime.ishaTime
                         } else {
-                            // Create a new record
                             let newPrayingTime = PrayingTime(context: context)
-                            newPrayingTime.cityName = prayerTimesData.cityName
-                            newPrayingTime.fajrTime = prayerTimesData.fajrTime
-                            newPrayingTime.sunriseTime = prayerTimesData.sunriseTime
-                            newPrayingTime.dhuhrTime = prayerTimesData.dhuhrTime
-                            newPrayingTime.asrTime = prayerTimesData.asrTime
-                            newPrayingTime.maghribTime = prayerTimesData.maghribTime
-                            newPrayingTime.ishaTime = prayerTimesData.ishaTime
+                            newPrayingTime.cityName = prayerTime.cityName
+                            newPrayingTime.fajrTime = prayerTime.fajrTime
+                            newPrayingTime.sunriseTime = prayerTime.sunriseTime
+                            newPrayingTime.dhuhrTime = prayerTime.dhuhrTime
+                            newPrayingTime.asrTime = prayerTime.asrTime
+                            newPrayingTime.maghribTime = prayerTime.maghribTime
+                            newPrayingTime.ishaTime = prayerTime.ishaTime
                         }
                         
-                        // Save changes to CoreData
                         try context.save()
-                        print("Data updated successfully")
                     } catch {
                         print("Error fetching or creating PrayingTime: \(error)")
                     }
-                } catch {
-                    print("Error decoding prayer times data: \(error)")
                 }
+            } catch {
+                print("Error decoding prayer times data: \(error)")
             }
-            task.resume()
         }
-
-        // Start the timer
-        timer.fire()
+        task.resume()
     }
+
+    timer.fire()
+}

@@ -135,10 +135,12 @@ struct PostsView: View {
                     DispatchQueue.main.async {
                         self.posts += decodedResponse.objects.map { Post(postObject: $0) }
                         self.totalPosts = decodedResponse.total
+                        LocationManager.shared.shouldContinueUpdatingLocation = false
                     }
                 } catch let decodingError {
                     print("Decoding error:", decodingError)
                 }
+
             } else if let error = error {
                 print("Error: \(error.localizedDescription)")
             }

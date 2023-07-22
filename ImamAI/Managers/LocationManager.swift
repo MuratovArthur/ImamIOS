@@ -9,31 +9,56 @@ import Foundation
 import SwiftUI
 import CoreLocation
 
-class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
+    static let shared = LocationManager()
+
     private let locationManager = CLLocationManager()
+
     @Published var location: CLLocation?
     @Published var deviceHeading: Double = 0.0
     @Published var qiblaDirection: Double = 0.0
+    @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
+    @Published var shouldContinueUpdatingLocation: Bool = true
+    @Published var locationFetched: Bool = false
+
     private let kaabaLatitude = 21.4225
     private let kaabaLongitude = 39.8262
-    @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
-    
+
     override init() {
-           super.init()
-           locationManager.delegate = self
-           locationManager.desiredAccuracy = kCLLocationAccuracyBest
-           locationManager.requestWhenInUseAuthorization()
-           authorizationStatus = locationManager.authorizationStatus
-           locationManager.startUpdatingLocation()
-       }
-    
-    func startUpdating() {
+        super.init()
+        self.locationManager.delegate = self
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.requestWhenInUseAuthorization() // Request location access permission
+        self.locationManager.startUpdatingLocation() // Start updating location
+    }
+
+    func startUpdatingLocation() {
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.startUpdatingLocation()
+        } else {
+            print("Location services are not enabled")
+        }
+    }
+
+    func stopUpdatingLocation() {
+        shouldContinueUpdatingLocation = false
+    }
+
+    func startUpdatingHeading() {
         locationManager.startUpdatingHeading()
     }
 
-    func stopUpdating() {
+    func stopUpdatingHeading() {
         locationManager.stopUpdatingHeading()
     }
+    
+    func startUpdating() {
+          locationManager.startUpdatingHeading()
+      }
+
+      func stopUpdating() {
+          locationManager.stopUpdatingHeading()
+      }
     
     func calculateQiblaDirection(from location: CLLocation) -> Double {
         let userLatitude = degreesToRadians(degrees: location.coordinate.latitude)
@@ -66,17 +91,17 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
-        // Check the timestamp of the location, only accept it if it's recent (less than 15 seconds old in this example)
-//        if location.timestamp.timeIntervalSinceNow < -15 {
-//            print("Location data is too old.")
-//            return
-//        }
 
         self.location = location
         self.qiblaDirection = calculateQiblaDirection(from: location)
-//        manager.stopUpdatingLocation()
         print("Location updated: \(location)")
+
+        if !shouldContinueUpdatingLocation || locationFetched {
+            manager.stopUpdatingLocation()
+            shouldContinueUpdatingLocation = false // add this line
+        }
     }
+
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Location manager error: \(error.localizedDescription)")
@@ -84,13 +109,13 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         DispatchQueue.main.async {
-            self.deviceHeading = newHeading.trueHeading // This is the device heading.
+            self.deviceHeading = newHeading.trueHeading
         }
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-           DispatchQueue.main.async {
-               self.authorizationStatus = status
-           }
-       }
-}
+        DispatchQueue.main.async {
+            self.authorizationStatus = status
+        }
+    }
+    }

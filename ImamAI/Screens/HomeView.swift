@@ -9,41 +9,24 @@ struct HomeView: View {
     @State private var isEventListVisible = false
     @State private var scrollPosition: CGFloat = 0
     @Binding var selectedTab: ContentView.Tab
-    let prayerTimes: [String: String]
-    let city: String
-    
-    
+    @Binding var prayerTimes: [String: String] // Change to @Binding
+    @Binding var city: String // Change to @Binding
+
     var body: some View {
         NavigationView {
             GeometryReader { geometry in
                 VStack(alignment: .center) {
                     CalendarButtonView(currentDate: currentDate)
-                    
-                    
+
                     ScrollViewReader { scrollViewProxy in
-                        ScrollView (showsIndicators: false) {
+                        ScrollView(showsIndicators: false) {
                             ImamChatPreview(selectedTab: $selectedTab)
-                            
-//                                                        PrayerTimesView(
-//                                                            prayerTimes: [
-//                                                                "Фаджр": "11:33",
-//                                                                "Восход": "11:34",
-//                                                                "Зухр": "11:35",
-//                                                                "Аср": "11:36",
-//                                                                "Магриб": "11:37",
-//                                                                "Иша": "11:38"
-//                                                            ],
-//                                                            city: "Алматы"
-//
-//                                                    )
-                            
+
                             PrayerTimesView(prayerTimes: prayerTimes, city: city)
 
                             PostsView()
-                            
-                            
+
                             Spacer()
-                            
                         }
                         .onChange(of: scrollToBottom) { newValue in
                             if newValue {
@@ -52,24 +35,83 @@ struct HomeView: View {
                             }
                         }
                         .onAppear {
+                            print("HomeView appeared.")
+                            print("prayerTimes: \(prayerTimes)")
+                            print("city: \(city)")
                             scrollToBottom = true
                             scrollViewProxy.scrollTo(scrollPosition)
                         }
-                        
                     }
                 }
             }
             .navigationBarHidden(true)
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
-        
     }
 }
-
-
-
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeView(selectedTab: .constant(.home), prayerTimes: ["1": "2"], city: "Алматы")
-    }
-}
+//
+//
+//import SwiftUI
+//
+//struct HomeView: View {
+//    @Binding var prayerTimes: [String: String]
+//    @Binding var city: String
+//
+//    var body: some View {
+//        VStack {
+//            Text("Prayer Times")
+//                .font(.title)
+//                .fontWeight(.bold)
+//                .padding(.top, 24)
+//
+//            ForEach(prayerTimes.sorted(by: <), id: \.key) { key, value in
+//                PrayerTimeRow(prayerName: key, prayerTime: value)
+//            }
+//
+//            Spacer()
+//
+//            Text("City: \(city)")
+//                .font(.headline)
+//                .padding(.bottom, 16)
+//        }
+//        .padding(.horizontal, 16)
+//        .onReceive(NotificationCenter.default.publisher(for: .prayerTimesUpdated)) { notification in
+//            if let userInfo = notification.userInfo as? [String: Any] {
+//                print("Received prayerTimesUpdated notification with userInfo: \(userInfo)")
+//                if let updatedPrayerTimes = userInfo["prayerTimes"] as? [String: String],
+//                   let updatedCity = userInfo["cityName"] as? String {
+//                    DispatchQueue.main.async {
+//                        print("Updating prayer times and city in HomeView")
+//                        self.prayerTimes = updatedPrayerTimes
+//                        self.city = updatedCity
+//                    }
+//                }
+//            }
+//        }
+//        .onAppear {
+//                 print("HomeView appeared with data:")
+//                 print("PrayerTimes: \(self.prayerTimes)")
+//                 print("City: \(self.city)")
+//             }
+//    }
+//}
+//
+//struct PrayerTimeRow: View {
+//    var prayerName: String
+//    var prayerTime: String
+//
+//    var body: some View {
+//        HStack {
+//            Text(prayerName)
+//                .font(.headline)
+//                .padding(.leading, 16)
+//
+//            Spacer()
+//
+//            Text(prayerTime) // Display the prayer time here
+//                .font(.subheadline)
+//                .padding(.trailing, 16)
+//        }
+//        .padding(.vertical, 8)
+//    }
+//}

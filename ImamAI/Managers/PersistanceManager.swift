@@ -14,7 +14,7 @@ class PersistenceManager {
     private init() {} // Ensure it's a singleton
     
     lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "NamazTime") // Replace with your .xcdatamodeld file name
+        let container = NSPersistentContainer(name: "ImamData") // Replace with your .xcdatamodeld file name
         container.loadPersistentStores(completionHandler: { _, error in
             if let error = error {
                 fatalError("Failed to load persistent stores: \(error)")

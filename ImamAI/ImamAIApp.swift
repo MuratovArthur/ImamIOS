@@ -23,6 +23,7 @@ struct ImamAIApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(\.managedObjectContext, appDelegate.persistentContainer.viewContext)
                 .preferredColorScheme(.light)
                 .navigationBarHidden(true)
         }

@@ -10,28 +10,33 @@ struct ContentView: View {
     }
     
     @Environment(\.managedObjectContext) private var viewContext
-    @StateObject var locationManager = LocationManager()
+    @StateObject var locationManager = LocationManager.shared
     @StateObject var scrollStore = ScrollPositionStore()
     @State private var selectedTab: Tab = .loading
     @State private var isLoadingComplete = false
     @State private var city: String = ""
     @State private var isLocationUpdating = true
+    @State private var isPrayerTimeReceived = false
     
-    var initialTab: Tab {
-        if locationManager.location != nil {
-            return .home
-        } else {
-            return .loading
-        }
-    }
+    @State private var prayerTimes: [String: String] = [
+        "Фаджр": "",
+        "Восход": "",
+        "Зухр": "",
+        "Аср": "",
+        "Магриб": "",
+        "Иша": ""
+    ]
+    
+    // Define the jsonArray variable here
+    var jsonArray: [[String: Any]] = []
     
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack {
                 switch selectedTab {
                 case .home:
-                    if !prayerTimes.isEmpty {
-                        HomeView(selectedTab: $selectedTab, prayerTimes: prayerTimes, city: city)
+                    if !locationManager.shouldContinueUpdatingLocation {
+                        HomeView(selectedTab: $selectedTab, prayerTimes: $prayerTimes, city: $city)
                             .environmentObject(scrollStore)
                             .navigationBarHidden(true)
                     } else {
@@ -50,17 +55,11 @@ struct ContentView: View {
             }
             .padding(.bottom, isLoadingComplete ? 50 : 0)
             
-            if isLoadingComplete {
+            if isLoadingComplete && selectedTab != .loading {
                 TabBarView(selectedTab: $selectedTab)
             }
             
-            if selectedTab == .loading || isLocationUpdating {
-                // Show the loading view when location updates are in progress
-                LoadingView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            
-            if selectedTab == .loading {
+            if locationManager.shouldContinueUpdatingLocation || selectedTab == .loading {
                 LoadingView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
@@ -75,31 +74,32 @@ struct ContentView: View {
             }
         }
         .onChange(of: locationManager.location) { newLocation in
-            if let _ = newLocation, selectedTab == .loading {
-                // Introduce a delay of 2 seconds before fetching prayer times
+            if let _ = newLocation, locationManager.shouldContinueUpdatingLocation, !isPrayerTimeReceived {
+                locationManager.shouldContinueUpdatingLocation = false // prevent further updates
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     makeRequest()
                 }
             }
         }
-        
         .onAppear {
-            // Introduce a delay of 2 seconds before fetching prayer times
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                fetchPrayerTimesFromCoreData()
-            }
+            //            makeRequestWithRetry(attempts: 5)
+            fetchPrayerTimesFromCoreData()
         }
     }
     
-    @State private var prayerTimes: [String: String] = [:]
-    
     func fetchPrayerTimesFromCoreData() {
+        print("calling fetchPrayerTimesFromCoreData")
+        
+    
+
         let fetchRequest: NSFetchRequest<PrayingTime> = PrayingTime.fetchRequest()
         fetchRequest.predicate = NSPredicate(value: true) // Fetch all records
         
         do {
-            let prayerTimesData = try PersistenceManager.shared.persistentContainer.viewContext.fetch(fetchRequest)
-            if let latestPrayingTime = prayerTimesData.last {
+            let prayerTimesData = try viewContext.fetch(fetchRequest)
+            if !prayerTimesData.isEmpty {
+                // Data exists in CoreData, use the latest data
+                let latestPrayingTime = prayerTimesData.last!
                 var prayerTimesDict: [String: String] = [:]
                 
                 if let fajrTime = latestPrayingTime.fajrTime {
@@ -122,11 +122,13 @@ struct ContentView: View {
                 }
                 
                 self.prayerTimes = prayerTimesDict
-                self.selectedTab = .home
                 self.isLoadingComplete = true
+                if isPrayerTimeReceived {
+                    self.selectedTab = .home
+                }
                 self.city = latestPrayingTime.cityName ?? "Алматы"
+                
             } else {
-                // No data available in CoreData, make an API request
                 makeRequestAndUpdateCoreData()
             }
         } catch {
@@ -136,16 +138,14 @@ struct ContentView: View {
     
     
     
-    
-    
-    
-    
-    
     func makeRequest() {
-        print("making time request")
-        
         guard let location = locationManager.location else {
-            print("No location available")
+            print("No location available. Waiting for location update.")
+            return
+        }
+        
+        guard !isPrayerTimeReceived else {
+            print("Prayer times already received.")
             return
         }
         
@@ -164,50 +164,76 @@ struct ContentView: View {
             return
         }
         
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        // Start the network request to fetch prayer times
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
-                print("Error making API request: \(error)")
-                return
-            }
-            
-            guard let data = data else {
-                print("Empty response data")
-                return
-            }
-            
-            do {
+                print("Error: \(error)")
+            } else if let data = data {
                 let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                let prayerTimesData = try decoder.decode(PrayerTimesData.self, from: data)
-                DispatchQueue.main.async {
-                    // Here, directly use the properties of prayerTimesData
-                    self.prayerTimes = [
-                        "Фаджр": prayerTimesData.fajrTime,
-                        "Восход": prayerTimesData.sunriseTime,
-                        "Зухр": prayerTimesData.dhuhrTime,
-                        "Аср": prayerTimesData.asrTime,
-                        "Магриб": prayerTimesData.maghribTime,
-                        "Иша": prayerTimesData.ishaTime
-                    ]
-                    self.selectedTab = .home
-                    self.isLoadingComplete = true
-                    self.city = prayerTimesData.cityName
-                    self.isLocationUpdating = false
-                }
-                print("decoded")
-                print(prayerTimesData)
-            } catch {
-                print("Error decoding prayer times data: \(error)")
-                DispatchQueue.main.async {
-                    self.isLocationUpdating = false
+                
+                do {
+                    // Decode the JSON response into an array of dictionaries
+                    if let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: String]] {
+                        print("Received JSON Array: \(jsonArray)")
+                        
+                        // Assuming the JSON response is an array of dictionaries, parse the first element in the array
+                        if let prayerTimesData = jsonArray.first {
+                            DispatchQueue.main.async {
+                                self.prayerTimes["Фаджр"] = prayerTimesData["fajr_time"]
+                                self.prayerTimes["Восход"] = prayerTimesData["sunrise_time"]
+                                self.prayerTimes["Зухр"] = prayerTimesData["dhuhr_time"]
+                                self.prayerTimes["Аср"] = prayerTimesData["asr_time"]
+                                self.prayerTimes["Магриб"] = prayerTimesData["maghrib_time"]
+                                self.prayerTimes["Иша"] = prayerTimesData["isha_time"]
+                                self.city = prayerTimesData["city_name"] ?? "Алматы"
+                                
+                                self.isPrayerTimeReceived = true
+                                self.isLoadingComplete = true
+                                self.selectedTab = .home
+                            }
+                        } else {
+                            print("Empty array of prayer times data")
+                        }
+                    } else {
+                        print("Failed to decode JSON data: Unexpected format")
+                    }
+                } catch {
+                    print("Failed to decode JSON data: \(error)")
                 }
             }
-        }.resume()
+        }
+        
+        task.resume()
     }
+    
+    func makeRequestWithRetry(attempts: Int) {
+        guard attempts > 0 else {
+            print("Failed to get location after multiple attempts.")
+            return
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            guard let _ = self.locationManager.location else {
+                print("No location available. Retrying...")
+                self.makeRequestWithRetry(attempts: attempts - 1)
+                return
+            }
+            
+            makeRequestAndUpdateCoreData()
+        }
+    }
+    
+    
+    
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
+}
+
+
+extension Notification.Name {
+    static let prayerTimesUpdated = Notification.Name("prayerTimesUpdated")
 }
