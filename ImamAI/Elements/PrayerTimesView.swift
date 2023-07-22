@@ -34,7 +34,7 @@ struct PrayerTimesView: View {
                                 Button(action: {
                                     isMutedForPrayerTime.wrappedValue.toggle()
                                     UserDefaultsManager.shared.updateMutedStatus(for: key, isMuted: isMutedForPrayerTime.wrappedValue)
-                                    NotificationManager.shared.scheduleNotificationIfNeeded(prayerTime: key, isMuted: isMutedForPrayerTime.wrappedValue, prayerTimes: prayerTimes)
+//                                    NotificationManager.shared.scheduleNotificationIfNeeded(prayerTime: key, isMuted: isMutedForPrayerTime.wrappedValue, prayerTimes: prayerTimes)
                                 }) {
                                     Image(systemName: isMutedForPrayerTime.wrappedValue ? "speaker.slash" : "speaker.wave.2")
                                         .font(.subheadline)
