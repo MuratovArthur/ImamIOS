@@ -72,29 +72,30 @@ struct PostsView: View {
                             .font(.subheadline)
                             .foregroundColor(.gray)
                             .padding(.top, 5)
-                    }
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            
-                            print("click on button")
-                            if self.posts.count < self.totalPosts {
-                                self.offset += 3
-                                loadPosts()
-                            } else {
-                                print("All posts have been loaded")
+                    } else {
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                print("click on button")
+                                if self.posts.count < self.totalPosts {
+                                    self.offset += 3
+                                    loadPosts()
+                                } else {
+                                    allPostsLoaded = true
+                                    print("All posts have been loaded")
+                                }
+                                
+                            }) {
+                                Text("Загрузить еще")
+                                    .font(.headline)
+                                    .foregroundColor(.black)
+                                    .padding()
+                                    .background(Color(UIColor.systemGray6))
+                                    .cornerRadius(10)
                             }
+                            .padding(.horizontal)
                             
-                        }) {
-                            Text("Загрузить еще")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                                .padding()
-                                .background(Color(UIColor.systemGray6))
-                                .cornerRadius(10)
                         }
-                        .padding(.horizontal)
-                        
                     }
                 }
                 .padding(.top, 8)
@@ -135,7 +136,6 @@ struct PostsView: View {
                     DispatchQueue.main.async {
                         self.posts += decodedResponse.objects.map { Post(postObject: $0) }
                         self.totalPosts = decodedResponse.total
-                        LocationManager.shared.shouldContinueUpdatingLocation = false
                     }
                 } catch let decodingError {
                     print("Decoding error:", decodingError)

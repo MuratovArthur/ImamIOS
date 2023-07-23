@@ -8,14 +8,14 @@
 import Foundation
 
 struct PrayerTime: Codable {
-    let date: String?
-    let cityName: String?
-    let asrTime: String?
-    let ishaTime: String?
-    let sunriseTime: String?
-    let maghribTime: String?
-    let dhuhrTime: String?
-    let fajrTime: String?
+    let date: String
+    let cityName: String
+    let asrTime: String
+    let ishaTime: String
+    let sunriseTime: String
+    let maghribTime: String
+    let dhuhrTime: String
+    let fajrTime: String
 
     enum CodingKeys: String, CodingKey {
         case date
@@ -26,6 +26,17 @@ struct PrayerTime: Codable {
         case maghribTime = "maghrib_time"
         case dhuhrTime = "dhuhr_time"
         case fajrTime = "fajr_time"
+    }
+    
+    var orderedValues: [String: String?] {
+        [
+            "Фаджр": fajrTime,
+            "Восход": sunriseTime,
+            "Зухр": dhuhrTime,
+            "Аср": asrTime,
+            "Магриб": maghribTime,
+            "Иша": ishaTime
+        ]
     }
 }
 

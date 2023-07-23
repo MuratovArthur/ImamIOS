@@ -18,7 +18,6 @@ class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
     @Published var deviceHeading: Double = 0.0
     @Published var qiblaDirection: Double = 0.0
     @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
-    @Published var shouldContinueUpdatingLocation: Bool = true
     @Published var locationFetched: Bool = false
 
     private let kaabaLatitude = 21.4225
@@ -38,10 +37,6 @@ class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
         } else {
             print("Location services are not enabled")
         }
-    }
-
-    func stopUpdatingLocation() {
-        shouldContinueUpdatingLocation = false
     }
 
     func startUpdatingHeading() {
@@ -90,16 +85,12 @@ class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else { return }
+        guard let location = locations.last, self.location == nil else { return }
+        manager.stopUpdatingLocation()
 
         self.location = location
         self.qiblaDirection = calculateQiblaDirection(from: location)
         print("Location updated: \(location)")
-
-        if !shouldContinueUpdatingLocation || locationFetched {
-            manager.stopUpdatingLocation()
-            shouldContinueUpdatingLocation = false // add this line
-        }
     }
 
 
@@ -118,4 +109,4 @@ class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
             self.authorizationStatus = status
         }
     }
-    }
+}

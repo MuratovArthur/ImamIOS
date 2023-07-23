@@ -19,6 +19,9 @@ struct LoadingView: View {
             Text("Ассаламу Алейкум!")
                 .font(.title)
                 .fontWeight(.bold)
+            
+            ProgressView()
+                .padding(.vertical)
         }
     }
 }

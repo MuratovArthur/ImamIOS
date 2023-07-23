@@ -9,7 +9,7 @@ struct HomeView: View {
     @State private var isEventListVisible = false
     @State private var scrollPosition: CGFloat = 0
     @Binding var selectedTab: ContentView.Tab
-    @Binding var prayerTimes: [String: String] // Change to @Binding
+    @Binding var prayerTime: PrayerTime?
     @Binding var city: String // Change to @Binding
 
     var body: some View {
@@ -22,7 +22,7 @@ struct HomeView: View {
                         ScrollView(showsIndicators: false) {
                             ImamChatPreview(selectedTab: $selectedTab)
 
-                            PrayerTimesView(prayerTimes: prayerTimes, city: city)
+                            PrayerTimesView(prayerTime: prayerTime, city: city)
 
                             PostsView()
 
@@ -36,7 +36,7 @@ struct HomeView: View {
                         }
                         .onAppear {
                             print("HomeView appeared.")
-                            print("prayerTimes: \(prayerTimes)")
+                            print("prayerTimes: \(prayerTime)")
                             print("city: \(city)")
                             scrollToBottom = true
                             scrollViewProxy.scrollTo(scrollPosition)

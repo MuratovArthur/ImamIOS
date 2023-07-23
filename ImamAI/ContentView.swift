@@ -11,11 +11,10 @@ struct ContentView: View {
     @StateObject var locationManager = LocationManager.shared
     @StateObject var scrollStore = ScrollPositionStore()
     @State private var selectedTab: Tab = .loading
-    @State private var isLoadingComplete = false
     @State private var city: String = ""
     @State private var isLocationUpdating = true
     @State private var isPrayerTimeReceived = false
-    @State private var arePrayerTimesFetched = false
+    @State private var isRequestInProgress = false
     
     @State private var prayerTimes: [String: String] = [
         "Фаджр": "",
@@ -26,6 +25,8 @@ struct ContentView: View {
         "Иша": ""
     ]
     
+    @State private var prayerTime: PrayerTime?
+    
     // Define the jsonArray variable here
     var jsonArray: [[String: Any]] = []
     
@@ -34,33 +35,25 @@ struct ContentView: View {
             VStack {
                 switch selectedTab {
                 case .home:
-                    if !locationManager.shouldContinueUpdatingLocation {
-                        HomeView(selectedTab: $selectedTab, prayerTimes: $prayerTimes, city: $city)
-                            .environmentObject(scrollStore)
-                            .navigationBarHidden(true)
-                    } else {
-                        ProgressView()
-                    }
+                    HomeView(selectedTab: $selectedTab, prayerTime: $prayerTime, city: $city)
+                        .environmentObject(scrollStore)
+                        .navigationBarHidden(true)
                 case .other:
                     ChatScreen(viewModel: ChatViewModel(), selectedTab: $selectedTab)
                         .navigationBarHidden(true)
                 case .settings:
                     CompassView()
                         .navigationBarHidden(true)
-                default:
-                    EmptyView()
+                case .loading:
+                    LoadingView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 Spacer()
             }
-            .padding(.bottom, isLoadingComplete ? 50 : 0)
+            .padding(.bottom, selectedTab != .loading ? 50 : 0)
             
-            if isLoadingComplete && selectedTab != .loading {
+            if selectedTab != .loading {
                 TabBarView(selectedTab: $selectedTab)
-            }
-            
-            if locationManager.shouldContinueUpdatingLocation || selectedTab == .loading {
-                LoadingView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
         .onChange(of: locationManager.authorizationStatus) { status in
@@ -73,11 +66,8 @@ struct ContentView: View {
             }
         }
         .onChange(of: locationManager.location) { newLocation in
-            if let _ = newLocation, locationManager.shouldContinueUpdatingLocation, !isPrayerTimeReceived {
-                locationManager.shouldContinueUpdatingLocation = false // prevent further updates
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    makeRequestWithRetry(attempts: 5)
-                }
+            if !isPrayerTimeReceived {
+                makeRequestWithRetry(attempts: 5)
             }
         }
         .onAppear {
@@ -88,11 +78,12 @@ struct ContentView: View {
                     print(error.localizedDescription)
                 }
             }
-            makeRequestWithRetry(attempts: 5)
         }
     }
     
     func makeRequest() {
+        print("making request")
+        
         guard let location = locationManager.location else {
             print("No location available. Waiting for location update.")
             return
@@ -100,6 +91,7 @@ struct ContentView: View {
         
         guard !isPrayerTimeReceived else {
             print("Prayer times already received.")
+            self.isPrayerTimeReceived = true
             return
         }
         
@@ -111,7 +103,6 @@ struct ContentView: View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd-MM-yyyy"
         let formattedDate = dateFormatter.string(from: currentDate)
-        print("CUrrent date: ", formattedDate)
         
         let url = URL(string: "https://fastapi-s53t.onrender.com/imam/get_time")!
         var request = URLRequest(url: url)
@@ -131,93 +122,21 @@ struct ContentView: View {
             if let error = error {
                 print("Error: \(error)")
             } else if let data = data {
-                print("Response Received", response)
-                let decoder = JSONDecoder()
-                
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
                 do {
-                    unscheduleAllNotifications()
-//                    if let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: String]] {
-                        if var jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: String]] {
-                        print("Received JSON Array: \(jsonArray)")
-
-                                                                
-                        if let prayerTimesData = jsonArray.first {
-                            DispatchQueue.main.async {
-                                self.prayerTimes["Фаджр"] = prayerTimesData["fajr_time"]
-                                self.prayerTimes["Восход"] = prayerTimesData["sunrise_time"]
-                                self.prayerTimes["Зухр"] = prayerTimesData["dhuhr_time"]
-                                self.prayerTimes["Аср"] = prayerTimesData["asr_time"]
-                                self.prayerTimes["Магриб"] = prayerTimesData["maghrib_time"]
-                                self.prayerTimes["Иша"] = prayerTimesData["isha_time"]
-                                self.city = prayerTimesData["city_name"] ?? "Алматы"
-                                
-                                self.isPrayerTimeReceived = true
-                                self.isLoadingComplete = true
-                                self.selectedTab = .home
-                                self.arePrayerTimesFetched = true
-                            }
-                        } else {
-                            print("Empty array of prayer times data")
-                        }
-                        
-                        for prayerTimes in jsonArray {
-                            if let dateString = prayerTimes["date"],
-                                let fajrTimeString = prayerTimes["fajr_time"],
-                                let sunriseTimeString = prayerTimes["sunrise_time"],
-                                let dhuhrTimeString = prayerTimes["dhuhr_time"],
-                                let asrTimeString = prayerTimes["asr_time"],
-                                let maghribTimeString = prayerTimes["maghrib_time"],
-                                let ishaTimeString = prayerTimes["isha_time"],
-                                let city = prayerTimes["city_name"] {
-
-                                if let date = dateFormatter.date(from: "\(dateString) \(fajrTimeString)") {
-                                    scheduleNotification(at: date, body: "Фаджр молитва в \(city)", identifier: "\(dateString)_fajr")
-                                } else {
-                                    print("Could not convert '\(dateString) \(fajrTimeString)' to a Date.")
-                                }
-
-                                if let date = dateFormatter.date(from: "\(dateString) \(sunriseTimeString)") {
-                                    scheduleNotification(at: date, body: "Восход в \(city)", identifier: "\(dateString)_sunrise")
-                                } else {
-                                    print("Could not convert '\(dateString) \(sunriseTimeString)' to a Date.")
-                                }
-
-                                if let date = dateFormatter.date(from: "\(dateString) \(dhuhrTimeString)") {
-                                    scheduleNotification(at: date, body: "Зухр молитва в \(city)", identifier: "\(dateString)_dhuhr")
-                                } else {
-                                    print("Could not convert '\(dateString) \(dhuhrTimeString)' to a Date.")
-                                }
-
-                                if let date = dateFormatter.date(from: "\(dateString) \(asrTimeString)") {
-                                    scheduleNotification(at: date, body: "Аср молитва в \(city)", identifier: "\(dateString)_asr")
-                                } else {
-                                    print("Could not convert '\(dateString) \(asrTimeString)' to a Date.")
-                                }
-
-                                if let date = dateFormatter.date(from: "\(dateString) \(maghribTimeString)") {
-                                    scheduleNotification(at: date, body: "Магриб молитва в \(city)", identifier: "\(dateString)_maghrib")
-                                } else {
-                                    print("Could not convert '\(dateString) \(maghribTimeString)' to a Date.")
-                                }
-
-                                if let date = dateFormatter.date(from: "\(dateString) \(ishaTimeString)") {
-                                    scheduleNotification(at: date, body: "Иша молита \(city)", identifier: "\(dateString)_isha")
-                                } else {
-                                    print("Could not convert '\(dateString) \(ishaTimeString)' to a Date.")
-                                }
-                                
-                                arePrayerTimesFetched = true
-                            } else {
-                                print("Unable to unwrap all required values.")
-                            }
-                        }
-
+                    let array = try JSONDecoder().decode([PrayerTime].self, from: data)
+        
+                    if let todayPrayerTime = array.first {
+                        self.prayerTime = todayPrayerTime
+                        self.city = todayPrayerTime.cityName
+                        self.selectedTab = .home
+                        self.isPrayerTimeReceived = true
                     }
-                    else {
-                        print("Failed to decode JSON data: Unexpected format")
-                    }
+                    
+                    NotificationManager.shared.prayerTimes = array
+                    NotificationManager.shared.reschedule()
+                    
+                    isPrayerTimeReceived = true
+                    isRequestInProgress = false
                 }
                 catch {
                     print("An error occurred while trying to deserialize the JSON data: \(error)")
@@ -228,82 +147,13 @@ struct ContentView: View {
         
         task.resume()
     }
-    func unscheduleAllNotifications() {
-        let notificationCenter = UNUserNotificationCenter.current()
-        notificationCenter.removeAllPendingNotificationRequests()
-        print("All scheduled notifications have been unscheduled.")
-    }
-    
-    func schedulePrayerNotifications(with prayerTimes: [String: [Date]]) {
-        print("Scheduling notifications")
-        let notificationCenter = UNUserNotificationCenter.current()
-        let prayerNames = ["Фаджр", "Восход", "Зухр", "Аср", "Магриб", "Иша"]
-        let isMutedArray = UserDefaultsManager.shared.getIsMuted() ?? Array(repeating: false, count: 6)
-        
-        // Unschedule all existing notifications
-        notificationCenter.removeAllPendingNotificationRequests()
-        
-        for (index, prayer) in prayerNames.enumerated() {
-            
-            //            print(prayerTimes[prayer], !isMutedArray[index])
-            
-            guard let times = prayerTimes[prayer], !isMutedArray[index] else {
-                continue
-            }
-            
-            for time in times {
-                let content = UNMutableNotificationContent()
-                content.title = "Prayer Time"
-                content.body = "It's time for \(prayer)"
-                
-                let triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute,], from: time)
-                let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
-                
-                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-                
-                notificationCenter.add(request) { (error) in
-                    if let error = error {
-                        print("Error scheduling notification for \(prayer): \(error)")
-                    } else {
-                        print("Successfully scheduled notification for \(prayer) at \(time)")
-                    }
-                }
-            }
-        }
-    }
-    
-    func scheduleNotification(at date: Date, body: String, identifier: String) {
-        let center = UNUserNotificationCenter.current()
-        center.getNotificationSettings { settings in
-            if settings.authorizationStatus == .authorized {
-                let content = UNMutableNotificationContent()
-                content.title = "Prayer Time"
-                content.body = body
-                content.sound = UNNotificationSound.default
-                
-                let calendar = Calendar.current
-                let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
-                let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-                
-                let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-                
-                center.add(request) { error in
-                    if let error = error {
-                        print("Error scheduling notification: \(error)")
-                    } else {
-                        print("Notification scheduled: \(identifier)")
-                    }
-                }
-            } else {
-                print("Permission not granted for notifications.")
-            }
-        }
-    }
     
     func makeRequestWithRetry(attempts: Int) {
+        guard !isRequestInProgress else { return }
+        
         DispatchQueue.main.async {
-            if !self.arePrayerTimesFetched {
-                self.arePrayerTimesFetched = true
+            if !self.isPrayerTimeReceived {
+                self.isRequestInProgress = true
                 self.makeRequest()
             } else if attempts > 0 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {

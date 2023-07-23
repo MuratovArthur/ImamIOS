@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct PrayerTimesView: View {
-    let prayerTimes: [String: String]
+    let prayerTime: PrayerTime?
     let order = ["Фаджр","Восход", "Зухр", "Аср", "Магриб", "Иша"]
     let country = "Казахстан"
     let city: String
@@ -22,25 +22,25 @@ struct PrayerTimesView: View {
                 .fontWeight(.bold)
             
             ForEach(order, id: \.self) { key in
-                            let index = order.firstIndex(of: key) ?? 0
-                            let isMutedForPrayerTime = $isMuted[index]
-
-                            HStack {
-                                Text(key)
-                                    .font(.subheadline)
-                                Spacer()
-                                Text(prayerTimes[key] ?? "")
-                                    .font(.subheadline)
-                                Button(action: {
-                                    isMutedForPrayerTime.wrappedValue.toggle()
-                                    UserDefaultsManager.shared.updateMutedStatus(for: key, isMuted: isMutedForPrayerTime.wrappedValue)
-//                                    NotificationManager.shared.scheduleNotificationIfNeeded(prayerTime: key, isMuted: isMutedForPrayerTime.wrappedValue, prayerTimes: prayerTimes)
-                                }) {
-                                    Image(systemName: isMutedForPrayerTime.wrappedValue ? "speaker.slash" : "speaker.wave.2")
-                                        .font(.subheadline)
-                                        .foregroundColor(Color.black)
-                                }
-                            }
+                let index = order.firstIndex(of: key) ?? 0
+                let isMutedForPrayerTime = $isMuted[index]
+                
+                HStack {
+                    Text(key)
+                        .font(.subheadline)
+                    Spacer()
+                    Text((prayerTime?.orderedValues[key] ?? "") ?? "")
+                        .font(.subheadline)
+                    Button(action: {
+                        isMutedForPrayerTime.wrappedValue.toggle()
+                        UserDefaultsManager.shared.updateMutedStatus(for: key, isMuted: isMutedForPrayerTime.wrappedValue)
+                        NotificationManager.shared.reschedule()
+                    }) {
+                        Image(systemName: isMutedForPrayerTime.wrappedValue ? "speaker.slash" : "speaker.wave.2")
+                            .font(.subheadline)
+                            .foregroundColor(Color.black)
+                    }
+                }
             };            Spacer()
             
         }
