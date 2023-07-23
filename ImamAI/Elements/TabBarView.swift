@@ -31,6 +31,9 @@ struct TabBarButton: View {
     var body: some View {
         Button(action: {
             selectedTab = tab
+//            if selectedTab == .home {
+//
+//            }
         }) {
             Image(systemName: imageName)
                 .font(.system(size: 20))

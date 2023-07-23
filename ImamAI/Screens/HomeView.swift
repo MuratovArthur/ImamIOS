@@ -11,23 +11,28 @@ struct HomeView: View {
     @Binding var selectedTab: ContentView.Tab
     @Binding var prayerTime: PrayerTime?
     @Binding var city: String // Change to @Binding
+    @Binding var tabBarShouldBeHidden: Bool
 
     var body: some View {
         NavigationView {
             GeometryReader { geometry in
                 VStack(alignment: .center) {
-                    CalendarButtonView(currentDate: currentDate)
+                  
 
                     ScrollViewReader { scrollViewProxy in
                         ScrollView(showsIndicators: false) {
+                            CalendarButtonView(currentDate: currentDate)
+                            
                             ImamChatPreview(selectedTab: $selectedTab)
 
                             PrayerTimesView(prayerTime: prayerTime, city: city)
 
-                            PostsView()
+                            PostsView(tabBarShouldBeHidden: $tabBarShouldBeHidden)
 
                             Spacer()
                         }
+                        
+                        .padding(.top, 0.1)
                         .onChange(of: scrollToBottom) { newValue in
                             if newValue {
                                 scrollViewProxy.scrollTo(imageNames.last, anchor: .trailing)
@@ -43,6 +48,7 @@ struct HomeView: View {
                         }
                     }
                 }
+                
             }
             .navigationBarHidden(true)
         }

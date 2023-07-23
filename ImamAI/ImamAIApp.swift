@@ -3,7 +3,6 @@ import UserNotifications
 
 @main
 struct ImamAIApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     let center = UNUserNotificationCenter.current()
     let notificationDelegate = NotificationDelegate()
 
@@ -23,7 +22,6 @@ struct ImamAIApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(\.managedObjectContext, appDelegate.persistentContainer.viewContext)
                 .preferredColorScheme(.light)
                 .navigationBarHidden(true)
         }

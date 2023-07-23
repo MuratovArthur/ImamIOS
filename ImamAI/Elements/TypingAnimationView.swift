@@ -12,6 +12,7 @@ struct TypingAnimationView: View {
                 .onAppear {
                     startAnimation()
                 }
+                .foregroundColor(.gray)
             Spacer()
         }
     }

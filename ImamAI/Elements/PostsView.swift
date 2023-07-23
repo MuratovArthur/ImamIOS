@@ -13,6 +13,7 @@ struct PostsView: View {
     @State private var totalPosts: Int = 0
     @State private var selectedPost: Post?
     @State private var allPostsLoaded = false
+    @Binding var tabBarShouldBeHidden: Bool
     let maxDescriptionLength = 50
     let postHeight: CGFloat = 130
     
@@ -27,7 +28,7 @@ struct PostsView: View {
             ScrollView {
                 VStack(spacing: 8) {
                     ForEach(posts) { post in
-                        NavigationLink(destination: PostDetailView(post: post)) {
+                        NavigationLink(destination: PostDetailView(post: post, tabBarShouldBeHidden: $tabBarShouldBeHidden)) {
                             HStack(spacing: 8) {
                                 AsyncImage(
                                     url: URL(string: post.imageName),
@@ -68,7 +69,7 @@ struct PostsView: View {
                         }
                     }
                     if allPostsLoaded {
-                        Text("All posts have been loaded")
+                        Text("Все посты были загружены")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                             .padding(.top, 5)
@@ -106,6 +107,7 @@ struct PostsView: View {
                     loadPosts()
                 }
             }
+            
         }
     }
     
@@ -153,6 +155,7 @@ struct PostsView: View {
 
 struct PostDetailView: View {
     let post: Post
+    @Binding var tabBarShouldBeHidden: Bool
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -200,6 +203,12 @@ struct PostDetailView: View {
         .navigationTitle(Text(post.title))
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarHidden(false)
+        .onAppear(){
+            tabBarShouldBeHidden = true
+        }
+        .onDisappear(){
+            tabBarShouldBeHidden = false
+        }
     }
     
     

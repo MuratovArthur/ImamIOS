@@ -15,6 +15,8 @@ struct ContentView: View {
     @State private var isLocationUpdating = true
     @State private var isPrayerTimeReceived = false
     @State private var isRequestInProgress = false
+    @State private var tabBarShouldBeHidden = false
+    
     
     @State private var prayerTimes: [String: String] = [
         "Фаджр": "",
@@ -35,7 +37,7 @@ struct ContentView: View {
             VStack {
                 switch selectedTab {
                 case .home:
-                    HomeView(selectedTab: $selectedTab, prayerTime: $prayerTime, city: $city)
+                    HomeView(selectedTab: $selectedTab, prayerTime: $prayerTime, city: $city, tabBarShouldBeHidden: $tabBarShouldBeHidden)
                         .environmentObject(scrollStore)
                         .navigationBarHidden(true)
                 case .other:
@@ -48,11 +50,14 @@ struct ContentView: View {
                     LoadingView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
+                
+                
                 Spacer()
             }
-            .padding(.bottom, selectedTab != .loading ? 50 : 0)
+            .edgesIgnoringSafeArea(.bottom) 
+            .padding(.bottom, calculateBottomPadding())
             
-            if selectedTab != .loading {
+            if selectedTab != .loading, tabBarShouldBeHidden==false {
                 TabBarView(selectedTab: $selectedTab)
             }
         }
@@ -80,6 +85,15 @@ struct ContentView: View {
             }
         }
     }
+    
+    private func calculateBottomPadding() -> CGFloat {
+            // Define your conditions here and return the appropriate padding amount
+            if selectedTab != .loading && !tabBarShouldBeHidden {
+                return 50
+            } else {
+                return 0
+            }
+        }
     
     func makeRequest() {
         print("making request")
