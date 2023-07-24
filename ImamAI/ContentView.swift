@@ -80,13 +80,7 @@ struct ContentView: View {
         }
         
         .onAppear {
-            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-                if success {
-                    print("All set!")
-                } else if let error = error {
-                    errorText = error.localizedDescription
-                }
-            }
+            requestNotificationAuthorization()
         }
     }
     
@@ -97,6 +91,23 @@ struct ContentView: View {
         } else {
             return 0
         }
+    }
+    
+    func requestNotificationAuthorization() {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                if success {
+                    print("Notification authorization successful!")
+                    DispatchQueue.main.async {
+                        self.requestLocationAuthorization()
+                    }
+                } else if let error = error {
+                    self.errorText = error.localizedDescription
+                }
+            }
+        }
+
+    func requestLocationAuthorization() {
+        self.locationManager.requestWhenInUseAuthorization() // Request location access permission
     }
     
     func makeRequest() {
