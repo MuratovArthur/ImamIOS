@@ -67,7 +67,6 @@ struct ContentView: View {
         .onChange(of: locationManager.authorizationStatus) { status in
             switch status {
             case .denied, .restricted:
-                print("Location permission denied or restricted.")
                 useAlmatyLocation = true
                 makeRequestWithRetry(attempts: 5)
             default:
@@ -85,7 +84,7 @@ struct ContentView: View {
                 if success {
                     print("All set!")
                 } else if let error = error {
-                    print(error.localizedDescription)
+                    errorText = error.localizedDescription
                 }
             }
         }
@@ -108,8 +107,7 @@ struct ContentView: View {
         
         if !useAlmatyLocation{
             guard let location = locationManager.location else {
-                print("No location available. Waiting for location update.")
-                errorText = "Произошла ошибка. Попробуйте перезайти в приложение."
+                errorText = "No location available. Waiting for location update."
                 return
             }
              latitude = String(location.coordinate.latitude)
@@ -142,8 +140,7 @@ struct ContentView: View {
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: parameters)
         } catch {
-            print("Error encoding parameters: \(error)")
-            errorText = "Произошла ошибка. Попробуйте перезайти в приложение."
+            errorText = "Error encoding parameters: \(error)"
             isRequestInProgress = false
             return
         }
@@ -161,25 +158,21 @@ struct ContentView: View {
                 
                 if let error = error {
                     if currentRetryAttempt < maxRetryAttempts {
-                        print("Error: \(error). Retrying request... (Attempt \(currentRetryAttempt) of \(maxRetryAttempts))")
-                        errorText = "Произошла ошибка. Попробуйте перезайти в приложение."
+                        errorText = "Error: \(error). Retrying request... (Attempt \(currentRetryAttempt) of \(maxRetryAttempts))"
                         sendRequest() // Retry the request
                     } else {
-                        print("Maximum number of retry attempts reached. Unable to fetch data.")
-                        errorText = "Произошла ошибка. Попробуйте перезайти в приложение."
+                        errorText = "Maximum number of retry attempts reached. Unable to fetch data."
                     }
                     return
                 }
                 
                 if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
-                    print("Error: unexpected status code: \(httpResponse.statusCode)")
-                    errorText = "Произошла ошибка. Попробуйте перезайти в приложение."
+                    errorText = "Error: unexpected status code: \(httpResponse.statusCode)"
                     return
                 }
                 
                 guard let data = data else {
-                    print("Error: No data received from server.")
-                    errorText = "Произошла ошибка. Попробуйте перезайти в приложение."
+                    errorText = "Error: No data received from server."
                     return
                 }
                 
@@ -187,8 +180,7 @@ struct ContentView: View {
                     let array = try JSONDecoder().decode([PrayerTime].self, from: data)
                     
                     guard let todayPrayerTime = array.first else {
-                        print("Error: The server didn't return any prayer times.")
-                        errorText = "Произошла ошибка. Попробуйте перезайти в приложение."
+                        errorText = "Error: The server didn't return any prayer times."
                         return
                     }
                     
@@ -201,8 +193,7 @@ struct ContentView: View {
                     NotificationManager.shared.reschedule()
                     
                 } catch {
-                    print("An error occurred while trying to deserialize the JSON data: \(error)")
-                    errorText = "Произошла ошибка. Попробуйте перезайти в приложение."
+                    errorText = "An error occurred while trying to deserialize the JSON data: \(error)"
                 }
             }
             

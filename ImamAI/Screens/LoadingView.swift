@@ -32,7 +32,7 @@ struct LoadingView: View {
             } else if !networkMonitor.isConnected {
                 Text("Отсутствует подключение к интернету")
                     .foregroundColor(.red)
-                    .padding(.top)
+                    .padding()
             } else {
                 ProgressView()
                     .padding(.vertical)
