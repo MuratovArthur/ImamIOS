@@ -11,6 +11,8 @@ struct ChatScreen: View {
     @State var textViewHeight: CGFloat = 10.0
     @Binding var selectedTab: ContentView.Tab
     @State private var isTyping = false
+    @ObservedObject var networkMonitor = NetworkMonitor()
+    @State private var sentOneMessage = false
     
     internal init(viewModel: ChatViewModel, selectedTab: Binding<ContentView.Tab>) {
         self.viewModel = viewModel
@@ -21,49 +23,61 @@ struct ChatScreen: View {
     var body: some View {
         GeometryReader { geometry in
             VStack {
-                ImamNavBarView()
+                ImamNavBarView(sentOneMessage: $sentOneMessage)
+                
                 ScrollViewReader { scrollViewProxy in
-                    ScrollView(showsIndicators: false) {
-                        VStack {
-                            ForEach(viewModel.chatMessages, id: \.id) { message in
-                                messageView(message: message)
-                                    .id(message.id)
-                                    .font(.system(size: 17))
-                            }
-                            .onChange(of: viewModel.chatMessages.count) { _ in
-                                if scrollToBottom {
-                                    scrollToLastMessage(scrollViewProxy: scrollViewProxy)
+                    if !viewModel.fetchingMessages{
+                        ScrollView(showsIndicators: false) {
+                            VStack {
+                                ForEach(viewModel.chatMessages, id: \.id) { message in
+                                    messageView(message: message)
+                                        .id(message.id)
+                                        .font(.system(size: 17))
+                                }
+                                .onChange(of: viewModel.chatMessages.count) { _ in
+                                    if scrollToBottom {
+                                        scrollToLastMessage(scrollViewProxy: scrollViewProxy)
+                                    }
                                 }
                             }
                         }
-                    }
-                    .onAppear {
-                        scrollToBottom = true
-                    }
-                    
-                    .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            withAnimation {
-                                scrollToBottom = true
-                                if let lastMessageID = viewModel.chatMessages.last?.id {
-                                    scrollViewProxy.scrollTo(lastMessageID, anchor: .bottom)
+                        .onAppear {
+                            scrollToBottom = true
+                        }
+                        
+                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                withAnimation {
+                                    scrollToBottom = true
+                                    if let lastMessageID = viewModel.chatMessages.last?.id {
+                                        scrollViewProxy.scrollTo(lastMessageID, anchor: .bottom)
+                                    }
                                 }
                             }
                         }
-                    }
-                    .onChange(of: textViewHeight) { _ in
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            withAnimation {
-                                if let lastMessageID = viewModel.chatMessages.last?.id {
-                                    scrollViewProxy.scrollTo(lastMessageID, anchor: .bottom)
+                        .onChange(of: textViewHeight) { _ in
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                withAnimation {
+                                    if let lastMessageID = viewModel.chatMessages.last?.id {
+                                        scrollViewProxy.scrollTo(lastMessageID, anchor: .bottom)
+                                    }
                                 }
                             }
                         }
+                        .onChange(of: textViewHeight) { _ in
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                withAnimation {
+                                    if let lastMessageID = viewModel.chatMessages.last?.id {
+                                        scrollViewProxy.scrollTo(lastMessageID, anchor: .bottom)
+                                    }
+                                }
+                            }
+                        }
+                    }else{
+                        ProgressView()
+                            .padding()
+                        Spacer()
                     }
-
-                    
-                    
-                    
                 }
                 .onTapGesture {
                     hideKeyboard()
@@ -76,35 +90,55 @@ struct ChatScreen: View {
                             TypingAnimationView()
                             Spacer() // Add spacer to align to the left
                         }
-                        .padding(.horizontal)
+                        .padding(.leading, 8)
                     }
                 }
                 
                 
-                
-                HStack {
-                    ResizableTextView(text: $textViewValue, height: $textViewHeight, placeholderText: "Type a message")
-                        .frame(height: textViewHeight < 160 ? self.textViewHeight : 160)
-                        .cornerRadius(16)
-                    
-                    Button(action: {
-                        viewModel.textViewValue = textViewValue
-                        viewModel.sendMessage()
-                        textViewValue = "" // Clear the local textViewValue
-                    }) {
-                        Image(systemName: "paperplane.fill")
-                            .font(.system(size: 20))
-                            .frame(width: 40, height: 40)
-                            .background(Color.white)
-                            .foregroundColor(.black)
-                            .clipShape(Circle())
+                if networkMonitor.isConnected {
+                    HStack {
+                        ResizableTextView(text: $textViewValue, height: $textViewHeight, placeholderText: "Сообщение")
+                            .frame(height: textViewHeight < 160 ? self.textViewHeight : 160)
+                            .cornerRadius(16)
+                        
+                        Button(action: {
+                            viewModel.textViewValue = textViewValue
+                            viewModel.sendMessage()
+                            textViewValue = "" // Clear the local textViewValue
+                            sentOneMessage = true
+                        }) {
+                            Image(systemName: "paperplane.fill")
+                                .font(.system(size: 20))
+                                .frame(width: 40, height: 40)
+                                .background(Color.white)
+                                .foregroundColor(.black)
+                                .clipShape(Circle())
+                        }
+                        
                     }
-                    
+                }
+                else{
+                    Text("Отсутствует подключение к интернету")
+                        .foregroundColor(.red)
+                        .padding(.vertical)
                 }
             }
             .padding(.horizontal)
             .onReceive(viewModel.$isTyping) { typing in
                 self.isTyping = typing
+            }
+            .onAppear {
+                if viewModel.conversationID == nil {
+                    viewModel.createNewConversation { conversationID in
+                        if let conversationID = conversationID {
+                            viewModel.fetchChatMessages()
+                        } else {
+                            print("Failed to create a new conversation")
+                        }
+                    }
+                } else {
+                    viewModel.fetchChatMessages()
+                }
             }
         }
     }
@@ -112,8 +146,6 @@ struct ChatScreen: View {
     
     
     func messageView(message: ChatMessage) -> some View {
-        print("message content: ", message.content)
-        
         return HStack {
             if message.sender == .user { Spacer() }
             

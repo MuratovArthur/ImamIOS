@@ -11,6 +11,7 @@ class UserDefaultsManager {
     static let shared = UserDefaultsManager()
     
     private let isMutedKey = "isMutedKey"
+    private let conversationIDKey = "conversationIDKey"
     
     func saveIsMuted(_ value: [Bool]) {
         UserDefaults.standard.set(value, forKey: isMutedKey)
@@ -18,6 +19,14 @@ class UserDefaultsManager {
     
     func getIsMuted() -> [Bool]? {
         return UserDefaults.standard.array(forKey: isMutedKey) as? [Bool]
+    }
+    
+    func saveConversationID(_ id: String) {
+        UserDefaults.standard.set(id, forKey: conversationIDKey)
+    }
+    
+    func getConversationID() -> String? {
+        return UserDefaults.standard.string(forKey: conversationIDKey)
     }
     
     // Optional: If you want to update the muted status for a specific prayer time
@@ -30,4 +39,5 @@ class UserDefaultsManager {
         saveIsMuted(mutedStatus)
     }
 }
+
 

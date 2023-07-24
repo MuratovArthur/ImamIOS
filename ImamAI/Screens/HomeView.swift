@@ -12,23 +12,30 @@ struct HomeView: View {
     @Binding var prayerTime: PrayerTime?
     @Binding var city: String // Change to @Binding
     @Binding var tabBarShouldBeHidden: Bool
-
+    @Binding var useAlmatyLocation: Bool
+    @State private var notificationAuthorizationStatus: UNAuthorizationStatus?
+    @State private var showAlertForSettings = false
+    
     var body: some View {
         NavigationView {
             GeometryReader { geometry in
                 VStack(alignment: .center) {
-                  
-
+                    
+                    
                     ScrollViewReader { scrollViewProxy in
                         ScrollView(showsIndicators: false) {
+                            
+                            
                             CalendarButtonView(currentDate: currentDate)
                             
                             ImamChatPreview(selectedTab: $selectedTab)
-
+                            
+                            
+                            
                             PrayerTimesView(prayerTime: prayerTime, city: city)
-
+                            
                             PostsView(tabBarShouldBeHidden: $tabBarShouldBeHidden)
-
+                            
                             Spacer()
                         }
                         
@@ -40,6 +47,7 @@ struct HomeView: View {
                             }
                         }
                         .onAppear {
+                            checkPermissions()
                             print("HomeView appeared.")
                             print("prayerTimes: \(prayerTime)")
                             print("city: \(city)")
@@ -47,12 +55,39 @@ struct HomeView: View {
                             scrollViewProxy.scrollTo(scrollPosition)
                         }
                     }
+                    
                 }
-                
+                .alert(isPresented: $showAlertForSettings) {
+                    Alert(
+                        title: Text("Требуется действие"),
+                        message: Text("Для использования всех функций, пожалуйста, предоставьте разрешения на определение местоположения и уведомления в настройках вашего устройства."),
+                        primaryButton: .default(Text("Открыть настройки"), action: {
+                            NotificationManager.shared.openAppSettings()
+                        }),
+                        secondaryButton: .cancel(Text("Отмена"))
+                    )
+                }
+                .onAppear {
+                    checkPermissions()
+                }
+               
             }
             .navigationBarHidden(true)
+           
+            
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
+    }
+    private func checkPermissions() {
+        // Check notification permission
+        NotificationManager.shared.getNotificationAuthorizationStatus { status in
+            notificationAuthorizationStatus = status
+            if status != .authorized {
+                showAlertForSettings = true
+            }
+        }
+        
+        // Add any additional checks for location permission if needed
     }
 }
 //

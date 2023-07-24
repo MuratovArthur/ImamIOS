@@ -26,12 +26,26 @@ class NotificationManager {
     
     private init() {}
     
+    func getNotificationAuthorizationStatus(completion: @escaping (UNAuthorizationStatus) -> Void) {
+          let center = UNUserNotificationCenter.current()
+          center.getNotificationSettings { settings in
+              completion(settings.authorizationStatus)
+          }
+      }
+    
+    func openAppSettings() {
+           if let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) {
+               UIApplication.shared.open(url, options: [:], completionHandler: nil)
+           }
+       }
+
+    
     func scheduleNotification(at date: Date, body: String, identifier: String) {
         let center = UNUserNotificationCenter.current()
         center.getNotificationSettings { settings in
             if settings.authorizationStatus == .authorized {
                 let content = UNMutableNotificationContent()
-                content.title = "Prayer Time"
+                content.title = "Время молитвы"
                 content.body = body
                 content.sound = UNNotificationSound.default
                 

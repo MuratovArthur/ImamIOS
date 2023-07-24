@@ -69,7 +69,7 @@ struct PostsView: View {
                         }
                     }
                     if allPostsLoaded {
-                        Text("Все посты были загружены")
+                        Text("Все посты уже загружены")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                             .padding(.top, 5)
@@ -83,7 +83,6 @@ struct PostsView: View {
                                     loadPosts()
                                 } else {
                                     allPostsLoaded = true
-                                    print("All posts have been loaded")
                                 }
                                 
                             }) {
@@ -194,6 +193,7 @@ struct PostDetailView: View {
             }
 //            .padding(.vertical)
             .navigationBarHidden(true)
+            .padding(.bottom, 8)
             
             
 //            Spacer()

@@ -1,16 +1,10 @@
-//
-//  ImamNavBarView.swift
-//  ImamAI
-//
-//  Created by Muratov Arthur on 17.07.2023.
-//
-
 import SwiftUI
 
 struct ImamNavBarView: View {
+    @Binding var sentOneMessage : Bool
+    
     var body: some View {
         HStack {
-            
             avatarTitle
             
             Spacer()
@@ -23,38 +17,37 @@ struct ImamNavBarView: View {
         .navigationBarHidden(true) // Hide the default navigation bar
 
         Spacer()
-           
     }
-        
-}
-
-struct ImamNavBarView_Previews: PreviewProvider {
-    static var previews: some View {
-        ImamNavBarView()
-    }
-}
-
-var avatarTitle: some View {
-    HStack {
-        Image("imam")
-            .resizable()
-            .aspectRatio(contentMode: .fill)
-            .frame(width: 50, height: 50)
-            .clipShape(Circle())
-            .overlay(Circle().stroke(Color.white, lineWidth: 2))
-            .shadow(radius: 3)
-        
-        VStack(alignment: .leading) {
-            Text("Имам")
-                .font(.headline)
-                .fontWeight(.bold)
-            Text("last seen recently")
-                .font(.subheadline)
-                .foregroundColor(.gray)
+    
+    var avatarTitle: some View {
+        HStack {
+            Image("imam")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 50, height: 50)
+                .clipShape(Circle())
+                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                .shadow(radius: 3)
+            
+            VStack(alignment: .leading) {
+                Text("Имам")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                
+                if sentOneMessage{
+                    Text("онлайн")
+                        .font(.subheadline)
+                        .foregroundColor(.blue)
+                }else{
+                    Text("недавно был онлайн")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+            }
+            .padding(.leading, 10)
+            
+            Spacer()
         }
-        .padding(.leading, 10)
-        
-        Spacer()
+        .padding(.vertical, 8)
     }
-    .padding(.vertical, 8)
 }

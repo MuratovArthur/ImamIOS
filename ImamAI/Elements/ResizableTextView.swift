@@ -47,7 +47,7 @@ struct ResizableTextView: UIViewRepresentable {
         func textViewDidBeginEditing(_ textView: UITextView) {
             DispatchQueue.main.async {
                 // Turn off autocorrection when editing starts
-                textView.autocorrectionType = .no
+                textView.autocorrectionType = .yes
                 self.parent.editing = true
             }
         }
@@ -66,7 +66,7 @@ struct ResizableTextView: UIViewRepresentable {
         func textViewDidEndEditing(_ textView: UITextView) {
             DispatchQueue.main.async {
                 // Reset autocorrection and placeholder text when editing ends
-                textView.autocorrectionType = .no
+                textView.autocorrectionType = .yes
                 self.parent.editing = false
             }
         }

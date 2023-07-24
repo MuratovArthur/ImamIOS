@@ -40,8 +40,10 @@ struct PrayerTimesView: View {
                             .font(.subheadline)
                             .foregroundColor(Color.black)
                     }
+                    .frame(width: 30, alignment: .trailing) // Set the fixed width of your button here.
                 }
-            };            Spacer()
+            }
+            Spacer()
             
         }
         .padding(.horizontal)
