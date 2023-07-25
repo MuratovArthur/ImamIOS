@@ -19,6 +19,7 @@ struct ContentView: View {
     @State private var useAlmatyLocation = false
     @StateObject var networkMonitor = NetworkMonitor()
     @State var errorText: String = ""
+    @State var firstTimeInApp = true
     
     @State private var prayerTimes: [String: String] = [
         "Фаджр": "",
@@ -39,7 +40,7 @@ struct ContentView: View {
             VStack {
                 switch selectedTab {
                 case .home:
-                    HomeView(selectedTab: $selectedTab, prayerTime: $prayerTime, city: $city, tabBarShouldBeHidden: $tabBarShouldBeHidden, useAlmatyLocation: $useAlmatyLocation)
+                    HomeView(selectedTab: $selectedTab, prayerTime: $prayerTime, city: $city, tabBarShouldBeHidden: $tabBarShouldBeHidden, useAlmatyLocation: $useAlmatyLocation, firstTimeInApp:$firstTimeInApp)
                         .environmentObject(scrollStore)
                         .navigationBarHidden(true)
                 case .other:
@@ -82,6 +83,12 @@ struct ContentView: View {
         .onAppear {
             requestNotificationAuthorization()
         }
+        .onChange(of: networkMonitor.isConnected) { isConnected in
+            print("Status changed")
+            if isConnected {
+                makeRequestWithRetry(attempts: 5)
+            }
+        }
     }
     
     private func calculateBottomPadding() -> CGFloat {
@@ -94,18 +101,16 @@ struct ContentView: View {
     }
     
     func requestNotificationAuthorization() {
-            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-                if success {
-                    print("Notification authorization successful!")
-                    DispatchQueue.main.async {
-                        self.requestLocationAuthorization()
-                    }
-                } else if let error = error {
-                    self.errorText = error.localizedDescription
-                }
-            }
-        }
+           UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+               if success {
+                   print("Notification authorization successful!")
+               }
 
+               // Call the function to request location authorization regardless of the notification result
+               self.requestLocationAuthorization()
+           }
+       }
+    
     func requestLocationAuthorization() {
         self.locationManager.requestWhenInUseAuthorization() // Request location access permission
     }
@@ -118,14 +123,14 @@ struct ContentView: View {
         
         if !useAlmatyLocation{
             guard let location = locationManager.location else {
-                errorText = "No location available. Waiting for location update."
+                errorText = "Произошла ошибка. Проверьте интернет соединение и попробуйте перезайти."
                 return
             }
-             latitude = String(location.coordinate.latitude)
-             longitude = String(location.coordinate.longitude)
+            latitude = String(location.coordinate.latitude)
+            longitude = String(location.coordinate.longitude)
         }else{
-             latitude = "43.238293"
-             longitude = "76.945465"
+            latitude = "43.238293"
+            longitude = "76.945465"
         }
         
         guard !isPrayerTimeReceived && !isRequestInProgress else {
@@ -135,7 +140,7 @@ struct ContentView: View {
         
         isRequestInProgress = true
         
-     
+        
         // Get current date and format it
         let currentDate = Date()
         let dateFormatter = DateFormatter()
@@ -151,7 +156,7 @@ struct ContentView: View {
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: parameters)
         } catch {
-            errorText = "Error encoding parameters: \(error)"
+            errorText = "Произошла ошибка. Проверьте интернет соединение и попробуйте перезайти."
             isRequestInProgress = false
             return
         }
@@ -169,21 +174,22 @@ struct ContentView: View {
                 
                 if let error = error {
                     if currentRetryAttempt < maxRetryAttempts {
-                        errorText = "Error: \(error). Retrying request... (Attempt \(currentRetryAttempt) of \(maxRetryAttempts))"
+                        errorText = "Произошла ошибка. Проверьте интернет соединение и попробуйте перезайти."
+                        print(error)
                         sendRequest() // Retry the request
                     } else {
-                        errorText = "Maximum number of retry attempts reached. Unable to fetch data."
+                        errorText = "Произошла ошибка. Проверьте интернет соединение и попробуйте перезайти."
                     }
                     return
                 }
                 
                 if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
-                    errorText = "Error: unexpected status code: \(httpResponse.statusCode)"
+                    errorText = "Произошла ошибка. Проверьте интернет соединение и попробуйте перезайти."
                     return
                 }
                 
                 guard let data = data else {
-                    errorText = "Error: No data received from server."
+                    errorText = "Произошла ошибка. Проверьте интернет соединение и попробуйте перезайти."
                     return
                 }
                 
@@ -191,7 +197,7 @@ struct ContentView: View {
                     let array = try JSONDecoder().decode([PrayerTime].self, from: data)
                     
                     guard let todayPrayerTime = array.first else {
-                        errorText = "Error: The server didn't return any prayer times."
+                        errorText = "Произошла ошибка. Проверьте интернет соединение и попробуйте перезайти."
                         return
                     }
                     
@@ -204,7 +210,7 @@ struct ContentView: View {
                     NotificationManager.shared.reschedule()
                     
                 } catch {
-                    errorText = "An error occurred while trying to deserialize the JSON data: \(error)"
+                    errorText = "Произошла ошибка. Проверьте интернет соединение и попробуйте перезайти."
                 }
             }
             
@@ -213,30 +219,30 @@ struct ContentView: View {
         
         sendRequest()
     }
-            
-            func makeRequestWithRetry(attempts: Int) {
-                guard !isRequestInProgress else { return }
+    
+    func makeRequestWithRetry(attempts: Int) {
+        guard !isRequestInProgress else { return }
+        
+        DispatchQueue.main.async {
+            if !self.isPrayerTimeReceived {
+                self.makeRequest()
                 
-                DispatchQueue.main.async {
-                    if !self.isPrayerTimeReceived {
-                        self.makeRequest()
-                        
-                        // if we didn't get prayer times, we will retry after 2 seconds
-                        if !self.isPrayerTimeReceived && attempts > 0 {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                self.makeRequestWithRetry(attempts: attempts - 1)
-                            }
-                        } else if attempts == 0 {
-                            errorText = "Failed to get prayer times after multiple attempts."
-                        }
+                // if we didn't get prayer times, we will retry after 2 seconds
+                if !self.isPrayerTimeReceived && attempts > 0 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        self.makeRequestWithRetry(attempts: attempts - 1)
                     }
+                } else if attempts == 0 {
+                    errorText = "Произошла ошибка. Проверьте интернет соединение и попробуйте перезайти."
                 }
             }
-            
         }
-        
-        struct ContentView_Previews: PreviewProvider {
-            static var previews: some View {
-                ContentView()
-            }
-        }
+    }
+    
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}

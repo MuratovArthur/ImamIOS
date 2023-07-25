@@ -30,7 +30,7 @@ class ChatViewModel: ObservableObject {
     }
     
     func fetchChatMessages() {
-//        self.fetchingMessages = true
+        self.fetchingMessages = true
         print("Stored conversationID: \(String(describing: conversationID))")
         
         guard let conversationID = conversationID else {
@@ -44,7 +44,7 @@ class ChatViewModel: ObservableObject {
         
         guard let url = URL(string: urlString) else {
             print("Failed to create URL from string: \(urlString)")
-//            fetchingMessages = false
+            self.fetchingMessages = false
             return
         }
         

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ImamNavBarView: View {
-    @Binding var sentOneMessage : Bool
+    @Binding var sentOneMessage: Bool
     
     var body: some View {
         HStack {
@@ -34,12 +34,12 @@ struct ImamNavBarView: View {
                     .font(.headline)
                     .fontWeight(.bold)
                 
-                if sentOneMessage{
+                if sentOneMessage {
                     Text("онлайн")
                         .font(.subheadline)
                         .foregroundColor(.blue)
-                }else{
-                    Text("недавно был онлайн")
+                } else {
+                    Text("был в сети \(Int.random(in: 1...9)) мин. назад")
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }

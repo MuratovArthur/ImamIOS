@@ -15,6 +15,7 @@ struct HomeView: View {
     @Binding var useAlmatyLocation: Bool
     @State private var notificationAuthorizationStatus: UNAuthorizationStatus?
     @State private var showAlertForSettings = false
+    @Binding var firstTimeInApp: Bool
     
     var body: some View {
         NavigationView {
@@ -82,8 +83,9 @@ struct HomeView: View {
         // Check notification permission
         NotificationManager.shared.getNotificationAuthorizationStatus { status in
             notificationAuthorizationStatus = status
-            if status != .authorized {
+            if status != .authorized, firstTimeInApp {
                 showAlertForSettings = true
+                firstTimeInApp = false
             }
         }
         

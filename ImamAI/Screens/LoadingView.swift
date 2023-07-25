@@ -27,22 +27,20 @@ struct LoadingView: View {
             
             if !errorText.isEmpty {
                 Text(errorText)
-                    .foregroundColor(.red)
-                    .padding(.top)
+                    .foregroundColor(.gray)
+                    .font(.subheadline)
+                    .padding()
+                    .multilineTextAlignment(.center)
             } else if !networkMonitor.isConnected {
                 Text("Отсутствует подключение к интернету")
-                    .foregroundColor(.red)
+                    .foregroundColor(.gray)
+                    .font(.subheadline)
                     .padding()
+                    .multilineTextAlignment(.center)
             } else {
                 ProgressView()
                     .padding(.vertical)
             }
-            
-            Text("При первом запуске загрузка может занять больше времени")
-                .multilineTextAlignment(.center)
-                .font(.subheadline)
-                .foregroundColor(.gray)
-                .padding(.top, 5)
         }
     }
 }
