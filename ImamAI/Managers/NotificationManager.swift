@@ -94,7 +94,7 @@ class NotificationManager {
             }
             
             if let date = dateFormatter.date(from: "\(time.date) \(time.ishaTime)"), !isMutedArray[5] {
-                NotificationManager.shared.scheduleNotification(at: date, body: "Иша молита \(time.cityName)", identifier: "\(time.date)_isha")
+                NotificationManager.shared.scheduleNotification(at: date, body: "Иша молитва в \(time.cityName)", identifier: "\(time.date)_isha")
             }
         }
     }
