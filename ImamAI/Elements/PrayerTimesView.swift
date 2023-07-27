@@ -36,7 +36,7 @@ struct PrayerTimesView: View {
                         UserDefaultsManager.shared.updateMutedStatus(for: key, isMuted: isMutedForPrayerTime.wrappedValue)
                         NotificationManager.shared.reschedule()
                     }) {
-                        Image(systemName: isMutedForPrayerTime.wrappedValue ? "speaker.slash" : "speaker.wave.2")
+                        Image(systemName: isMutedForPrayerTime.wrappedValue ? "bell.slash" : "bell.badge")
                             .font(.subheadline)
                             .foregroundColor(Color.black)
                     }

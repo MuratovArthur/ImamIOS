@@ -162,6 +162,21 @@ class ChatViewModel: ObservableObject {
                     return
                 }
                 
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    self?.showError()
+                    return
+                }
+                
+                if httpResponse.statusCode != 200 {
+                    let correctedString = "Ассаламу Алейкум! Я чуть-чуть занят сейчас, напиши мне попозже."
+                    let receivedMessage = ChatMessage(id: UUID().uuidString, content: correctedString, dataCreated: Date(), sender: .gpt)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        self?.chatMessages.append(receivedMessage)
+                        self?.isTyping = false // Stop typing animation
+                    }
+                    return
+                }
+                
                 guard let data = data else {
                     self?.showError()
                     return
@@ -170,22 +185,12 @@ class ChatViewModel: ObservableObject {
                 if let responseString = String(data: data, encoding: .utf8) {
                     print("Response: \(responseString)")
                     
-                    if responseString == "Internal Server Error"{
-                        let correctedString = "Ассаламу Алейкум! Я чуть-чуть занят сейчас, напиши мне попозже."
-                        let receivedMessage = ChatMessage(id: UUID().uuidString, content: correctedString, dataCreated: Date(), sender: .gpt)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                            self?.chatMessages.append(receivedMessage)
-                            self?.isTyping = false // Stop typing animation
-                        }
-                        
-                    }else{
-                        let correctedString = responseString.replacingOccurrences(of: "\\n", with: "\n").replacingOccurrences(of: "\\\"", with: "\"").trimQuotes()
-                        // Create a new ChatMessage object and append it to chatMessages
-                        let receivedMessage = ChatMessage(id: UUID().uuidString, content: correctedString, dataCreated: Date(), sender: .gpt)
-                        DispatchQueue.main.async {
-                            self?.chatMessages.append(receivedMessage)
-                            self?.isTyping = false // Stop typing animation
-                        }
+                    let correctedString = responseString.replacingOccurrences(of: "\\n", with: "\n").replacingOccurrences(of: "\\\"", with: "\"").trimQuotes()
+                    // Create a new ChatMessage object and append it to chatMessages
+                    let receivedMessage = ChatMessage(id: UUID().uuidString, content: correctedString, dataCreated: Date(), sender: .gpt)
+                    DispatchQueue.main.async {
+                        self?.chatMessages.append(receivedMessage)
+                        self?.isTyping = false // Stop typing animation
                     }
                 } else {
                     self?.showError()
@@ -197,6 +202,7 @@ class ChatViewModel: ObservableObject {
             self.showError()
         }
     }
+         
     
     
     func createNewConversation(completion: @escaping (String?) -> Void) {

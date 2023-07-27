@@ -45,7 +45,7 @@ class NotificationManager {
         center.getNotificationSettings { settings in
             if settings.authorizationStatus == .authorized {
                 let content = UNMutableNotificationContent()
-                content.title = "Время молитвы"
+                content.title = "Ассаламу Алейкум!"
                 content.body = body
                 content.sound = UNNotificationSound.default
                 
