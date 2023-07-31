@@ -63,7 +63,9 @@ struct HomeView: View {
                         title: Text("Требуется действие"),
                         message: Text("Для использования всех функций, пожалуйста, предоставьте разрешения на определение местоположения и уведомления в настройках вашего устройства."),
                         primaryButton: .default(Text("Открыть настройки"), action: {
-                            NotificationManager.shared.openAppSettings()
+                            DispatchQueue.main.async {
+                                NotificationManager.shared.openAppSettings()
+                            }
                         }),
                         secondaryButton: .cancel(Text("Отмена"))
                     )
@@ -92,69 +94,3 @@ struct HomeView: View {
         // Add any additional checks for location permission if needed
     }
 }
-//
-//
-//import SwiftUI
-//
-//struct HomeView: View {
-//    @Binding var prayerTimes: [String: String]
-//    @Binding var city: String
-//
-//    var body: some View {
-//        VStack {
-//            Text("Prayer Times")
-//                .font(.title)
-//                .fontWeight(.bold)
-//                .padding(.top, 24)
-//
-//            ForEach(prayerTimes.sorted(by: <), id: \.key) { key, value in
-//                PrayerTimeRow(prayerName: key, prayerTime: value)
-//            }
-//
-//            Spacer()
-//
-//            Text("City: \(city)")
-//                .font(.headline)
-//                .padding(.bottom, 16)
-//        }
-//        .padding(.horizontal, 16)
-//        .onReceive(NotificationCenter.default.publisher(for: .prayerTimesUpdated)) { notification in
-//            if let userInfo = notification.userInfo as? [String: Any] {
-//                print("Received prayerTimesUpdated notification with userInfo: \(userInfo)")
-//                if let updatedPrayerTimes = userInfo["prayerTimes"] as? [String: String],
-//                   let updatedCity = userInfo["cityName"] as? String {
-//                    DispatchQueue.main.async {
-//                        print("Updating prayer times and city in HomeView")
-//                        self.prayerTimes = updatedPrayerTimes
-//                        self.city = updatedCity
-//                    }
-//                }
-//            }
-//        }
-//        .onAppear {
-//                 print("HomeView appeared with data:")
-//                 print("PrayerTimes: \(self.prayerTimes)")
-//                 print("City: \(self.city)")
-//             }
-//    }
-//}
-//
-//struct PrayerTimeRow: View {
-//    var prayerName: String
-//    var prayerTime: String
-//
-//    var body: some View {
-//        HStack {
-//            Text(prayerName)
-//                .font(.headline)
-//                .padding(.leading, 16)
-//
-//            Spacer()
-//
-//            Text(prayerTime) // Display the prayer time here
-//                .font(.subheadline)
-//                .padding(.trailing, 16)
-//        }
-//        .padding(.vertical, 8)
-//    }
-//}

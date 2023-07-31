@@ -8,10 +8,14 @@ struct ServerMessage: Decodable {
 
 class ChatViewModel: ObservableObject {
     static let shared = ChatViewModel()
-    @Published var chatMessages: [ChatMessage] = []
+    @Published var chatMessages: [ChatMessage] = []{
+        didSet {
+            print("Chat messages updated. New count: \(chatMessages.count)")
+        }
+    }
     @Published var textViewValue: String = ""
     @Published var isTyping = false
-    @Published var errorMessage: String?
+    @Published var errorMessage: String = ""
     @Published var fetchingMessages = false
     
     private var cancellables = Set<AnyCancellable>()
@@ -29,6 +33,25 @@ class ChatViewModel: ObservableObject {
         }
     }
     
+    func clearHistory() {
+        // Create new conversation
+        createNewConversation { [weak self] conversationID in
+            guard let conversationID = conversationID else {
+                print("Failed to create a new conversation.")
+                self?.showError()
+                return
+            }
+            // Update the value of conversationID in user defaults
+            UserDefaultsManager.shared.saveConversationID(conversationID)
+            // Clear chatMessages
+            self?.chatMessages = []
+            // Fetch new messages
+            self?.fetchChatMessages()
+            print("History cleared and new conversation created.")
+        }
+    }
+
+    
     func fetchChatMessages() {
         self.fetchingMessages = true
         print("Stored conversationID: \(String(describing: conversationID))")
@@ -36,6 +59,7 @@ class ChatViewModel: ObservableObject {
         guard let conversationID = conversationID else {
             print("conversationID is nil")
             self.fetchingMessages = false
+            self.showError()
             return
         }
         
@@ -45,6 +69,7 @@ class ChatViewModel: ObservableObject {
         guard let url = URL(string: urlString) else {
             print("Failed to create URL from string: \(urlString)")
             self.fetchingMessages = false
+            self.showError()
             return
         }
         
@@ -69,6 +94,7 @@ class ChatViewModel: ObservableObject {
                 switch completion {
                 case .failure(let error):
                     print("Failed with error: \(error)")
+                    self.showError()
                 case .finished:
                     print("Finished successfully")
                 }
@@ -76,21 +102,22 @@ class ChatViewModel: ObservableObject {
             }, receiveValue: { chatMessages in
                 print("Received \(chatMessages.count) chat messages")
                 self.chatMessages = chatMessages
+                print("Fetching messages, number of messages fetched: \(self.chatMessages.count)")
             })
             .store(in: &cancellables)
+
+        
+        print("Fetching messages, number of messages fetched: \(self.chatMessages.count)")
     }
     
     
     func sendMessage() {
-        
-        
         self.errorMessage = ""
         let trimmedMessage = self.textViewValue.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedMessage.isEmpty else {
             return
         }
         
-        // Show typing animation
         self.isTyping = true
         
         if let conversationID = conversationID {
@@ -110,7 +137,7 @@ class ChatViewModel: ObservableObject {
         
         let myMessage = ChatMessage(id: UUID().uuidString, content: trimmedMessage, dataCreated: Date(), sender: .user)
         self.chatMessages.append(myMessage)
-        
+        print("Message sent, total number of messages now: \(self.chatMessages.count)")
     }
     
     
@@ -122,11 +149,11 @@ class ChatViewModel: ObservableObject {
         }
         
         // Show typing animation
-        self.isTyping = true
+//        self.isTyping = true
         
-        print("isTyping is now \(self.isTyping)") // debug print
+//        print("isTyping is now \(self.isTyping)") // debug print
         
-        let receivedMessage = ChatMessage(id: UUID().uuidString, content: "Ассаламу алейкум родной, кажется у тебя что-то с интернетом не так", dataCreated: Date(), sender: .gpt)
+        let receivedMessage = ChatMessage(id: UUID().uuidString, content: "Ассаламу Алейкум! Я чуть-чуть занят сейчас, напиши мне попозже.", dataCreated: Date(), sender: .gpt)
         
         chatMessages.append(receivedMessage)
         
@@ -207,47 +234,71 @@ class ChatViewModel: ObservableObject {
     
     func createNewConversation(completion: @escaping (String?) -> Void) {
         print("creating new conversation")
-        
+        self.fetchingMessages = true
+
         guard let url = URL(string: "https://fastapi-s53t.onrender.com/messages/") else {
             completion(nil)
             return
         }
-        
+
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             if let error = error {
                 print("Error: \(error)")
                 completion(nil)
                 self?.isTyping = false
+
+                // Handle timeout error
+                if let error = error as? URLError, error.code == .timedOut {
+                    self?.showError()
+                }
+
                 return
             }
-            
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                completion(nil)
+                self?.isTyping = false
+                return
+            }
+
+            if httpResponse.statusCode != 200 {
+                // Handle non-200 status codes (e.g., 404, 500, etc.)
+                self?.showError()
+                return
+            }
+
             guard let data = data else {
                 print("No data received")
                 completion(nil)
                 self?.isTyping = false
                 return
             }
-            
+
             if let conversationID = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) {
-                self!.conversationID = conversationID.replacingOccurrences(of: "\"", with: "")
-                print("conversationID: ", self!.conversationID)
+                self?.conversationID = conversationID.replacingOccurrences(of: "\"", with: "")
+                print("conversationID: ", self?.conversationID)
                 completion(conversationID)
             } else {
                 print("Invalid response")
                 completion(nil)
             }
-            
+
             print("finished creating new conversation")
-            
-            
-        }.resume()
+            self?.fetchingMessages = false
+        }
+
+        task.resume()
+        print("New conversation created with id: \(self.conversationID ?? "nil"), number of messages: \(self.chatMessages.count)")
     }
+
     
     func showError() {
-        self.errorMessage = "Что-то пошло не так..."
+        print("Error is being shown")
+        self.errorMessage = "Произошла ошибка. Проверьте интернет соединение и попробуйте перезайти."
     }
 }
