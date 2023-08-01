@@ -5,6 +5,7 @@
 //  Created by Muratov Arthur on 11.07.2023.
 //
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct PostsView: View {
     // Properties
@@ -30,22 +31,43 @@ struct PostsView: View {
                     ForEach(posts) { post in
                         NavigationLink(destination: PostDetailView(post: post, tabBarShouldBeHidden: $tabBarShouldBeHidden)) {
                             HStack(spacing: 8) {
-                                AsyncImage(
-                                    url: URL(string: post.imageName),
-                                    content: { image in
-                                        image
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fill)
-                                            .frame(maxWidth: 150)
-//                                            .cornerRadius(10)
-                                            .clipped()
-                                    },
-                                    placeholder: {
-                                        ProgressView()
-                                    }
-                                )
-                                
-                                
+//                                AsyncImage(
+//                                    url: URL(string: post.imageName),
+//                                    content: { image in
+//                                        image
+//                                            .resizable()
+//                                            .aspectRatio(contentMode: .fill)
+//                                            .frame(maxWidth: 150)
+//                                            .clipped()
+//                                    },
+//                                    placeholder: {
+//                                        ProgressView()
+//                                    }
+//                                )
+//
+                                WebImage(url: URL(string: post.imageName))
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(maxWidth: 170, maxHeight: 200)
+                                    .cornerRadius(10)
+                                    .clipped()
+////                                    .onSuccess { image, data, cacheType in
+////                                        // Success. The `image` is the downloaded image instance.
+////                                    }
+////                                    .onFailure { error in
+////                                        // Failure. Handle error here.
+////                                    }
+////                                    .onProgress { receivedSize, expectedSize in
+////                                        // Progress. Use this to update a progress view.
+////                                    }
+////                                    .placeholder {
+////                                        // Provide a placeholder until the image loads or fails to load.
+////                                        ProgressView()
+////                                            .padding()
+////                                    }
+//                                    .padding(.vertical, 16)
+
+
                                 
                                 VStack(alignment: .leading, spacing: 16) {
                                     Text(post.title)
@@ -160,22 +182,33 @@ struct PostDetailView: View {
         VStack(alignment: .leading) {
             ScrollView(showsIndicators: false) {
                 
-                AsyncImage(
-                    url: URL(string: post.imageName),
-                    content: { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(maxWidth: .infinity, maxHeight: 200)
-                            .cornerRadius(10)
-                            .clipped()
-                    },
-                    placeholder: {
-                        ProgressView()
-                            .padding()
-                    }
-                )
-                .padding(.vertical, 16)
+//                AsyncImage(
+//                    url: URL(string: post.imageName),
+//                    content: { image in
+//                        image
+//                            .resizable()
+//                            .aspectRatio(contentMode: .fill)
+//                            .frame(maxWidth: .infinity, maxHeight: 200)
+//                            .cornerRadius(10)
+//                            .clipped()
+//                    },
+//                    placeholder: {
+//                        ProgressView()
+//                            .padding()
+//                    }
+//                )
+//                .padding(.vertical, 16)
+                
+
+                WebImage(url: URL(string: post.imageName))
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(maxWidth: .infinity, maxHeight: 200)
+                    .cornerRadius(10)
+                    .clipped()
+////                    .placeholder(ProgressView().padding())
+////                    .padding(.vertical, 16)
+
                 
                 VStack(alignment: .leading) {
                     
