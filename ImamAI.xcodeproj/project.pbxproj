@@ -1,0 +1,541 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		525D14C32A52934700F040C8 /* ImamAIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525D14C22A52934700F040C8 /* ImamAIApp.swift */; };
+		525D14C52A52934700F040C8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525D14C42A52934700F040C8 /* ContentView.swift */; };
+		525D14C72A52934A00F040C8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 525D14C62A52934A00F040C8 /* Assets.xcassets */; };
+		525D14CB2A52934A00F040C8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 525D14CA2A52934A00F040C8 /* Preview Assets.xcassets */; };
+		525D14D22A52A00000F040C8 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525D14D12A52A00000F040C8 /* HomeView.swift */; };
+		525D14D42A52A00F00F040C8 /* CompassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525D14D32A52A00F00F040C8 /* CompassView.swift */; };
+		5261471A2A694483008AE45E /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526147192A694483008AE45E /* NetworkManager.swift */; };
+		5261471C2A69863A008AE45E /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5261471B2A69863A008AE45E /* UserDefaultsManager.swift */; };
+		52772F1B2A6BF23E00AC9BF3 /* WeeklyFetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52772F1A2A6BF23E00AC9BF3 /* WeeklyFetch.swift */; };
+		52772F1D2A6BF25600AC9BF3 /* PersistanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52772F1C2A6BF25600AC9BF3 /* PersistanceManager.swift */; };
+		52772F2A2A6C208000AC9BF3 /* PrayerTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52772F292A6C208000AC9BF3 /* PrayerTime.swift */; };
+		528B29212A62B4480001E455 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 528B29202A62B4480001E455 /* HistoryView.swift */; };
+		528B40142A6C4A6F00E21DAE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 528B40132A6C4A6F00E21DAE /* AppDelegate.swift */; };
+		529403952A630F4E00176CA5 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529403942A630F4E00176CA5 /* ChatMessage.swift */; };
+		529403972A630F7300176CA5 /* TypingAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529403962A630F7300176CA5 /* TypingAnimationView.swift */; };
+		529403992A630F8700176CA5 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529403982A630F8700176CA5 /* ChatViewModel.swift */; };
+		52A26D212A5D1BC900AB5062 /* IslamicEventListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A26D202A5D1BC900AB5062 /* IslamicEventListView.swift */; };
+		52A26D232A5D3DF100AB5062 /* PrayerTimesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A26D222A5D3DF100AB5062 /* PrayerTimesView.swift */; };
+		52A26D252A5D4FB100AB5062 /* PostsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A26D242A5D4FB100AB5062 /* PostsView.swift */; };
+		52A36EF52A558F3D00733FD8 /* ResizableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A36EF42A558F3D00733FD8 /* ResizableTextView.swift */; };
+		52AD2E822A65619B0053A52A /* ImamNavBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52AD2E812A65619B0053A52A /* ImamNavBarView.swift */; };
+		52DFC6B62A643E1500769257 /* CompassManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DFC6B52A643E1500769257 /* CompassManager.swift */; };
+		52F860C12A546F5A0032DE79 /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F860C02A546F5A0032DE79 /* KeyboardResponder.swift */; };
+		52F860C32A546F720032DE79 /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F860C22A546F720032DE79 /* ViewExtension.swift */; };
+		52F860C52A54714B0032DE79 /* ChatScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F860C42A54714B0032DE79 /* ChatScreen.swift */; };
+		52F860C92A54736B0032DE79 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F860C82A54736B0032DE79 /* SceneDelegate.swift */; };
+		52F860D12A54996A0032DE79 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F860D02A54996A0032DE79 /* Message.swift */; };
+		52FC92292A625D55000F86CB /* ScrollPositionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FC92282A625D55000F86CB /* ScrollPositionStore.swift */; };
+		52FC922B2A625DB5000F86CB /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FC922A2A625DB5000F86CB /* LocationManager.swift */; };
+		52FC92312A625F66000F86CB /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FC92302A625F66000F86CB /* LoadingView.swift */; };
+		52FC92332A626292000F86CB /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FC92322A626292000F86CB /* TabBarView.swift */; };
+		52FC92352A626B86000F86CB /* CalendarButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FC92342A626B86000F86CB /* CalendarButtonView.swift */; };
+		52FC92372A627796000F86CB /* AyahGreetingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FC92362A627796000F86CB /* AyahGreetingView.swift */; };
+		52FC923B2A62782D000F86CB /* ImamChatPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FC923A2A62782D000F86CB /* ImamChatPreview.swift */; };
+		52FF122C2A6A412F00D9816F /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FF122B2A6A412F00D9816F /* NotificationManager.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		525D14BF2A52934700F040C8 /* ImamAI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImamAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		525D14C22A52934700F040C8 /* ImamAIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImamAIApp.swift; sourceTree = "<group>"; };
+		525D14C42A52934700F040C8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		525D14C62A52934A00F040C8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		525D14C82A52934A00F040C8 /* ImamAI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ImamAI.entitlements; sourceTree = "<group>"; };
+		525D14CA2A52934A00F040C8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		525D14D12A52A00000F040C8 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		525D14D32A52A00F00F040C8 /* CompassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassView.swift; sourceTree = "<group>"; };
+		526147192A694483008AE45E /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		5261471B2A69863A008AE45E /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
+		52772F1A2A6BF23E00AC9BF3 /* WeeklyFetch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeeklyFetch.swift; sourceTree = "<group>"; };
+		52772F1C2A6BF25600AC9BF3 /* PersistanceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistanceManager.swift; sourceTree = "<group>"; };
+		52772F292A6C208000AC9BF3 /* PrayerTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTime.swift; sourceTree = "<group>"; };
+		528B29202A62B4480001E455 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		528B40132A6C4A6F00E21DAE /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		529403942A630F4E00176CA5 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		529403962A630F7300176CA5 /* TypingAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingAnimationView.swift; sourceTree = "<group>"; };
+		529403982A630F8700176CA5 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		52A26D202A5D1BC900AB5062 /* IslamicEventListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IslamicEventListView.swift; sourceTree = "<group>"; };
+		52A26D222A5D3DF100AB5062 /* PrayerTimesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTimesView.swift; sourceTree = "<group>"; };
+		52A26D242A5D4FB100AB5062 /* PostsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsView.swift; sourceTree = "<group>"; };
+		52A36EF42A558F3D00733FD8 /* ResizableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizableTextView.swift; sourceTree = "<group>"; };
+		52AD2E812A65619B0053A52A /* ImamNavBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImamNavBarView.swift; sourceTree = "<group>"; };
+		52DFC6B52A643E1500769257 /* CompassManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassManager.swift; sourceTree = "<group>"; };
+		52F860C02A546F5A0032DE79 /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
+		52F860C22A546F720032DE79 /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
+		52F860C42A54714B0032DE79 /* ChatScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatScreen.swift; sourceTree = "<group>"; };
+		52F860C82A54736B0032DE79 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		52F860D02A54996A0032DE79 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		52FC92282A625D55000F86CB /* ScrollPositionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollPositionStore.swift; sourceTree = "<group>"; };
+		52FC922A2A625DB5000F86CB /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		52FC92302A625F66000F86CB /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		52FC92322A626292000F86CB /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
+		52FC92342A626B86000F86CB /* CalendarButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarButtonView.swift; sourceTree = "<group>"; };
+		52FC92362A627796000F86CB /* AyahGreetingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AyahGreetingView.swift; sourceTree = "<group>"; };
+		52FC923A2A62782D000F86CB /* ImamChatPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImamChatPreview.swift; sourceTree = "<group>"; };
+		52FF122B2A6A412F00D9816F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		525D14BC2A52934700F040C8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		525D14B62A52934600F040C8 = {
+			isa = PBXGroup;
+			children = (
+				525D14C12A52934700F040C8 /* ImamAI */,
+				525D14C02A52934700F040C8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		525D14C02A52934700F040C8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				525D14BF2A52934700F040C8 /* ImamAI.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		525D14C12A52934700F040C8 /* ImamAI */ = {
+			isa = PBXGroup;
+			children = (
+				528B40132A6C4A6F00E21DAE /* AppDelegate.swift */,
+				525D14C22A52934700F040C8 /* ImamAIApp.swift */,
+				525D14C42A52934700F040C8 /* ContentView.swift */,
+				52FC922F2A625EC2000F86CB /* Screens */,
+				52FC922E2A625E99000F86CB /* Models */,
+				52FC922D2A625E6C000F86CB /* Elements */,
+				52FC922C2A625E48000F86CB /* Managers */,
+				525D14C62A52934A00F040C8 /* Assets.xcassets */,
+				525D14C82A52934A00F040C8 /* ImamAI.entitlements */,
+				525D14C92A52934A00F040C8 /* Preview Content */,
+			);
+			path = ImamAI;
+			sourceTree = "<group>";
+		};
+		525D14C92A52934A00F040C8 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				525D14CA2A52934A00F040C8 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		52FC922C2A625E48000F86CB /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				52772F1C2A6BF25600AC9BF3 /* PersistanceManager.swift */,
+				52772F1A2A6BF23E00AC9BF3 /* WeeklyFetch.swift */,
+				52F860C22A546F720032DE79 /* ViewExtension.swift */,
+				52F860C82A54736B0032DE79 /* SceneDelegate.swift */,
+				52FC92282A625D55000F86CB /* ScrollPositionStore.swift */,
+				52F860C02A546F5A0032DE79 /* KeyboardResponder.swift */,
+				52FC922A2A625DB5000F86CB /* LocationManager.swift */,
+				52DFC6B52A643E1500769257 /* CompassManager.swift */,
+				526147192A694483008AE45E /* NetworkManager.swift */,
+				5261471B2A69863A008AE45E /* UserDefaultsManager.swift */,
+				52FF122B2A6A412F00D9816F /* NotificationManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		52FC922D2A625E6C000F86CB /* Elements */ = {
+			isa = PBXGroup;
+			children = (
+				52FC92362A627796000F86CB /* AyahGreetingView.swift */,
+				52A26D222A5D3DF100AB5062 /* PrayerTimesView.swift */,
+				52F860D02A54996A0032DE79 /* Message.swift */,
+				52A36EF42A558F3D00733FD8 /* ResizableTextView.swift */,
+				52A26D242A5D4FB100AB5062 /* PostsView.swift */,
+				52A26D202A5D1BC900AB5062 /* IslamicEventListView.swift */,
+				52FC92322A626292000F86CB /* TabBarView.swift */,
+				52FC92342A626B86000F86CB /* CalendarButtonView.swift */,
+				52FC923A2A62782D000F86CB /* ImamChatPreview.swift */,
+				529403962A630F7300176CA5 /* TypingAnimationView.swift */,
+				52AD2E812A65619B0053A52A /* ImamNavBarView.swift */,
+			);
+			path = Elements;
+			sourceTree = "<group>";
+		};
+		52FC922E2A625E99000F86CB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				529403942A630F4E00176CA5 /* ChatMessage.swift */,
+				529403982A630F8700176CA5 /* ChatViewModel.swift */,
+				52772F292A6C208000AC9BF3 /* PrayerTime.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		52FC922F2A625EC2000F86CB /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				52FC92302A625F66000F86CB /* LoadingView.swift */,
+				525D14D12A52A00000F040C8 /* HomeView.swift */,
+				52F860C42A54714B0032DE79 /* ChatScreen.swift */,
+				525D14D32A52A00F00F040C8 /* CompassView.swift */,
+				528B29202A62B4480001E455 /* HistoryView.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		525D14BE2A52934700F040C8 /* ImamAI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 525D14CE2A52934A00F040C8 /* Build configuration list for PBXNativeTarget "ImamAI" */;
+			buildPhases = (
+				525D14BB2A52934700F040C8 /* Sources */,
+				525D14BC2A52934700F040C8 /* Frameworks */,
+				525D14BD2A52934700F040C8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ImamAI;
+			packageProductDependencies = (
+			);
+			productName = ImamAI;
+			productReference = 525D14BF2A52934700F040C8 /* ImamAI.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		525D14B72A52934600F040C8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1430;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					525D14BE2A52934700F040C8 = {
+						CreatedOnToolsVersion = 14.3;
+					};
+				};
+			};
+			buildConfigurationList = 525D14BA2A52934600F040C8 /* Build configuration list for PBXProject "ImamAI" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 525D14B62A52934600F040C8;
+			packageReferences = (
+			);
+			productRefGroup = 525D14C02A52934700F040C8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				525D14BE2A52934700F040C8 /* ImamAI */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		525D14BD2A52934700F040C8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				525D14CB2A52934A00F040C8 /* Preview Assets.xcassets in Resources */,
+				525D14C72A52934A00F040C8 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		525D14BB2A52934700F040C8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52772F1D2A6BF25600AC9BF3 /* PersistanceManager.swift in Sources */,
+				5261471A2A694483008AE45E /* NetworkManager.swift in Sources */,
+				52F860C32A546F720032DE79 /* ViewExtension.swift in Sources */,
+				52A26D232A5D3DF100AB5062 /* PrayerTimesView.swift in Sources */,
+				52A26D212A5D1BC900AB5062 /* IslamicEventListView.swift in Sources */,
+				52FC92352A626B86000F86CB /* CalendarButtonView.swift in Sources */,
+				52FC923B2A62782D000F86CB /* ImamChatPreview.swift in Sources */,
+				52FC92292A625D55000F86CB /* ScrollPositionStore.swift in Sources */,
+				52772F1B2A6BF23E00AC9BF3 /* WeeklyFetch.swift in Sources */,
+				52772F2A2A6C208000AC9BF3 /* PrayerTime.swift in Sources */,
+				528B29212A62B4480001E455 /* HistoryView.swift in Sources */,
+				52FC92312A625F66000F86CB /* LoadingView.swift in Sources */,
+				525D14D22A52A00000F040C8 /* HomeView.swift in Sources */,
+				5261471C2A69863A008AE45E /* UserDefaultsManager.swift in Sources */,
+				52F860C52A54714B0032DE79 /* ChatScreen.swift in Sources */,
+				525D14D42A52A00F00F040C8 /* CompassView.swift in Sources */,
+				52A26D252A5D4FB100AB5062 /* PostsView.swift in Sources */,
+				525D14C52A52934700F040C8 /* ContentView.swift in Sources */,
+				529403952A630F4E00176CA5 /* ChatMessage.swift in Sources */,
+				52FC92332A626292000F86CB /* TabBarView.swift in Sources */,
+				525D14C32A52934700F040C8 /* ImamAIApp.swift in Sources */,
+				52FC922B2A625DB5000F86CB /* LocationManager.swift in Sources */,
+				529403972A630F7300176CA5 /* TypingAnimationView.swift in Sources */,
+				52AD2E822A65619B0053A52A /* ImamNavBarView.swift in Sources */,
+				529403992A630F8700176CA5 /* ChatViewModel.swift in Sources */,
+				52F860C12A546F5A0032DE79 /* KeyboardResponder.swift in Sources */,
+				52F860D12A54996A0032DE79 /* Message.swift in Sources */,
+				52DFC6B62A643E1500769257 /* CompassManager.swift in Sources */,
+				52F860C92A54736B0032DE79 /* SceneDelegate.swift in Sources */,
+				52FC92372A627796000F86CB /* AyahGreetingView.swift in Sources */,
+				52FF122C2A6A412F00D9816F /* NotificationManager.swift in Sources */,
+				528B40142A6C4A6F00E21DAE /* AppDelegate.swift in Sources */,
+				52A36EF52A558F3D00733FD8 /* ResizableTextView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		525D14CC2A52934A00F040C8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Alnur Abdykalykov (UD7GN29598)";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = UD7GN29598;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		525D14CD2A52934A00F040C8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Alnur Abdykalykov (UD7GN29598)";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = UD7GN29598;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		525D14CF2A52934A00F040C8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ImamAI/ImamAI.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"ImamAI/Preview Content\"";
+				DEVELOPMENT_TEAM = UD7GN29598;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = UD7GN29598;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Локация используется для расчета точного времени молитвы в соответствии с местным временем.";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.2;
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.arthurmuratov.ImamAI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		525D14D02A52934A00F040C8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ImamAI/ImamAI.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"ImamAI/Preview Content\"";
+				DEVELOPMENT_TEAM = UD7GN29598;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Локация используется для расчета точного времени молитвы в соответствии с местным временем.";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.2;
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.arthurmuratov.ImamAI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		525D14BA2A52934600F040C8 /* Build configuration list for PBXProject "ImamAI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				525D14CC2A52934A00F040C8 /* Debug */,
+				525D14CD2A52934A00F040C8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		525D14CE2A52934A00F040C8 /* Build configuration list for PBXNativeTarget "ImamAI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				525D14CF2A52934A00F040C8 /* Debug */,
+				525D14D02A52934A00F040C8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 525D14B72A52934600F040C8 /* Project object */;
+}
