@@ -12,6 +12,24 @@ class UserDefaultsManager {
     
     private let isMutedKey = "isMutedKey"
     private let conversationIDKey = "conversationIDKey"
+//    private let countryKey = "UserDefaultCountry"
+//    private let cityKey = "UserDefaultCity"
+//
+//    func getCountry() -> String? {
+//        return UserDefaults.standard.string(forKey: countryKey)
+//    }
+//
+//    func saveCountry(_ country: String) {
+//        UserDefaults.standard.set(country, forKey: countryKey)
+//    }
+//
+//    func getCity() -> String? {
+//        return UserDefaults.standard.string(forKey: cityKey)
+//    }
+//
+//    func saveCity(_ city: String) {
+//        UserDefaults.standard.set(city, forKey: cityKey)
+//    }
     
     func saveIsMuted(_ value: [Bool]) {
         UserDefaults.standard.set(value, forKey: isMutedKey)

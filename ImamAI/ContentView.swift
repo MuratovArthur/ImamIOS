@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 struct ContentView: View {
     enum Tab {
@@ -20,6 +21,9 @@ struct ContentView: View {
     @StateObject var networkMonitor = NetworkMonitor()
     @State var errorText: String = ""
     @State var firstTimeInApp = true
+    
+    @State private var translation: CGSize = .zero
+    private let dragThreshold: CGFloat = 200
     
     @State private var prayerTimes: [String: String] = [
         "Фаджр": "",
@@ -45,7 +49,22 @@ struct ContentView: View {
                         .navigationBarHidden(true)
                 case .other:
                     ChatScreen(viewModel: ChatViewModel(), selectedTab: $selectedTab)
-                        .navigationBarHidden(true)
+                            .navigationBarHidden(true)
+                            .contentShape(Rectangle())
+                            .simultaneousGesture(DragGesture()
+                                .onChanged { value in
+                                    translation = value.translation
+                                }
+                                .onEnded { value in
+                                    if translation.width > dragThreshold {
+                                        selectedTab = .home
+                                    }
+                                    translation = .zero
+                                }
+                            )
+                            .simultaneousGesture(TapGesture(count: 1)
+                                .exclusively(before: DragGesture())
+                            )
                 case .settings:
                     CompassView()
                         .navigationBarHidden(true)
@@ -101,15 +120,15 @@ struct ContentView: View {
     }
     
     func requestNotificationAuthorization() {
-           UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-               if success {
-                   print("Notification authorization successful!")
-               }
-
-               // Call the function to request location authorization regardless of the notification result
-               self.requestLocationAuthorization()
-           }
-       }
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+            if success {
+                print("Notification authorization successful!")
+            }
+            
+            // Call the function to request location authorization regardless of the notification result
+            self.requestLocationAuthorization()
+        }
+    }
     
     func requestLocationAuthorization() {
         self.locationManager.requestWhenInUseAuthorization() // Request location access permission
