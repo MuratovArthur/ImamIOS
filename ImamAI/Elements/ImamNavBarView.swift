@@ -18,16 +18,17 @@ struct ImamNavBarView: View {
                     .shadow(radius: 3)
                 
                 VStack(alignment: .leading) {
-                    Text("Имам")
+                    Text(NSLocalizedString("imam", comment: "imam bar view"))
                         .font(.headline)
                         .fontWeight(.bold)
                     
                     if sentOneMessage {
-                        Text("онлайн")
+                        Text(NSLocalizedString("online", comment: "imam bar view"))
                             .font(.subheadline)
                             .foregroundColor(.blue)
                     } else {
-                        Text("был в сети \(randomInt) мин. назад")
+                        let localized = NSLocalizedString("last-seen", comment: "imam bar view")
+                        Text(String.localizedStringWithFormat(localized, String(randomInt)))
                             .font(.subheadline)
                             .foregroundColor(.gray)
                     }

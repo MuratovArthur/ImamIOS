@@ -21,7 +21,7 @@ struct PostsView: View {
     var body: some View {
         
         VStack(alignment: .leading){
-            Text("Для прочтения")
+            Text(NSLocalizedString("to-read", comment: "posts view"))
                 .font(.title)
                 .fontWeight(.bold)
                 .padding(.horizontal)
@@ -91,7 +91,7 @@ struct PostsView: View {
                         }
                     }
                     if allPostsLoaded {
-                        Text("Все посты уже загружены")
+                        Text(NSLocalizedString("all-posts-loaded", comment: "posts view"))
                             .font(.subheadline)
                             .foregroundColor(.gray)
                             .padding(.top, 5)
@@ -108,7 +108,7 @@ struct PostsView: View {
                                 }
                                 
                             }) {
-                                Text("Загрузить еще")
+                                Text(NSLocalizedString("load-more", comment: "posts view"))
                                     .font(.headline)
                                     .foregroundColor(.black)
                                     .padding()

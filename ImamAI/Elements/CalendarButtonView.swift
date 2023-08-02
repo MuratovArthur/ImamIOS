@@ -11,12 +11,32 @@ struct CalendarButtonView: View {
         return formatter
     }()
     
-    let gregorianDateFormatter: DateFormatter = {
+    var gregorianDateFormatter: DateFormatter {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ru_RU")
+        let locale = getLocale()
+        formatter.locale = Locale(identifier: locale)
         formatter.dateStyle = .medium
         return formatter
-    }()
+    }
+
+    init(currentDate: Date) {
+        self.currentDate = currentDate
+    }
+
+    private func getLocale() -> String {
+        let locale = NSLocale.current.languageCode
+
+        switch locale {
+        case "ru":
+            return "ru_RU"
+        case "ar":
+            return "ar_AR"
+        case "kk":
+            return "kk_KK"
+        default:
+            return "en_EN"
+        }
+    }
     
     let islamicMonths = [
         1: "Muharram",
@@ -47,7 +67,7 @@ struct CalendarButtonView: View {
                       Image(systemName: "calendar")
                           .font(.subheadline)
                           .padding(.leading)
-                      
+
                       Text(isIslamic ? formatIslamicDate(date: currentDate) : gregorianDateFormatter.string(from: currentDate))
                           .font(.body)
                           .padding(.trailing)

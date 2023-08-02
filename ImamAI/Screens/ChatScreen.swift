@@ -92,8 +92,8 @@ struct ChatScreen: View {
                         hideKeyboard()
                     }
                     
-                }else{
-                    Text(viewModel.errorMessage ?? "Произошла ошибка. Проверьте интернет соединение и попробуйте перезайти.")
+                } else {
+                    Text(viewModel.errorMessage)
                         .font(.subheadline)
                         .foregroundColor(.gray)
                     Spacer()
@@ -113,7 +113,7 @@ struct ChatScreen: View {
                 
                 if networkMonitor.isConnected {
                     HStack {
-                        ResizableTextView(text: $textViewValue, height: $textViewHeight, placeholderText: "Сообщение")
+                        ResizableTextView(text: $textViewValue, height: $textViewHeight, placeholderText: NSLocalizedString("placeholder", comment: "chat screen"))
                             .frame(height: textViewHeight < 160 ? self.textViewHeight : 160)
                             .cornerRadius(16)
                         
@@ -134,7 +134,7 @@ struct ChatScreen: View {
                     }
                 }
                 else{
-                    Text("Отсутствует подключение к интернету")
+                    Text(NSLocalizedString("no-internet", comment: "errors"))
                         .font(.subheadline)
                         .foregroundColor(.gray)
                         .padding(.vertical)
@@ -164,15 +164,15 @@ struct ChatScreen: View {
             }
             .alert(isPresented: $showAlert, content: {
                 Alert(
-                    title: Text("Удалить беседу"),
-                    message: Text("Вы уверены, что хотите удалить эту беседу?"),
-                    primaryButton: .destructive(Text("Удалить")) {
+                    title: Text(NSLocalizedString("delete-chat", comment: "chat screen")),
+                    message: Text(NSLocalizedString("delete-question", comment: "chat screen")),
+                    primaryButton: .destructive(Text(NSLocalizedString("delete", comment: "chat screen"))) {
                         if viewModel.chatMessages.count > 1{
                             viewModel.clearHistory()
                             print("Updated")
                         }
                     },
-                    secondaryButton: .cancel(Text("Отмена"))
+                    secondaryButton: .cancel(Text(NSLocalizedString("cancel", comment: "chat screen")))
                 )
             })
         }

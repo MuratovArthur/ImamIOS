@@ -19,7 +19,7 @@ struct LoadingView: View {
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 200, height: 200)
             
-            Text("Ассаламу Алейкум!")
+            Text(NSLocalizedString("assalamu-alaikum", comment: "loading view"))
                 .font(.title)
                 .fontWeight(.bold)
             
@@ -32,7 +32,7 @@ struct LoadingView: View {
                     .padding()
                     .multilineTextAlignment(.center)
             } else if !networkMonitor.isConnected {
-                Text("Отсутствует подключение к интернету")
+                Text(NSLocalizedString("no-internet", comment: "errors"))
                     .foregroundColor(.gray)
                     .font(.subheadline)
                     .padding()

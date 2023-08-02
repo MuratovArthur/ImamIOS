@@ -21,17 +21,11 @@ struct HomeView: View {
         NavigationView {
             GeometryReader { geometry in
                 VStack(alignment: .center) {
-                    
-                    
                     ScrollViewReader { scrollViewProxy in
                         ScrollView(showsIndicators: false) {
-                            
-                            
                             CalendarButtonView(currentDate: currentDate)
                             
                             ImamChatPreview(selectedTab: $selectedTab)
-                            
-                            
                             
                             PrayerTimesView(prayerTime: prayerTime, city: city)
                             
@@ -60,14 +54,14 @@ struct HomeView: View {
                 }
                 .alert(isPresented: $showAlertForSettings) {
                     Alert(
-                        title: Text("Требуется действие"),
-                        message: Text("Для использования всех функций, пожалуйста, предоставьте разрешения на определение местоположения и уведомления в настройках вашего устройства."),
-                        primaryButton: .default(Text("Открыть настройки"), action: {
+                        title: Text(NSLocalizedString("action-required", comment: "alerts")),
+                        message: Text(NSLocalizedString("internet-alert", comment: "alerts")),
+                        primaryButton: .default(Text(NSLocalizedString("open-settings", comment: "alerts")), action: {
                             DispatchQueue.main.async {
                                 NotificationManager.shared.openAppSettings()
                             }
                         }),
-                        secondaryButton: .cancel(Text("Отмена"))
+                        secondaryButton: .cancel(Text(NSLocalizedString("cancel", comment: "alerts")))
                     )
                 }
                 .onAppear {

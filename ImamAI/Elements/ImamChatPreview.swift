@@ -12,7 +12,7 @@ struct ImamChatPreview: View {
     
     var body: some View {
         VStack(alignment: .leading){
-            Text("Персональный Имам")
+            Text(NSLocalizedString("personal-imam", comment: "chat preview"))
                 .font(.title)
                 .fontWeight(.bold)
                 .padding(.horizontal)
@@ -27,7 +27,7 @@ struct ImamChatPreview: View {
                 Spacer()
                 
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("Добро пожаловать! Я ваш персональный Имам. Я могу ответить на любые вопросы об исламе, Коране, исламской культуре и истории. Какой вопрос интересует вас сегодня?")
+                    Text(NSLocalizedString("imam-text", comment: "chat preview"))
                         .font(.subheadline)
                 }
                 
@@ -38,7 +38,7 @@ struct ImamChatPreview: View {
             Button(action: {
                 selectedTab = .other
             }) {
-                Text("Задайте свой вопрос!")
+                Text(NSLocalizedString("ask-question", comment: "chat preview"))
                     .font(.headline)
                     .padding(.vertical)
                     .frame(maxWidth: .infinity)

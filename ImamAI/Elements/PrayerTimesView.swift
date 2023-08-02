@@ -3,7 +3,8 @@ import SwiftUI
 struct PrayerTimesView: View {
     let prayerTime: PrayerTime?
     let order = ["Фаджр","Восход", "Зухр", "Аср", "Магриб", "Иша"]
-    let country = "Казахстан"
+    
+    let country = NSLocalizedString("default-country", comment: "prayer times view")
     let city: String
     
     @State private var isMuted: [Bool] = UserDefaultsManager.shared.getIsMuted() ?? Array(repeating: false, count: 6)
@@ -17,7 +18,7 @@ struct PrayerTimesView: View {
             }
             .padding(.top, 16)
             
-            Text("Время намаза")
+            Text(NSLocalizedString("prayer-time", comment: "prayer times view"))
                 .font(.title)
                 .fontWeight(.bold)
             
@@ -26,7 +27,7 @@ struct PrayerTimesView: View {
                 let isMutedForPrayerTime = $isMuted[index]
                 
                 HStack {
-                    Text(key)
+                    Text(NSLocalizedString(key, comment: "prayer times view"))
                         .font(.subheadline)
                     Spacer()
                     Text((prayerTime?.orderedValues[key] ?? "") ?? "")

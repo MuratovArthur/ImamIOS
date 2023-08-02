@@ -8,7 +8,7 @@ struct CompassView: View {
     var body: some View {
         VStack(alignment: .leading) {
             
-            Text("Поиск Киблы")
+            Text(NSLocalizedString("header", comment: "compass view"))
                 .font(.title)
                 .fontWeight(.bold)
 //                .padding()

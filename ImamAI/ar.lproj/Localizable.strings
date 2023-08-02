@@ -1,0 +1,55 @@
+/* 
+  Localizable.strings
+  ImamAI
+
+  Created by Nurali Rakhay on 01.08.2023.
+  
+*/
+
+/* errors */
+"no-internet-suggestion" = "حدث خطأ. تحقق من اتصالك بالإنترنت وحاول إعادة التشغيل.";
+"no-internet" = "لا يوجد اتصال بالإنترنت";
+
+/* alerts */
+"action-required" = "الإجراء مطلوب";
+"internetAlert" = "لاستخدام جميع الميزات ، يرجى منح أذونات الموقع والإشعارات في إعدادات جهازك.";
+"openSettings" = "أفتح الإعدادات";
+"cancel" = "يلغي";
+
+/* loading view */
+"assalamu-alaikum" = "السلام عليكم!";
+
+/* chat preview */
+"personal-imam" = "الإمام الشخصي";
+"imam-text" = "مرحباً! أنا إمامك الشخصي. أستطيع أن أجيب على أي أسئلة حول الإسلام والقرآن والثقافة الإسلامية والتاريخ. ما السؤال الذي يثير اهتمامك اليوم؟";
+"ask-question" = "اسأل سؤالك!";
+
+/* prayer times view */
+"prayer-time" = "وقت الصلاة";
+"Фаджр" = "الفجر";
+"Восход" = "شروق الشمس";
+"Зухр" = "ظهر";
+"Аср" = "العصر";
+"Магриб" = "المغرب";
+"Иша" = "العشاء";
+"default-country" = "كازاخستان";
+
+/* posts view */
+"to-read" = "ليقرأ";
+"all-posts-loaded" = "يتم تحميل جميع المشاركات";
+"load-more" = "تحميل المزيد";
+
+/* chat screen */
+"placeholder" = "طرح سؤال";
+"delete-chat" = "حذف محادثة";
+"delete-question" = "هل أنت متأكد أنك تريد حذف هذه المحادثة؟";
+"delete" = "يمسح";
+"cancel" = "يلغي";
+
+/* imam bar view */
+"imam" = "إمام";
+"online" = "متصل";
+"last-seen" = "كان متصلاً منذ ٪@ دقيقة";
+
+/* compass view */
+"header" = "مكتشف القبلة";

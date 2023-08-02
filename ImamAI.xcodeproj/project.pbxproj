@@ -43,6 +43,7 @@
 		52FC92372A627796000F86CB /* AyahGreetingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FC92362A627796000F86CB /* AyahGreetingView.swift */; };
 		52FC923B2A62782D000F86CB /* ImamChatPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FC923A2A62782D000F86CB /* ImamChatPreview.swift */; };
 		52FF122C2A6A412F00D9816F /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FF122B2A6A412F00D9816F /* NotificationManager.swift */; };
+		5C5C9F252A79166400D40585 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5C5C9F272A79166400D40585 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,6 +84,10 @@
 		52FC92362A627796000F86CB /* AyahGreetingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AyahGreetingView.swift; sourceTree = "<group>"; };
 		52FC923A2A62782D000F86CB /* ImamChatPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImamChatPreview.swift; sourceTree = "<group>"; };
 		52FF122B2A6A412F00D9816F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		5C5C9F262A79166400D40585 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5C5C9F292A79167600D40585 /* kk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = kk; path = kk.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5C5C9F2A2A79167900D40585 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5C5C9F2B2A79167A00D40585 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +131,7 @@
 				525D14C62A52934A00F040C8 /* Assets.xcassets */,
 				525D14C82A52934A00F040C8 /* ImamAI.entitlements */,
 				525D14C92A52934A00F040C8 /* Preview Content */,
+				5C5C9F272A79166400D40585 /* Localizable.strings */,
 			);
 			path = ImamAI;
 			sourceTree = "<group>";
@@ -241,6 +247,9 @@
 			knownRegions = (
 				en,
 				Base,
+				ar,
+				ru,
+				kk,
 			);
 			mainGroup = 525D14B62A52934600F040C8;
 			packageReferences = (
@@ -261,6 +270,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				525D14CB2A52934A00F040C8 /* Preview Assets.xcassets in Resources */,
+				5C5C9F252A79166400D40585 /* Localizable.strings in Resources */,
 				525D14C72A52934A00F040C8 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -309,6 +319,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		5C5C9F272A79166400D40585 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5C5C9F262A79166400D40585 /* en */,
+				5C5C9F292A79167600D40585 /* kk */,
+				5C5C9F2A2A79167900D40585 /* ar */,
+				5C5C9F2B2A79167A00D40585 /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		525D14CC2A52934A00F040C8 /* Debug */ = {
@@ -440,8 +464,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ImamAI/Preview Content\"";
-				DEVELOPMENT_TEAM = UD7GN29598;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = UD7GN29598;
+				DEVELOPMENT_TEAM = AA27Q22GWM;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -462,7 +485,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.2;
 				MARKETING_VERSION = 1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.arthurmuratov.ImamAI;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nrakhay.ImamAI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "";
@@ -486,7 +509,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ImamAI/Preview Content\"";
-				DEVELOPMENT_TEAM = UD7GN29598;
+				DEVELOPMENT_TEAM = AA27Q22GWM;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -507,7 +530,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.2;
 				MARKETING_VERSION = 1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.arthurmuratov.ImamAI;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nrakhay.ImamAI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
