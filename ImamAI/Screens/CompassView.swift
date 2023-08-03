@@ -3,6 +3,7 @@ import CoreLocation
 
 struct CompassView: View {
     @ObservedObject var locationManager = LocationManager()
+    @EnvironmentObject private var globalData: GlobalData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     let currentDate = Date()
     
@@ -18,7 +19,7 @@ struct CompassView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text(NSLocalizedString("qibla-search", comment: "compass view"))
+            Text("qibla-search", bundle: globalData.bundle)
                 .font(.title)
                 .fontWeight(.bold)
             

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ImamNavBarView: View {
     @ObservedObject private var viewModel = ChatViewModel.shared
+    @EnvironmentObject private var globalData: GlobalData
     @Binding var sentOneMessage: Bool
     @State var randomInt = Int.random(in: 1...9)
     @Binding var showAlert: Bool
@@ -18,16 +19,16 @@ struct ImamNavBarView: View {
                     .shadow(radius: 3)
                 
                 VStack(alignment: .leading) {
-                    Text(NSLocalizedString("imam", comment: "imam bar view"))
+                    Text("imam", bundle: globalData.bundle)
                         .font(.headline)
                         .fontWeight(.bold)
                     
                     if sentOneMessage {
-                        Text(NSLocalizedString("online", comment: "imam bar view"))
+                        Text("online", bundle: globalData.bundle)
                             .font(.subheadline)
                             .foregroundColor(.blue)
                     } else {
-                        let localized = NSLocalizedString("last-seen", comment: "imam bar view")
+                        let localized = NSLocalizedString("last-seen", bundle: globalData.bundle ?? Bundle.main, comment: "imam bar view")
                         Text(String.localizedStringWithFormat(localized, String(randomInt)))
                             .font(.subheadline)
                             .foregroundColor(.gray)

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct LoadingView: View {
     @EnvironmentObject var networkMonitor: NetworkMonitor
+    @EnvironmentObject private var globalData: GlobalData
     @Binding var errorText: String
     
     var body: some View {
@@ -19,7 +20,7 @@ struct LoadingView: View {
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 200, height: 200)
             
-            Text(NSLocalizedString("assalamu-alaikum", comment: "loading view"))
+            Text("assalamu-alaikum", bundle: globalData.bundle)
                 .font(.title)
                 .fontWeight(.bold)
             
@@ -32,7 +33,7 @@ struct LoadingView: View {
                     .padding()
                     .multilineTextAlignment(.center)
             } else if !networkMonitor.isConnected {
-                Text(NSLocalizedString("no-internet", comment: "errors"))
+                Text("no-internet", bundle: globalData.bundle)
                     .foregroundColor(.gray)
                     .font(.subheadline)
                     .padding()

@@ -183,7 +183,7 @@ class ChatViewModel: ObservableObject {
             request.httpBody = requestData
             
             URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-                if let error = error {
+                if error != nil {
                     self?.showError()
                     self?.isTyping = false
                     return
@@ -281,7 +281,7 @@ class ChatViewModel: ObservableObject {
 
             if let conversationID = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) {
                 self?.conversationID = conversationID.replacingOccurrences(of: "\"", with: "")
-                print("conversationID: ", self?.conversationID)
+                print("conversationID: ", self?.conversationID ?? "")
                 completion(conversationID)
             } else {
                 print("Invalid response")

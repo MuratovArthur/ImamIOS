@@ -11,7 +11,6 @@ struct HomeHeaderView: View {
     let currentDate = Date()
     @State private var isMenuVisible = false
     @EnvironmentObject private var globalData: GlobalData
-    private let languages = ["English", "Arabian", "Kazakh", "Russian"]
     
     var body: some View {
         HStack {
@@ -29,11 +28,21 @@ struct HomeHeaderView: View {
                 ForEach(Language.allCases, id: \.self) { language in
                     Button {
                         globalData.appLanguage = language
+                        let locale = GlobalData.decideLocale(lang: language)
+                        globalData.locale = locale
+                        UserDefaultsManager.shared.setLanguage(locale)
                         print("Language switched to \(globalData.appLanguage.rawValue)")
                     } label: {
                         Text(language.rawValue)
                         Spacer()
-                        language.rawValue == globalData.appLanguage.rawValue ? Image(systemName: "checkmark") : nil
+                        
+                        if let locale = UserDefaultsManager.shared.getLanguage() {
+                            if language.rawValue == GlobalData.decideLanguageFromLocale(locale: locale) {
+                                Image(systemName: "checkmark")
+                            }
+                        } else if language.rawValue == globalData.appLanguage.rawValue {
+                            Image(systemName: "checkmark")
+                        }
                     }
                     
                 }

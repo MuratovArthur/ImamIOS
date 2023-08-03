@@ -9,10 +9,12 @@ import SwiftUI
 
 struct ImamChatPreview: View {
     @Binding var selectedTab: ContentView.Tab
+    @EnvironmentObject private var globalData: GlobalData
     
     var body: some View {
         VStack(alignment: .leading){
-            Text(NSLocalizedString("personal-imam", comment: "chat preview"))
+//            Text(NSLocalizedString("personal-imam", comment: "chat preview"))
+            Text("personal-imam", bundle: globalData.bundle)
                 .font(.title)
                 .fontWeight(.bold)
                 .padding(.horizontal)
@@ -27,7 +29,7 @@ struct ImamChatPreview: View {
                 Spacer()
                 
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(NSLocalizedString("imam-text", comment: "chat preview"))
+                    Text("imam-text", bundle: globalData.bundle)
                         .font(.subheadline)
                 }
                 
@@ -38,7 +40,7 @@ struct ImamChatPreview: View {
             Button(action: {
                 selectedTab = .other
             }) {
-                Text(NSLocalizedString("ask-question", comment: "chat preview"))
+                Text("ask-question", bundle: globalData.bundle)
                     .font(.headline)
                     .padding(.vertical)
                     .frame(maxWidth: .infinity)

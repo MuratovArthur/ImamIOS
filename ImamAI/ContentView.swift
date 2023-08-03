@@ -147,7 +147,7 @@ struct ContentView: View {
         
         if !useAlmatyLocation {
             guard let location = locationManager.location else {
-                errorText = NSLocalizedString("no-internet-suggestion", comment: "errors")
+                errorText = NSLocalizedString("no-internet-suggestion", bundle: globalData.bundle ?? Bundle.main, comment: "errors")
                 return
             }
             latitude = String(location.coordinate.latitude)
@@ -180,7 +180,7 @@ struct ContentView: View {
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: parameters)
         } catch {
-            errorText = NSLocalizedString("no-internet-suggestion", comment: "errors")
+            errorText = NSLocalizedString("no-internet-suggestion", bundle: globalData.bundle ?? Bundle.main, comment: "errors")
             isRequestInProgress = false
             return
         }
@@ -198,22 +198,22 @@ struct ContentView: View {
                 
                 if let error = error {
                     if currentRetryAttempt < maxRetryAttempts {
-                        errorText = NSLocalizedString("no-internet-suggestion", comment: "errors")
+                        errorText = NSLocalizedString("no-internet-suggestion", bundle: globalData.bundle ?? Bundle.main, comment: "errors")
                         print(error)
                         sendRequest() // Retry the request
                     } else {
-                        errorText = NSLocalizedString("no-internet-suggestion", comment: "errors")
+                        errorText = NSLocalizedString("no-internet-suggestion", bundle: globalData.bundle ?? Bundle.main, comment: "errors")
                     }
                     return
                 }
                 
                 if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
-                    errorText = NSLocalizedString("no-internet-suggestion", comment: "errors")
+                    errorText = NSLocalizedString("no-internet-suggestion", bundle: globalData.bundle ?? Bundle.main, comment: "errors")
                     return
                 }
                 
                 guard let data = data else {
-                    errorText = NSLocalizedString("no-internet-suggestion", comment: "errors")
+                    errorText = NSLocalizedString("no-internet-suggestion", bundle: globalData.bundle ?? Bundle.main, comment: "errors")
                     return
                 }
                 
@@ -221,7 +221,7 @@ struct ContentView: View {
                     let array = try JSONDecoder().decode([PrayerTime].self, from: data)
                     
                     guard let todayPrayerTime = array.first else {
-                        errorText = NSLocalizedString("no-internet-suggestion", comment: "errors")
+                        errorText = NSLocalizedString("no-internet-suggestion", bundle: globalData.bundle ?? Bundle.main, comment: "errors")
                         return
                     }
                     
@@ -234,7 +234,7 @@ struct ContentView: View {
                     NotificationManager.shared.reschedule()
                     
                 } catch {
-                    errorText = NSLocalizedString("no-internet-suggestion", comment: "errors")
+                    errorText = NSLocalizedString("no-internet-suggestion", bundle: globalData.bundle ?? Bundle.main, comment: "errors")
                 }
             }
             
@@ -257,7 +257,7 @@ struct ContentView: View {
                         self.makeRequestWithRetry(attempts: attempts - 1)
                     }
                 } else if attempts == 0 {
-                    errorText = NSLocalizedString("no-internet-suggestion", comment: "errors")
+                    errorText = NSLocalizedString("no-internet-suggestion", bundle: globalData.bundle ?? Bundle.main, comment: "errors")
                 }
             }
         }

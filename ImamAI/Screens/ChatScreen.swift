@@ -5,13 +5,15 @@ import Foundation
 
 struct ChatScreen: View {
     @ObservedObject private var viewModel = ChatViewModel.shared
+    @ObservedObject var networkMonitor = NetworkMonitor()
+    @EnvironmentObject private var globalData: GlobalData
     @State var messageText: String = ""
     @State var scrollToBottom: Bool = true
     @State var textViewValue = String()
     @State var textViewHeight: CGFloat = 10.0
     @Binding var selectedTab: ContentView.Tab
     @State private var isTyping = false
-    @ObservedObject var networkMonitor = NetworkMonitor()
+    
     @State private var sentOneMessage = false
     @State private var showAlert = false
     
@@ -111,7 +113,7 @@ struct ChatScreen: View {
                 
                 if networkMonitor.isConnected {
                     HStack {
-                        ResizableTextView(text: $textViewValue, height: $textViewHeight, placeholderText: NSLocalizedString("placeholder", comment: "chat screen"))
+                        ResizableTextView(text: $textViewValue, height: $textViewHeight, placeholderText: NSLocalizedString("placeholder", bundle: globalData.bundle ?? Bundle.main, comment: "chat screen"))
                             .frame(height: textViewHeight < 160 ? self.textViewHeight : 160)
                             .cornerRadius(16)
                         
@@ -132,7 +134,7 @@ struct ChatScreen: View {
                     }
                 }
                 else{
-                    Text(NSLocalizedString("no-internet", comment: "errors"))
+                    Text("no-internet", bundle: globalData.bundle)
                         .font(.subheadline)
                         .foregroundColor(.gray)
                         .padding(.vertical)
@@ -162,15 +164,15 @@ struct ChatScreen: View {
             }
             .alert(isPresented: $showAlert, content: {
                 Alert(
-                    title: Text(NSLocalizedString("delete-chat", comment: "chat screen")),
-                    message: Text(NSLocalizedString("delete-question", comment: "chat screen")),
-                    primaryButton: .destructive(Text(NSLocalizedString("delete", comment: "chat screen"))) {
+                    title: Text("delete-chat", bundle: globalData.bundle),
+                    message: Text("delete-question", bundle: globalData.bundle),
+                    primaryButton: .destructive(Text("delete", bundle: globalData.bundle)) {
                         if viewModel.chatMessages.count > 1{
                             viewModel.clearHistory()
                             print("Updated")
                         }
                     },
-                    secondaryButton: .cancel(Text(NSLocalizedString("cancel", comment: "chat screen")))
+                    secondaryButton: .cancel(Text("cancel", bundle: globalData.bundle))
                 )
             })
         }

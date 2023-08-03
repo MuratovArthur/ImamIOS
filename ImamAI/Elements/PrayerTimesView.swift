@@ -7,6 +7,7 @@ struct PrayerTimesView: View {
     let country = NSLocalizedString("default-country", comment: "prayer times view")
     let city: String
 
+    @EnvironmentObject private var globalData: GlobalData
     @State private var isMuted: [Bool] = UserDefaultsManager.shared.getIsMuted() ?? Array(repeating: false, count: 6)
 
     var body: some View {
@@ -18,7 +19,7 @@ struct PrayerTimesView: View {
             }
             .padding(.top, 16)
 
-            Text(NSLocalizedString("prayer-time", comment: "prayer times view"))
+            Text("prayer-time", bundle: globalData.bundle)
                 .font(.title)
                 .fontWeight(.bold)
 
@@ -27,7 +28,7 @@ struct PrayerTimesView: View {
                 let isMutedForPrayerTime = $isMuted[index]
 
                 HStack {
-                    Text(NSLocalizedString(key, comment: "prayer times view"))
+                    Text("\(key)", bundle: globalData.bundle)
                         .font(.subheadline)
                     Spacer()
                     Text((prayerTime?.orderedValues[key] ?? "") ?? "")

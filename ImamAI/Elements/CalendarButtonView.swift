@@ -25,7 +25,7 @@ struct CalendarButtonView: View {
     }
 
     private func getLocale() -> String {
-        let locale = NSLocale.current.languageCode
+        let locale = UserDefaultsManager.shared.getLanguage() ?? GlobalData.decideLocale(lang: globalData.appLanguage)
 
         switch locale {
         case "ru":

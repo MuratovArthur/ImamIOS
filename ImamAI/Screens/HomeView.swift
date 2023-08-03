@@ -44,7 +44,7 @@ struct HomeView: View {
                         .onAppear {
                             checkPermissions()
                             print("HomeView appeared.")
-                            print("prayerTimes: \(prayerTime)")
+                            print("prayerTimes: \(String(describing: prayerTime))")
                             print("city: \(city)")
                             scrollToBottom = true
                             scrollViewProxy.scrollTo(scrollPosition)
@@ -54,14 +54,14 @@ struct HomeView: View {
                 }
                 .alert(isPresented: $showAlertForSettings) {
                     Alert(
-                        title: Text(NSLocalizedString("action-required", comment: "alerts")),
-                        message: Text(NSLocalizedString("internet-alert", comment: "alerts")),
-                        primaryButton: .default(Text(NSLocalizedString("open-settings", comment: "alerts")), action: {
+                        title: Text("action-required", bundle: globalData.bundle),
+                        message: Text("internet-alert", bundle: globalData.bundle),
+                        primaryButton: .default(Text("open-settings", bundle: globalData.bundle), action: {
                             DispatchQueue.main.async {
                                 NotificationManager.shared.openAppSettings()
                             }
                         }),
-                        secondaryButton: .cancel(Text(NSLocalizedString("cancel", comment: "alerts")))
+                        secondaryButton: .cancel(Text("cancel", bundle: globalData.bundle))
                     )
                 }
                 .onAppear {

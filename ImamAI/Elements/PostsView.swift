@@ -15,13 +15,14 @@ struct PostsView: View {
     @State private var selectedPost: Post?
     @State private var allPostsLoaded = false
     @Binding var tabBarShouldBeHidden: Bool
+    @EnvironmentObject private var globalData: GlobalData
     let maxDescriptionLength = 50
     let postHeight: CGFloat = 130
     
     var body: some View {
         
         VStack(alignment: .leading){
-            Text(NSLocalizedString("to-read", comment: "posts view"))
+            Text("to-read", bundle: globalData.bundle)
                 .font(.title)
                 .fontWeight(.bold)
                 .padding(.horizontal)
@@ -91,7 +92,7 @@ struct PostsView: View {
                         }
                     }
                     if allPostsLoaded {
-                        Text(NSLocalizedString("all-posts-loaded", comment: "posts view"))
+                        Text("all-posts-loaded", bundle: globalData.bundle)
                             .font(.subheadline)
                             .foregroundColor(.gray)
                             .padding(.top, 5)
@@ -108,7 +109,7 @@ struct PostsView: View {
                                 }
                                 
                             }) {
-                                Text(NSLocalizedString("load-more", comment: "posts view"))
+                                Text("load-more", bundle: globalData.bundle)
                                     .font(.headline)
                                     .foregroundColor(.black)
                                     .padding()

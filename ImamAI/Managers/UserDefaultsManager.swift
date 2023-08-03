@@ -12,6 +12,7 @@ class UserDefaultsManager {
     
     private let isMutedKey = "isMutedKey"
     private let conversationIDKey = "conversationIDKey"
+    private let appLanguage = "appLanguage"
 //    private let countryKey = "UserDefaultCountry"
 //    private let cityKey = "UserDefaultCity"
 //
@@ -30,6 +31,14 @@ class UserDefaultsManager {
 //    func saveCity(_ city: String) {
 //        UserDefaults.standard.set(city, forKey: cityKey)
 //    }
+    
+    func setLanguage(_ value: String) {
+        UserDefaults.standard.set(value, forKey: appLanguage)
+    }
+    
+    func getLanguage() -> String? {
+        UserDefaults.standard.string(forKey: appLanguage)
+    }
     
     func saveIsMuted(_ value: [Bool]) {
         UserDefaults.standard.set(value, forKey: isMutedKey)
