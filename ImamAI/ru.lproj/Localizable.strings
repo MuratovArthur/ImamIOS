@@ -53,4 +53,4 @@
 "last-seen" = "был в сети %@ мин. назад";
 
 /* compass view */
-"header" = "Поиск Киблы";
+"qibla-search" = "Поиск Киблы";

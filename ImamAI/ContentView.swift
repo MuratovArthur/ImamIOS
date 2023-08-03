@@ -66,14 +66,14 @@ struct ContentView: View {
                                 .exclusively(before: DragGesture())
                             )
                 case .settings:
-                    CompassView()
-                        .navigationBarHidden(true)
+//                    CompassView()
+//                        .navigationBarHidden(true)
+                    FeaturesView()
                 case .loading:
                     LoadingView(errorText: $errorText)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .environmentObject(networkMonitor)
                 }
-                
                 
                 Spacer()
             }

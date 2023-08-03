@@ -52,4 +52,4 @@
 "last-seen" = "last seen %@ mins. ago";
 
 /* compass view */
-"header" = "Qibla Finder";
+"qibla-search" = "Qibla Finder";

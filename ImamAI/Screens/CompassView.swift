@@ -3,15 +3,24 @@ import CoreLocation
 
 struct CompassView: View {
     @ObservedObject var locationManager = LocationManager()
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     let currentDate = Date()
+    
+    var backButton: some View {
+        Button(action: {
+                self.presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.black)
+                }
+    }
     
     var body: some View {
         VStack(alignment: .leading) {
-            
-            Text(NSLocalizedString("header", comment: "compass view"))
+            Text(NSLocalizedString("qibla-search", comment: "compass view"))
                 .font(.title)
                 .fontWeight(.bold)
-//                .padding()
             
             Spacer()
             
@@ -37,7 +46,10 @@ struct CompassView: View {
         .onDisappear {
             locationManager.stopUpdating()
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: backButton)
     }
+        
 }
 
 struct CompassView_Previews: PreviewProvider {

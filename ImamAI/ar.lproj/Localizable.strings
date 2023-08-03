@@ -52,4 +52,4 @@
 "last-seen" = "كان متصلاً منذ ٪@ دقيقة";
 
 /* compass view */
-"header" = "مكتشف القبلة";
+"qibla-search" = "مكتشف القبلة";
