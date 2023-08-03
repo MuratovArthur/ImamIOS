@@ -299,6 +299,6 @@ class ChatViewModel: ObservableObject {
     
     func showError() {
         print("Error is being shown")
-        self.errorMessage = "Произошла ошибка. Проверьте интернет соединение и попробуйте перезайти."
+        self.errorMessage = NSLocalizedString("no-internet-suggestion", comment: "errors")
     }
 }

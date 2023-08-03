@@ -14,10 +14,9 @@ struct FeaturesView: View {
     var body: some View {
         NavigationView {
             VStack (alignment: .leading) {
-                Text("Title")
+                Text("Useful")
                     .font(.title)
                     .fontWeight(.bold)
-//                Spacer()
                 VStack {
                     NavigationLink {
                         CompassView()
@@ -46,7 +45,7 @@ struct FeatureContainerView: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             Color(.systemGray6)
-                .cornerRadius(12)
+                .cornerRadius(10)
             
             VStack(alignment: .leading, spacing: 8) {
                 Image(systemName: imageName) // Replace this

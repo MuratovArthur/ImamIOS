@@ -29,16 +29,14 @@ struct ChatScreen: View {
                 if viewModel.errorMessage == ""
                 {
                     ScrollViewReader { scrollViewProxy in
-                        if !viewModel.fetchingMessages{
+                        if !viewModel.fetchingMessages {
                             ScrollView(showsIndicators: false) {
                                 VStack {
-                                   
                                     ForEach(viewModel.chatMessages, id: \.id) { message in
                                         messageView(message: message)
                                             .id(message.id)
                                             .font(.system(size: 17))
                                     }
-                                 
                                     .onAppear {
                                         scrollToLastMessage(scrollViewProxy: scrollViewProxy)
                                     }
@@ -150,7 +148,7 @@ struct ChatScreen: View {
             .onAppear {
                 if viewModel.conversationID == nil {
                     viewModel.createNewConversation { conversationID in
-                        if let conversationID = conversationID {
+                        if conversationID != nil {
                             viewModel.fetchChatMessages()
                             scrollToBottom = true
                         } else {
