@@ -66,9 +66,9 @@ struct ContentView: View {
                                 .exclusively(before: DragGesture())
                             )
                 case .settings:
-//                    CompassView()
-//                        .navigationBarHidden(true)
-                    FeaturesView()
+                    CompassView()
+                        .navigationBarHidden(true)
+//                    FeaturesView()
                 case .loading:
                     LoadingView(errorText: $errorText)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)

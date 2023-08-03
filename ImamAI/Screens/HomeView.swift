@@ -3,7 +3,6 @@ import CoreLocation
 
 struct HomeView: View {
     let imageNames = ["IMAGE 1", "IMAGE 2", "IMAGE 3", "IMAGE 4", "IMAGE 2", "IMAGE 3"]
-    let currentDate = Date()
     @State private var isChatOpen = false
     @State private var scrollToBottom = false // New state variable
     @State private var isEventListVisible = false
@@ -23,7 +22,7 @@ struct HomeView: View {
                 VStack(alignment: .center) {
                     ScrollViewReader { scrollViewProxy in
                         ScrollView(showsIndicators: false) {
-                            CalendarButtonView(currentDate: currentDate)
+                            HomeHeaderView()
                             
                             ImamChatPreview(selectedTab: $selectedTab)
                             

@@ -46,6 +46,7 @@
 		5C397C812A7A54B600F5AFA0 /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C397C802A7A54B600F5AFA0 /* FeaturesView.swift */; };
 		5C397C832A7A58F600F5AFA0 /* BooksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C397C822A7A58F600F5AFA0 /* BooksView.swift */; };
 		5C5C9F252A79166400D40585 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5C5C9F272A79166400D40585 /* Localizable.strings */; };
+		5CC69B0C2A7B73310084DFDF /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC69B0B2A7B73310084DFDF /* HomeHeaderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -92,6 +93,7 @@
 		5C5C9F292A79167600D40585 /* kk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = kk; path = kk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5C5C9F2A2A79167900D40585 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5C5C9F2B2A79167A00D40585 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5CC69B0B2A7B73310084DFDF /* HomeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +182,7 @@
 				52FC923A2A62782D000F86CB /* ImamChatPreview.swift */,
 				529403962A630F7300176CA5 /* TypingAnimationView.swift */,
 				52AD2E812A65619B0053A52A /* ImamNavBarView.swift */,
+				5CC69B0B2A7B73310084DFDF /* HomeHeaderView.swift */,
 			);
 			path = Elements;
 			sourceTree = "<group>";
@@ -308,6 +311,7 @@
 				528B29212A62B4480001E455 /* HistoryView.swift in Sources */,
 				52FC92312A625F66000F86CB /* LoadingView.swift in Sources */,
 				525D14D22A52A00000F040C8 /* HomeView.swift in Sources */,
+				5CC69B0C2A7B73310084DFDF /* HomeHeaderView.swift in Sources */,
 				5261471C2A69863A008AE45E /* UserDefaultsManager.swift in Sources */,
 				5C397C812A7A54B600F5AFA0 /* FeaturesView.swift in Sources */,
 				52F860C52A54714B0032DE79 /* ChatScreen.swift in Sources */,

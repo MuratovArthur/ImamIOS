@@ -5,11 +5,11 @@ struct CalendarButtonView: View {
 
     let currentDate: Date
     
-    let islamicDateFormatter: DateFormatter = {
+    var islamicDateFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.calendar = Calendar(identifier: .islamicUmmAlQura)
         return formatter
-    }()
+    }
     
     var gregorianDateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -79,7 +79,11 @@ struct CalendarButtonView: View {
       }
     
     func formatIslamicDate(date: Date) -> String {
-        let components = islamicDateFormatter.calendar.dateComponents([.year, .month, .day], from: date)
+        let formatter = islamicDateFormatter
+        let locale = getLocale()
+        formatter.locale = Locale(identifier: locale)
+    
+        let components = formatter.calendar.dateComponents([.year, .month, .day], from: date)
         if let day = components.day, let month = components.month, let year = components.year, let monthName = islamicMonths[month] {
             return "\(monthName) \(day), \(year)"
         } else {
