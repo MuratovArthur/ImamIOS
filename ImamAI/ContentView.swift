@@ -9,6 +9,7 @@ struct ContentView: View {
         case settings
     }
     
+    @StateObject var globalData = GlobalData()
     @StateObject var locationManager = LocationManager.shared
     @StateObject var scrollStore = ScrollPositionStore()
     @State private var selectedTab: Tab = .loading
@@ -46,6 +47,7 @@ struct ContentView: View {
                 case .home:
                     HomeView(selectedTab: $selectedTab, prayerTime: $prayerTime, city: $city, tabBarShouldBeHidden: $tabBarShouldBeHidden, useAlmatyLocation: $useAlmatyLocation, firstTimeInApp:$firstTimeInApp)
                         .environmentObject(scrollStore)
+                        .environmentObject(globalData)
                         .navigationBarHidden(true)
                 case .other:
                     ChatScreen(viewModel: ChatViewModel(), selectedTab: $selectedTab)
@@ -65,14 +67,17 @@ struct ContentView: View {
                             .simultaneousGesture(TapGesture(count: 1)
                                 .exclusively(before: DragGesture())
                             )
+                            .environmentObject(globalData)
                 case .settings:
                     CompassView()
                         .navigationBarHidden(true)
+                        .environmentObject(globalData)
 //                    FeaturesView()
                 case .loading:
                     LoadingView(errorText: $errorText)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .environmentObject(networkMonitor)
+                        .environmentObject(globalData)
                 }
                 
                 Spacer()
@@ -140,14 +145,14 @@ struct ContentView: View {
         var latitude = ""
         var longitude = ""
         
-        if !useAlmatyLocation{
+        if !useAlmatyLocation {
             guard let location = locationManager.location else {
                 errorText = NSLocalizedString("no-internet-suggestion", comment: "errors")
                 return
             }
             latitude = String(location.coordinate.latitude)
             longitude = String(location.coordinate.longitude)
-        }else{
+        } else {
             latitude = "43.238293"
             longitude = "76.945465"
         }

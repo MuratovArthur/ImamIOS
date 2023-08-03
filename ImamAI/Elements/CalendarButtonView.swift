@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct CalendarButtonView: View {
+    @EnvironmentObject private var globalData: GlobalData
     @State var isIslamic = false
 
     let currentDate: Date
