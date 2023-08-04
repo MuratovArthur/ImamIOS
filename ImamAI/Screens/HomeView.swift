@@ -15,7 +15,6 @@ struct HomeView: View {
     @Binding var useAlmatyLocation: Bool
     @State private var notificationAuthorizationStatus: UNAuthorizationStatus?
     @State private var showAlertForSettings = false
-    @Binding var firstTimeInApp: Bool
     
     var body: some View {
         NavigationView {
@@ -61,7 +60,9 @@ struct HomeView: View {
                                 NotificationManager.shared.openAppSettings()
                             }
                         }),
-                        secondaryButton: .cancel(Text("cancel", bundle: globalData.bundle))
+                        secondaryButton: .cancel(Text("cancel", bundle: globalData.bundle), action: {
+                            showAlertForSettings = false
+                        })
                     )
                 }
                 .onAppear {
@@ -79,9 +80,11 @@ struct HomeView: View {
         // Check notification permission
         NotificationManager.shared.getNotificationAuthorizationStatus { status in
             notificationAuthorizationStatus = status
-            if status != .authorized, firstTimeInApp {
+            
+            let alertShown = UserDefaultsManager.shared.getSettingsAlertShown()
+            if status != .authorized, !alertShown {
                 showAlertForSettings = true
-                firstTimeInApp = false
+                UserDefaultsManager.shared.setSettingsAlertShown(true)
             }
         }
         

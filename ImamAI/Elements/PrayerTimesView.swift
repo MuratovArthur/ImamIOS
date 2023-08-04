@@ -28,7 +28,8 @@ struct PrayerTimesView: View {
                 let isMutedForPrayerTime = $isMuted[index]
 
                 HStack {
-                    Text("\(key)", bundle: globalData.bundle)
+//                    Text("\(key)", bundle: globalData.bundle)
+                    Text(NSLocalizedString("\(key)", bundle: globalData.bundle ?? Bundle.main, comment: "prayer times view"))
                         .font(.subheadline)
                     Spacer()
                     Text((prayerTime?.orderedValues[key] ?? "") ?? "")
