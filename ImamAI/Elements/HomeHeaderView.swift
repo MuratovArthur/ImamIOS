@@ -36,11 +36,13 @@ struct HomeHeaderView: View {
                         Text(language.rawValue)
                         Spacer()
                         
+                        
+                        
                         if let locale = UserDefaultsManager.shared.getLanguage() {
                             if language.rawValue == GlobalData.decideLanguageFromLocale(locale: locale) {
                                 Image(systemName: "checkmark")
                             }
-                        } else if language.rawValue == globalData.appLanguage.rawValue {
+                        } else if GlobalData.decideLocale(lang: language) == globalData.locale {
                             Image(systemName: "checkmark")
                         }
                     }
