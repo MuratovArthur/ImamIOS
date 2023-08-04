@@ -49,7 +49,7 @@
 /* imam bar view */
 "imam" = "إمام";
 "online" = "متصل";
-"last-seen" = "كان متصلاً منذ ٪@ دقيقة";
+"last-seen" = "كان متصلاً منذ %@ دقيقة";
 
 /* compass view */
 "qibla-search" = "مكتشف القبلة";
