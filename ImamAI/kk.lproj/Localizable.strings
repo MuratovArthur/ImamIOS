@@ -42,7 +42,7 @@
 /* chat screen */
 "placeholder" = "Сұрағыңызды қойыңыз";
 "delete-chat" = "Әңгімені жою";
-"delete-question" = "Осы әңгімені шынымен жойғыңыз келе ме??";
+"delete-question" = "Осы әңгімені шынымен жойғыңыз келе ме?";
 "delete" = "Жою";
 "cancel" = "Бас тарту";
 "imam-is-typing" = "Имам теріп жатыр";
