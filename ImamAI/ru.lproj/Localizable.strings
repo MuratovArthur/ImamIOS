@@ -46,6 +46,7 @@
 "delete-question" = "Вы уверены, что хотите удалить эту беседу?";
 "delete" = "Удалить";
 "cancel" = "Отмена";
+"imam-is-typing" = "Имам печатает";
 
 /* imam bar view */
 "imam" = "Имам";

@@ -45,6 +45,7 @@
 "delete-question" = "هل أنت متأكد أنك تريد حذف هذه المحادثة؟";
 "delete" = "يمسح";
 "cancel" = "يلغي";
+"imam-is-typing" = "الإمام يكتب";
 
 /* imam bar view */
 "imam" = "إمام";
