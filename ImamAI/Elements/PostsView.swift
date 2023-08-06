@@ -26,6 +26,7 @@ struct PostsView: View {
                 .font(.title)
                 .fontWeight(.bold)
                 .padding(.horizontal)
+                .padding(.top)
             
             ScrollView {
                 VStack(spacing: 8) {

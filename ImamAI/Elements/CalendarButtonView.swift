@@ -3,7 +3,7 @@ import SwiftUI
 struct CalendarButtonView: View {
     @EnvironmentObject private var globalData: GlobalData
     @State var isIslamic = false
-
+    
     let currentDate: Date
     
     var islamicDateFormatter: DateFormatter {
@@ -19,14 +19,14 @@ struct CalendarButtonView: View {
         formatter.dateStyle = .medium
         return formatter
     }
-
+    
     init(currentDate: Date) {
         self.currentDate = currentDate
     }
-
+    
     private func getLocale() -> String {
         let locale = UserDefaultsManager.shared.getLanguage() ?? GlobalData.decideLocale(lang: globalData.appLanguage)
-
+        
         switch locale {
         case "ru":
             return "ru_RU"
@@ -53,37 +53,41 @@ struct CalendarButtonView: View {
         11: "Dhu al-Qi'dah",
         12: "Dhu al-Hijjah"
     ]
-
+    
     var body: some View {
-          Button(action: {
-              self.isIslamic.toggle()
-          }) {
-              ZStack {
-                  RoundedRectangle(cornerRadius: 20)
-                      .foregroundColor(Color(UIColor.systemGray6))
-                      .frame(width: calculateButtonWidth()+UIScreen.main.bounds.width*0.15,
-                             height: UIScreen.main.bounds.height * 0.05)
-                  
-                  HStack {
-                      Image(systemName: "calendar")
-                          .font(.subheadline)
-                          .padding(.leading)
-
-                      Text(isIslamic ? formatIslamicDate(date: currentDate) : gregorianDateFormatter.string(from: currentDate))
-                          .font(.body)
-                          .padding(.trailing)
-                  }
-              }
-              .padding(8)
-              .foregroundColor(Color.black)
-          }
-      }
+        Button(action: {
+            self.isIslamic.toggle()
+        }) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 20)
+                    .foregroundColor(Color(UIColor.systemGray6))
+                    .frame(width: calculateButtonWidth()+UIScreen.main.bounds.width*0.15,
+                           height: UIScreen.main.bounds.height * 0.05)
+                
+                VStack(alignment: .leading) { // Set alignment to .leading
+                    HStack() {
+                        Image(systemName: "calendar")
+                            .font(.subheadline)
+                            .padding(.leading)
+                        
+                        Text(isIslamic ? formatIslamicDate(date: currentDate) : gregorianDateFormatter.string(from: currentDate))
+                            .font(.body)
+                            .padding(.trailing)
+                        
+                    }
+                    
+                }
+            }
+            .padding(8)
+            .foregroundColor(Color.black)
+        }
+    }
     
     func formatIslamicDate(date: Date) -> String {
         let formatter = islamicDateFormatter
         let locale = getLocale()
         formatter.locale = Locale(identifier: locale)
-    
+        
         let components = formatter.calendar.dateComponents([.year, .month, .day], from: date)
         if let day = components.day, let month = components.month, let year = components.year, let monthName = islamicMonths[month] {
             return "\(monthName) \(day), \(year)"
@@ -93,10 +97,10 @@ struct CalendarButtonView: View {
     }
     
     private func calculateButtonWidth() -> CGFloat {
-          let text = isIslamic ? formatIslamicDate(date: currentDate) : gregorianDateFormatter.string(from: currentDate)
-          let textWidth = text.size(withAttributes: [.font: UIFont.systemFont(ofSize: UIFont.systemFontSize)]).width
-          let horizontalPadding: CGFloat = 40 // Adjust the padding value as needed
-          
-          return textWidth + horizontalPadding
-      }
+        let text = isIslamic ? formatIslamicDate(date: currentDate) : gregorianDateFormatter.string(from: currentDate)
+        let textWidth = text.size(withAttributes: [.font: UIFont.systemFont(ofSize: UIFont.systemFontSize)]).width
+        let horizontalPadding: CGFloat = 40 // Adjust the padding value as needed
+        
+        return textWidth + horizontalPadding
+    }
 }
