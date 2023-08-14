@@ -46,6 +46,7 @@
 		5C397C812A7A54B600F5AFA0 /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C397C802A7A54B600F5AFA0 /* FeaturesView.swift */; };
 		5C397C832A7A58F600F5AFA0 /* BooksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C397C822A7A58F600F5AFA0 /* BooksView.swift */; };
 		5C5C9F252A79166400D40585 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5C5C9F272A79166400D40585 /* Localizable.strings */; };
+		5C69650F2A89E74400ED4A37 /* LocationPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C69650E2A89E74400ED4A37 /* LocationPickerView.swift */; };
 		5CC69B0C2A7B73310084DFDF /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC69B0B2A7B73310084DFDF /* HomeHeaderView.swift */; };
 		5CC69B0E2A7BA78F0084DFDF /* GlobalData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC69B0D2A7BA78F0084DFDF /* GlobalData.swift */; };
 /* End PBXBuildFile section */
@@ -94,6 +95,7 @@
 		5C5C9F292A79167600D40585 /* kk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = kk; path = kk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5C5C9F2A2A79167900D40585 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5C5C9F2B2A79167A00D40585 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5C69650E2A89E74400ED4A37 /* LocationPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerView.swift; sourceTree = "<group>"; };
 		5CC69B0B2A7B73310084DFDF /* HomeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
 		5CC69B0D2A7BA78F0084DFDF /* GlobalData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -210,6 +212,7 @@
 				528B29202A62B4480001E455 /* HistoryView.swift */,
 				5C397C802A7A54B600F5AFA0 /* FeaturesView.swift */,
 				5C397C822A7A58F600F5AFA0 /* BooksView.swift */,
+				5C69650E2A89E74400ED4A37 /* LocationPickerView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -309,6 +312,7 @@
 				52A26D212A5D1BC900AB5062 /* IslamicEventListView.swift in Sources */,
 				52FC92352A626B86000F86CB /* CalendarButtonView.swift in Sources */,
 				52FC923B2A62782D000F86CB /* ImamChatPreview.swift in Sources */,
+				5C69650F2A89E74400ED4A37 /* LocationPickerView.swift in Sources */,
 				52FC92292A625D55000F86CB /* ScrollPositionStore.swift in Sources */,
 				52772F2A2A6C208000AC9BF3 /* PrayerTime.swift in Sources */,
 				528B29212A62B4480001E455 /* HistoryView.swift in Sources */,

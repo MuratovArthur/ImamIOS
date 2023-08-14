@@ -9,11 +9,14 @@ struct TypingAnimationView: View {
     
     var body: some View {
         HStack {
-            Text(NSLocalizedString("imam-is-typing", bundle: globalData.bundle ?? Bundle.main, comment: "chat screen") + String(repeating: ".", count: dotCount))
-                .animation(Animation.easeInOut(duration: animationDuration).repeatForever())
-                .onAppear {
-                    startAnimation()
-                }
+//            Text(NSLocalizedString("imam-is-typing", bundle: globalData.bundle ?? Bundle.main, comment: "chat screen") + String(repeating: ".", count: dotCount))
+//                .animation(Animation.easeInOut(duration: animationDuration).repeatForever())
+//                .onAppear {
+//                    startAnimation()
+//                }
+//                .foregroundColor(.gray)
+//            Spacer()
+            Text(NSLocalizedString("imam-is-typing", bundle: globalData.bundle ?? Bundle.main, comment: "chat screen"))
                 .foregroundColor(.gray)
             Spacer()
         }

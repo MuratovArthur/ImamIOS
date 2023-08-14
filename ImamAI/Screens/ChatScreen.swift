@@ -101,13 +101,11 @@ struct ChatScreen: View {
                 
                 
                 if isTyping {
-                    withAnimation {
                         HStack {
                             TypingAnimationView()
                             Spacer() // Add spacer to align to the left
                         }
                         .padding(.leading, 8)
-                    }
                 }
                 
                 
@@ -213,12 +211,6 @@ struct ChatScreen: View {
         }
         return lines
     }
-    
-    
-    
-    
-    
-    
     
     func scrollToLastMessage(scrollViewProxy: ScrollViewProxy) {
         withAnimation {

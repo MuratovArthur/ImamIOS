@@ -71,8 +71,6 @@ struct HomeView: View {
                
             }
             .navigationBarHidden(true)
-           
-            
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
     }
