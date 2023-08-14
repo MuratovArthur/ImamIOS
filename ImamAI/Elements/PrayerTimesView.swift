@@ -13,7 +13,7 @@ struct PrayerTimesView: View {
     var body: some View {
             VStack(alignment: .leading, spacing: 16) {
                 
-                NavigationLink(destination: LocationPickerView()) {
+                NavigationLink(destination: CitySearchView()) {
                     HStack {
                         Image(systemName: "location")
                         Text("\(country), \(city)")
