@@ -13,9 +13,22 @@ struct CitySearchView: View {
     @State private var mapItems: [MKMapItem] = []
     @State private var selectedLocation: MKMapItem?
     @EnvironmentObject private var globalData: GlobalData
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         VStack {
+            Button(action: {
+                presentationMode.wrappedValue.dismiss()
+            }) {
+                Image(systemName: "chevron.left")
+                    .font(.title)
+                    .foregroundColor(Color.black)
+                
+                Spacer()
+            }
+            .padding(.leading, 16)
+            
+            
             TextField("Search for a city", text: $searchText)
                 .padding()
                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -60,7 +73,7 @@ struct CitySearchView: View {
                     let country = getCountryFromString(inputString: selectedLocation.placemark.title ?? "Kazakhstan")
                     
                     updateLocationData(city: city, country: country)
-                }     
+                }
             }) {
                 Text("Save", bundle: globalData.bundle)
                     .font(.headline)
@@ -75,6 +88,9 @@ struct CitySearchView: View {
             Spacer()
         }
         .background(Color.white)
+        //        .navigationBarTitle("", displayMode: .inline)
+                .navigationBarBackButtonHidden(true) // Hide default back button
+        //        .navigationBarItems(leading: Image(systemName: "chevron.left")) // Set custom back button
     }
     
     private func searchCities() {
@@ -100,7 +116,7 @@ struct CitySearchView: View {
     private func getCountryFromString(inputString: String) -> String {
         var idx = inputString.endIndex
         var commaSeen = false
-
+        
         while idx > inputString.startIndex {
             idx = inputString.index(before: idx)
             
@@ -120,7 +136,7 @@ struct CitySearchView: View {
         }
     }
 }
-    
+
 
 struct CitySearchView_Previews: PreviewProvider {
     static var previews: some View {
