@@ -16,8 +16,9 @@ enum Language: String, CaseIterable {
 
 class GlobalData: ObservableObject {
     @Published var appLanguage: Language = .english
-//    @Published var locale: String = Locale.current.languageCode ?? "en"
     @Published var locale: String = UserDefaultsManager.shared.getLanguage() ?? Locale.current.languageCode ?? "en"
+    @Published var city: String = UserDefaultsManager.shared.getCity() ?? "Almaty"
+    @Published var country: String = UserDefaultsManager.shared.getCountry() ?? "Kazakhstan"
     
     var bundle: Bundle? {
         let b = Bundle.main.path(forResource: locale, ofType: "lproj")!

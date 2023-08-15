@@ -11,7 +11,8 @@ import MapKit
 struct CitySearchView: View {
     @State private var searchText = ""
     @State private var mapItems: [MKMapItem] = []
-    @State private var selectedCity: MKMapItem?
+    @State private var selectedLocation: MKMapItem?
+    @EnvironmentObject private var globalData: GlobalData
     
     var body: some View {
         VStack {
@@ -24,10 +25,10 @@ struct CitySearchView: View {
             
             List(mapItems, id: \.self) { mapItem in
                 Button(action: {
-                    if selectedCity == mapItem {
-                        selectedCity = nil
+                    if selectedLocation == mapItem {
+                        selectedLocation = nil
                     } else {
-                        selectedCity = mapItem
+                        selectedLocation = mapItem
                     }
                 }) {
                     HStack {
@@ -40,8 +41,8 @@ struct CitySearchView: View {
                         
                         Spacer()
                         
-                        if mapItem.placemark.name == selectedCity?.name,
-                           mapItem.placemark.title == selectedCity?.placemark.title
+                        if mapItem.placemark.name == selectedLocation?.name,
+                           mapItem.placemark.title == selectedLocation?.placemark.title
                         {
                             Image(systemName: "checkmark")
                         }
@@ -52,11 +53,31 @@ struct CitySearchView: View {
             .listStyle(PlainListStyle())
             
             Spacer()
+            
+            Button(action: {
+                if let selectedLocation = selectedLocation {
+                    let city = selectedLocation.placemark.name ?? "Almaty"
+                    let country = getCountryFromString(inputString: selectedLocation.placemark.title ?? "Kazakhstan")
+                    
+                    updateLocationData(city: city, country: country)
+                }     
+            }) {
+                Text("Save", bundle: globalData.bundle)
+                    .font(.headline)
+                    .padding(.vertical)
+                    .frame(maxWidth: .infinity)
+                    .background(Color(UIColor.black))
+                    .foregroundColor(Color.white)
+                    .cornerRadius(10)
+                    .padding(.horizontal, 16)
+            }
+            
+            Spacer()
         }
         .background(Color.white)
     }
     
-    func searchCities() {
+    private func searchCities() {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = searchText
         let search = MKLocalSearch(request: request)
@@ -67,7 +88,39 @@ struct CitySearchView: View {
             }
         }
     }
+    
+    private func updateLocationData(city: String, country: String) {
+        globalData.country = country
+        globalData.city = city
+        
+        UserDefaultsManager.shared.setCity(city)
+        UserDefaultsManager.shared.setCountry(country)
+    }
+    
+    private func getCountryFromString(inputString: String) -> String {
+        var idx = inputString.endIndex
+        var commaSeen = false
+
+        while idx > inputString.startIndex {
+            idx = inputString.index(before: idx)
+            
+            let currentCharacter = inputString[idx]
+            
+            if currentCharacter == "," {
+                commaSeen = true
+                break
+            }
+            
+        }
+        
+        if commaSeen {
+            return String(inputString[inputString.index(idx, offsetBy: 2)...])
+        } else {
+            return String(inputString[idx...])
+        }
+    }
 }
+    
 
 struct CitySearchView_Previews: PreviewProvider {
     static var previews: some View {

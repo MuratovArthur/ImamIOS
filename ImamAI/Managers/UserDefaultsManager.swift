@@ -14,24 +14,24 @@ class UserDefaultsManager {
     private let conversationIDKey = "conversationIDKey"
     private let appLanguage = "appLanguage"
     private let settingsAlertShown = "settingsAlertShown"
-//    private let countryKey = "UserDefaultCountry"
-//    private let cityKey = "UserDefaultCity"
-//
-//    func getCountry() -> String? {
-//        return UserDefaults.standard.string(forKey: countryKey)
-//    }
-//
-//    func saveCountry(_ country: String) {
-//        UserDefaults.standard.set(country, forKey: countryKey)
-//    }
-//
-//    func getCity() -> String? {
-//        return UserDefaults.standard.string(forKey: cityKey)
-//    }
-//
-//    func saveCity(_ city: String) {
-//        UserDefaults.standard.set(city, forKey: cityKey)
-//    }
+    private let countryKey = "country"
+    private let cityKey = "city"
+
+    func getCountry() -> String? {
+        return UserDefaults.standard.string(forKey: countryKey)
+    }
+
+    func setCountry(_ country: String) {
+        UserDefaults.standard.set(country, forKey: countryKey)
+    }
+
+    func getCity() -> String? {
+        return UserDefaults.standard.string(forKey: cityKey)
+    }
+
+    func setCity(_ city: String) {
+        UserDefaults.standard.set(city, forKey: cityKey)
+    }
     
     func setSettingsAlertShown(_ value: Bool) {
         UserDefaults.standard.set(value, forKey: settingsAlertShown)

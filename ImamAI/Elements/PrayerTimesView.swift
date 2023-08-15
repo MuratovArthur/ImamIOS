@@ -13,14 +13,13 @@ struct PrayerTimesView: View {
     var body: some View {
             VStack(alignment: .leading, spacing: 16) {
                 
-                NavigationLink(destination: CitySearchView()) {
+                NavigationLink(destination: CitySearchView().environmentObject(globalData)) {
                     HStack {
                         Image(systemName: "location")
-                        Text("\(country), \(city)")
+                        Text("\(globalData.country), \(globalData.city)")
                             .font(.subheadline)
                     }
                     .padding(.top, 16)
-
                 }
                 .foregroundColor(.black)
                 
