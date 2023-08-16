@@ -116,10 +116,27 @@ struct ChatScreen: View {
                             .cornerRadius(16)
                         
                         Button(action: {
-                            viewModel.textViewValue = textViewValue
-                            viewModel.sendMessage()
-                            textViewValue = "" // Clear the local textViewValue
-                            sentOneMessage = true
+                            if viewModel.conversationID == nil {
+                                viewModel.createNewConversation(completion: { conversationID in
+                                    if let _ = conversationID { // check if conversationID is not nil
+                                        // Continue with the rest of the operations since the conversationID is available
+                                        viewModel.textViewValue = textViewValue
+                                        viewModel.sendMessage()
+                                        textViewValue = "" // Clear the local textViewValue
+                                        sentOneMessage = true
+//                                        viewModel.fetchChatMessages()
+                                    } else {
+                                        print("Failed to create a new conversation")
+                                    }
+                                }, language: globalData.locale)
+                            } else {
+                                // If the conversationID is already available, you can directly proceed with the operations
+                                viewModel.textViewValue = textViewValue
+                                viewModel.sendMessage()
+                                textViewValue = "" // Clear the local textViewValue
+                                sentOneMessage = true
+//                                viewModel.fetchChatMessages()
+                            }
                         }) {
                             Image(systemName: "paperplane.fill")
                                 .font(.system(size: 20))
@@ -128,7 +145,7 @@ struct ChatScreen: View {
                                 .foregroundColor(.black)
                                 .clipShape(Circle())
                         }
-                        
+
                     }
                 }
                 else{
@@ -146,20 +163,23 @@ struct ChatScreen: View {
                 self.isTyping = typing
             }
             .onAppear {
-                if viewModel.conversationID == nil {
-                    viewModel.createNewConversation { conversationID in
-                        if conversationID != nil {
-                            viewModel.fetchChatMessages()
-                            scrollToBottom = true
-                        } else {
-                            print("Failed to create a new conversation")
-                        }
-                    }
-                } else {
+                if let conversationID = viewModel.conversationID {
                     viewModel.fetchChatMessages()
                     scrollToBottom = true
+                } else {
+                    let language = globalData.locale
+                    let greetings: [String: String] = [
+                        "ar": "السلام عليكم! كيف يمكنني مساعدتك؟",
+                        "ru": "Ассаламу Алейкум! Как я могу вам помочь?",
+                        "kk": "Ассаламу Aлейкум! Cізге қалай көмектесе аламын?",
+                        "en": "Assalamu Alaikum! How may I help you?"
+                    ]
+                    
+                    let content = greetings[language] ?? "Assalamu Alaikum! How may I help you?"
+                    viewModel.chatMessages = [ChatMessage(id: UUID().uuidString, content: content, dataCreated: Date(), sender: .gpt)]
                 }
             }
+
             .alert(isPresented: $showAlert, content: {
                 Alert(
                     title: Text("delete-chat", bundle: globalData.bundle),
@@ -168,6 +188,16 @@ struct ChatScreen: View {
                         if viewModel.chatMessages.count > 1{
                             viewModel.clearHistory()
                             print("Updated")
+                            let language = globalData.locale
+                            let greetings: [String: String] = [
+                                "ar": "السلام عليكم! كيف يمكنني مساعدتك؟",
+                                "ru": "Ассаламу Алейкум! Как я могу вам помочь?",
+                                "kk": "Ассаламу Aлейкум! Cізге қалай көмектесе аламын?",
+                                "en": "Assalamu Alaikum! How may I help you?"
+                            ]
+                            
+                            let content = greetings[language] ?? "Assalamu Alaikum! How may I help you?"
+                            viewModel.chatMessages = [ChatMessage(id: UUID().uuidString, content: content, dataCreated: Date(), sender: .gpt)]
                         }
                     },
                     secondaryButton: .cancel(Text("cancel", bundle: globalData.bundle))
