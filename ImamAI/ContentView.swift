@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import CoreLocation
 
 struct ContentView: View {
     enum Tab {
@@ -9,7 +10,7 @@ struct ContentView: View {
         case settings
     }
     
-    @StateObject var globalData = GlobalData()
+    @EnvironmentObject private var globalData: GlobalData
     @StateObject var locationManager = LocationManager.shared
     @StateObject var scrollStore = ScrollPositionStore()
     @State private var selectedTab: Tab = .loading
@@ -139,22 +140,62 @@ struct ContentView: View {
         self.locationManager.requestWhenInUseAuthorization() // Request location access permission
     }
     
+    func getCityAndCountry(latitude: Double, longitude: Double, completion: @escaping (String?, String?) -> Void) {
+        let location = CLLocation(latitude: latitude, longitude: longitude)
+        
+        CLGeocoder().reverseGeocodeLocation(location) { placemarks, error in
+            if let error = error {
+                print("Reverse geocoding error: \(error.localizedDescription)")
+                completion(nil, nil)
+                return
+            }
+            
+            if let placemark = placemarks?.first {
+                let city = placemark.locality ?? ""
+                let country = placemark.country ?? ""
+                completion(city, country)
+            } else {
+                completion(nil, nil)
+            }
+        }
+    }
+    
     func makeRequest() {
         print("making request")
         
         var latitude = ""
         var longitude = ""
         
+        let latFromDefaults = UserDefaultsManager.shared.getLocation().0
+        let lonFromDefaults = UserDefaultsManager.shared.getLocation().1
+        
         if !useAlmatyLocation {
-            guard let location = locationManager.location else {
-                errorText = NSLocalizedString("no-internet-suggestion", bundle: globalData.bundle ?? Bundle.main, comment: "errors")
-                return
+            if let latFromDefaults, let lonFromDefaults {
+                latitude = String(latFromDefaults)
+                longitude = String(lonFromDefaults)
+            } else {
+                guard let location = locationManager.location else {
+                    errorText = NSLocalizedString("no-internet-suggestion", bundle: globalData.bundle ?? Bundle.main, comment: "errors")
+                    return
+                }
+                
+                latitude = String(location.coordinate.latitude)
+                longitude = String(location.coordinate.longitude)
             }
-            latitude = String(location.coordinate.latitude)
-            longitude = String(location.coordinate.longitude)
+            
+            
         } else {
-            latitude = "43.238293"
-            longitude = "76.945465"
+            if let latFromDefaults, let lonFromDefaults {
+                latitude = String(latFromDefaults)
+                longitude = String(lonFromDefaults)
+            } else {
+                latitude = "43.238293"
+                longitude = "76.945465"
+                
+                UserDefaultsManager.shared.setLocation(lat: 43.238293, lon: 76.945465)
+                UserDefaultsManager.shared.setCity("Almaty")
+                UserDefaultsManager.shared.setCountry("Kazakhstan")
+            }
         }
         
         guard !isPrayerTimeReceived && !isRequestInProgress else {

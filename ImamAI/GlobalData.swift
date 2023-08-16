@@ -11,7 +11,7 @@ enum Language: String, CaseIterable {
     case english = "English"
     case russian = "Russian"
     case kazakh = "Kazakh"
-    case arabian = "Arabian"
+    case arabic = "Arabic"
 }
 
 class GlobalData: ObservableObject {
@@ -29,7 +29,7 @@ class GlobalData: ObservableObject {
         switch lang {
         case .english:
             return "en"
-        case .arabian:
+        case .arabic:
             return "ar"
         case .kazakh:
             return "kk"
@@ -45,7 +45,7 @@ class GlobalData: ObservableObject {
         case "kk":
             return "Kazakh"
         case "ar":
-            return "Arabian"
+            return "Arabic"
         case "ru":
             return "Russian"
         default:

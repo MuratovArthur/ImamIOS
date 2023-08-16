@@ -16,7 +16,20 @@ class UserDefaultsManager {
     private let settingsAlertShown = "settingsAlertShown"
     private let countryKey = "country"
     private let cityKey = "city"
+    private let latKey = "latitude"
+    private let lonKey = "longitude"
+    
+    func getLocation() -> (Double?, Double?) {
+        let lat = UserDefaults.standard.double(forKey: latKey)
+        let lon = UserDefaults.standard.double(forKey: lonKey)
+        return (lat, lon)
+    }
 
+    func setLocation(lat: Double, lon: Double) {
+        UserDefaults.standard.set(lat, forKey: latKey)
+        UserDefaults.standard.set(lon, forKey: lonKey)
+    }
+    
     func getCountry() -> String? {
         return UserDefaults.standard.string(forKey: countryKey)
     }
