@@ -74,6 +74,10 @@ class UserDefaultsManager {
         UserDefaults.standard.set(id, forKey: conversationIDKey)
     }
     
+    func clearConversationID() {
+        UserDefaults.standard.removeObject(forKey: conversationIDKey)
+    }
+    
     func getConversationID() -> String? {
         return UserDefaults.standard.string(forKey: conversationIDKey)
     }

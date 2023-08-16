@@ -23,7 +23,7 @@ class ChatViewModel: ObservableObject {
     var conversationID: String? {
         didSet {
             UserDefaultsManager.shared.saveConversationID(conversationID ?? "")
-            fetchChatMessages()
+//            fetchChatMessages()
         }
     }
     
@@ -34,23 +34,12 @@ class ChatViewModel: ObservableObject {
     }
     
     func clearHistory() {
-        // Create new conversation
-        createNewConversation { [weak self] conversationID in
-            guard let conversationID = conversationID else {
-                print("Failed to create a new conversation.")
-                self?.showError()
-                return
-            }
-            // Update the value of conversationID in user defaults
-            UserDefaultsManager.shared.saveConversationID(conversationID)
-            // Clear chatMessages
-            self?.chatMessages = []
-            // Fetch new messages
-            self?.fetchChatMessages()
-            print("History cleared and new conversation created.")
-        }
+        // Clear conversation ID in user defaults
+        UserDefaultsManager.shared.clearConversationID()
+        // Clear chatMessages
+        self.chatMessages = []
+        print("History cleared.")
     }
-
     
     func fetchChatMessages() {
         self.fetchingMessages = true
@@ -63,7 +52,7 @@ class ChatViewModel: ObservableObject {
             return
         }
         
-        let urlString = "https://fastapi-s53t.onrender.com/messages/\(conversationID)"
+        let urlString = "https://railway-imamai-production.up.railway.app/messages/\(conversationID)"
         print("Constructed URL string: \(urlString)")
         
         guard let url = URL(string: urlString) else {
@@ -105,13 +94,14 @@ class ChatViewModel: ObservableObject {
                 print("Fetching messages, number of messages fetched: \(self.chatMessages.count)")
             })
             .store(in: &cancellables)
-
+        
         
         print("Fetching messages, number of messages fetched: \(self.chatMessages.count)")
     }
     
     
     func sendMessage() {
+        print("sending message first time")
         self.errorMessage = ""
         let trimmedMessage = self.textViewValue.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedMessage.isEmpty else {
@@ -120,23 +110,15 @@ class ChatViewModel: ObservableObject {
         
         self.isTyping = true
         
-        if let conversationID = conversationID {
-            print(conversationID)
-            sendMessageToConversation(conversationID: conversationID, message: trimmedMessage)
-        } else {
-            createNewConversation { [weak self] conversationID in
-                guard let conversationID = conversationID else {
-                    self?.showError()
-                    return
-                }
-                
-                self?.conversationID = conversationID // Store the conversation ID
-                self?.sendMessageToConversation(conversationID: conversationID, message: trimmedMessage)
-            }
+        guard let conversationID = conversationID else {
+            print("Misssing")
+            // Handle the case when conversationID is unexpectedly missing
+            self.showError()
+            return
         }
-        
         let myMessage = ChatMessage(id: UUID().uuidString, content: trimmedMessage, dataCreated: Date(), sender: .user)
         self.chatMessages.append(myMessage)
+        sendMessageToConversation(conversationID: conversationID, message: trimmedMessage)
         print("Message sent, total number of messages now: \(self.chatMessages.count)")
     }
     
@@ -147,16 +129,16 @@ class ChatViewModel: ObservableObject {
             print("Error: Message cannot be empty or whitespace.")
             return
         }
-        
+
         // Show typing animation
-//        self.isTyping = true
-        
-//        print("isTyping is now \(self.isTyping)") // debug print
-        
+        //        self.isTyping = true
+
+        //        print("isTyping is now \(self.isTyping)") // debug print
+
         let receivedMessage = ChatMessage(id: UUID().uuidString, content: "Ассаламу Алейкум! Я чуть-чуть занят сейчас, напиши мне попозже.", dataCreated: Date(), sender: .gpt)
-        
+
         chatMessages.append(receivedMessage)
-        
+
         let myMessage = ChatMessage(id: UUID().uuidString, content: trimmedMessage, dataCreated: Date(), sender: .user)
         self.chatMessages.append(myMessage)
     }
@@ -166,7 +148,7 @@ class ChatViewModel: ObservableObject {
         print("sending message")
         
         let conversationIDWithoutQuotes = conversationID.replacingOccurrences(of: "\"", with: "")
-        let conversationURL = "https://fastapi-s53t.onrender.com/messages/\(conversationIDWithoutQuotes)"
+        let conversationURL = "https://railway-imamai-production.up.railway.app/messages/\(conversationIDWithoutQuotes)"
         guard let url = URL(string: conversationURL) else {
             self.showError()
             return
@@ -229,73 +211,78 @@ class ChatViewModel: ObservableObject {
             self.showError()
         }
     }
-         
     
     
-    func createNewConversation(completion: @escaping (String?) -> Void) {
+    
+    func createNewConversation(completion: @escaping (String?) -> Void, language: String) {
         print("creating new conversation")
-        self.fetchingMessages = true
-
-        guard let url = URL(string: "https://fastapi-s53t.onrender.com/messages/") else {
+//        self.fetchingMessages = true
+        
+        guard let encodedLanguage = language.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
+            let url = URL(string: "https://railway-imamai-production.up.railway.app/messages/\(encodedLanguage)/new") else {
             completion(nil)
             return
         }
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
+        
         let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             if let error = error {
                 print("Error: \(error)")
                 completion(nil)
                 self?.isTyping = false
-
+                
                 // Handle timeout error
                 if let error = error as? URLError, error.code == .timedOut {
                     self?.showError()
                 }
-
+                
                 return
             }
-
+            
             guard let httpResponse = response as? HTTPURLResponse else {
                 print("Invalid response")
                 completion(nil)
                 self?.isTyping = false
                 return
             }
-
+            
             if httpResponse.statusCode != 200 {
                 // Handle non-200 status codes (e.g., 404, 500, etc.)
                 self?.showError()
                 return
             }
-
+            
             guard let data = data else {
                 print("No data received")
                 completion(nil)
                 self?.isTyping = false
                 return
             }
-
+            
             if let conversationID = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) {
                 self?.conversationID = conversationID.replacingOccurrences(of: "\"", with: "")
                 print("conversationID: ", self?.conversationID ?? "")
+                
+                // Move the chatMessages count print statement here
+                print("New conversation created with id: \(self?.conversationID ?? "nil"), number of messages: \(self?.chatMessages.count ?? 0)")
+                
                 completion(conversationID)
             } else {
                 print("Invalid response")
                 completion(nil)
             }
-
+            
             print("finished creating new conversation")
-            self?.fetchingMessages = false
+//            self?.fetchChatMessages()
         }
-
+        
         task.resume()
-        print("New conversation created with id: \(self.conversationID ?? "nil"), number of messages: \(self.chatMessages.count)")
     }
 
+    
     
     func showError() {
         print("Error is being shown")
