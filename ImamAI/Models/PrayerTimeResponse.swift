@@ -12,7 +12,7 @@ struct PrayerTimeResponse: Codable {
 }
 
 struct SingleDayPrayerTime: Codable {
-    let timings: [Prayers]
+    let timings: Prayers
 }
 
 struct Prayers: Codable {

@@ -12,19 +12,24 @@ struct PrayerTimesView: View {
 
     var body: some View {
             VStack(alignment: .leading, spacing: 16) {
-                
-                NavigationLink(destination:
-                                CitySearchView()
-                                    .environmentObject(globalData)
-                ) {
-                    HStack {
-                        Image(systemName: "location")
-                        Text("\(globalData.country), \(globalData.city)")
-                            .font(.subheadline)
+                HStack {
+                    NavigationLink(destination:
+                                    CitySearchView()
+                                        .environmentObject(globalData)
+                    ) {
+                        HStack {
+                            Image(systemName: "location")
+                            Text("\(globalData.country), \(globalData.city)")
+                                .font(.subheadline)
+                        }
                     }
-                    .padding(.top, 16)
+                    .foregroundColor(.black)
+                    
+                    Spacer()
+                    
+                    PrayerMethodPickerView()
                 }
-                .foregroundColor(.black)
+                .padding(.top, 16)
                 
                 Text("prayer-time", bundle: globalData.bundle)
                     .font(.title)
