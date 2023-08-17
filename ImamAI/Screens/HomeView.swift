@@ -29,14 +29,14 @@ struct HomeView: View {
                             
                             ZStack {
                                 if shouldShowActivityIndicator {
-                                    PrayerTimesView(prayerTime: prayerTime, city: city)
+                                    PrayerTimesView(prayerTime: prayerTime, city: city, tabBarShouldBeHidden: $tabBarShouldBeHidden)
                                         .environmentObject(globalData)
                                         .opacity(0.3)
                                     
                                     ProgressView()
                                         .progressViewStyle(CircularProgressViewStyle())
                                 } else {
-                                    PrayerTimesView(prayerTime: prayerTime, city: city)
+                                    PrayerTimesView(prayerTime: prayerTime, city: city, tabBarShouldBeHidden: $tabBarShouldBeHidden)
                                         .environmentObject(globalData)
                                 }
                             }
