@@ -30,7 +30,7 @@ struct ContentView: View {
     @State private var useAlmatyLocation = false
     @StateObject var networkMonitor = NetworkMonitor()
     @State var errorText: String = ""
-    @State var firstTimeInApp = true
+    @State var shouldShowActivityIndicator = false
     
     @State private var translation: CGSize = .zero
     private let dragThreshold: CGFloat = 200
@@ -54,7 +54,7 @@ struct ContentView: View {
             VStack {
                 switch selectedTab {
                 case .home:
-                    HomeView(selectedTab: $selectedTab, prayerTime: $prayerTime, city: $city, tabBarShouldBeHidden: $tabBarShouldBeHidden, useAlmatyLocation: $useAlmatyLocation)
+                    HomeView(selectedTab: $selectedTab, prayerTime: $prayerTime, city: $city, tabBarShouldBeHidden: $tabBarShouldBeHidden, useAlmatyLocation: $useAlmatyLocation, shouldShowActivityIndicator: $shouldShowActivityIndicator)
                         .environmentObject(scrollStore)
                         .environmentObject(globalData)
                         .navigationBarHidden(true)
@@ -112,6 +112,12 @@ struct ContentView: View {
                 makeRequestWithRetry(attempts: 5)
             }
         }
+        .onChange(of: globalData.prayerTimeMethod, perform: { newValue in
+                    isPrayerTimeReceived = false
+                    isRequestInProgress = false
+                    shouldShowActivityIndicator = true
+                    makeRequestWithRetry(attempts: 5)
+                })
         
         .onAppear {
             requestNotificationAuthorization()
@@ -264,7 +270,13 @@ struct ContentView: View {
             currentRetryAttempt += 1
             
             func performRequest() {
-                let urlString = "http://api.aladhan.com/v1/calendar/\(year)/\(month)?latitude=\(latitude)&longitude=\(longitude)&method=2"
+                var methodToUse = globalData.prayerTimeMethod
+                
+                if methodToUse >= 6 {
+                    methodToUse += 1
+                }
+                
+                let urlString = "http://api.aladhan.com/v1/calendar/\(year)/\(month)?latitude=\(latitude)&longitude=\(longitude)&method=\(methodToUse)"
                 print(urlString)
                     
                 guard let url = URL(string: urlString) else {

@@ -13,6 +13,7 @@ struct HomeView: View {
     @Binding var city: String // Change to @Binding
     @Binding var tabBarShouldBeHidden: Bool
     @Binding var useAlmatyLocation: Bool
+    @Binding var shouldShowActivityIndicator: Bool
     @State private var notificationAuthorizationStatus: UNAuthorizationStatus?
     @State private var showAlertForSettings = false
     
@@ -26,8 +27,19 @@ struct HomeView: View {
                             
                             ImamChatPreview(selectedTab: $selectedTab)
                             
-                            PrayerTimesView(prayerTime: prayerTime, city: city)
-                                .environmentObject(globalData)
+                            ZStack {
+                                if shouldShowActivityIndicator {
+                                    PrayerTimesView(prayerTime: prayerTime, city: city)
+                                        .environmentObject(globalData)
+                                        .opacity(0.3)
+                                    
+                                    ProgressView()
+                                        .progressViewStyle(CircularProgressViewStyle())
+                                } else {
+                                    PrayerTimesView(prayerTime: prayerTime, city: city)
+                                        .environmentObject(globalData)
+                                }
+                            }
                             
                             PostsView(tabBarShouldBeHidden: $tabBarShouldBeHidden)
                             
@@ -69,7 +81,7 @@ struct HomeView: View {
                 .onAppear {
                     checkPermissions()
                 }
-               
+                
             }
             .navigationBarHidden(true)
         }

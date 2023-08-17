@@ -18,13 +18,22 @@ class UserDefaultsManager {
     private let cityKey = "city"
     private let latKey = "latitude"
     private let lonKey = "longitude"
+    private let methodKey = "method"
+    
+    func getPrayerTimeMethod() -> Int? {
+        return UserDefaults.standard.integer(forKey: methodKey)
+    }
+    
+    func setPrayerTimeMethod(_ method: Int) {
+        UserDefaults.standard.set(method, forKey: methodKey)
+    }
     
     func getLocation() -> (Double?, Double?) {
         let lat = UserDefaults.standard.double(forKey: latKey)
         let lon = UserDefaults.standard.double(forKey: lonKey)
         return (lat, lon)
     }
-
+    
     func setLocation(lat: Double, lon: Double) {
         UserDefaults.standard.set(lat, forKey: latKey)
         UserDefaults.standard.set(lon, forKey: lonKey)
@@ -33,15 +42,15 @@ class UserDefaultsManager {
     func getCountry() -> String? {
         return UserDefaults.standard.string(forKey: countryKey)
     }
-
+    
     func setCountry(_ country: String) {
         UserDefaults.standard.set(country, forKey: countryKey)
     }
-
+    
     func getCity() -> String? {
         return UserDefaults.standard.string(forKey: cityKey)
     }
-
+    
     func setCity(_ city: String) {
         UserDefaults.standard.set(city, forKey: cityKey)
     }

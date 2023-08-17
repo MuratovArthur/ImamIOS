@@ -19,6 +19,7 @@ class GlobalData: ObservableObject {
     @Published var locale: String = UserDefaultsManager.shared.getLanguage() ?? Locale.current.languageCode ?? "en"
     @Published var city: String = UserDefaultsManager.shared.getCity() ?? "Almaty"
     @Published var country: String = UserDefaultsManager.shared.getCountry() ?? "Kazakhstan"
+    @Published var prayerTimeMethod: Int = UserDefaultsManager.shared.getPrayerTimeMethod() ?? 2
     
     var bundle: Bundle? {
         let b = Bundle.main.path(forResource: locale, ofType: "lproj")!

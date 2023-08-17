@@ -32,12 +32,30 @@ struct PrayerMethodPickerView: View {
                 .font(.headline)
                 .foregroundColor(.gray)
             
-            ForEach(methods.sorted(), id: \.self) { method in
+            ForEach(methods, id: \.self) { method in
                 Button {
+                    var index = -1
+                    for i in 0..<methods.count {
+                        if method == methods[i] {
+                            index = i
+                        }
+                    }
                     
+                    globalData.prayerTimeMethod = index
+                    UserDefaultsManager.shared.setPrayerTimeMethod(index)
                 } label: {
                     Text(method)
                     Spacer()
+                    
+                    if let methodFromCache = UserDefaultsManager.shared.getPrayerTimeMethod() {
+                        if methods[methodFromCache] == method {
+                            Image(systemName: "checkmark")
+                        }
+                    } else {
+                        if methods[globalData.prayerTimeMethod] == method {
+                            Image(systemName: "checkmark")
+                        }
+                    }
                 }
 
             }
