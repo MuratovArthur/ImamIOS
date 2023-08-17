@@ -49,7 +49,7 @@ struct PrayerTimesView: View {
                         Button(action: {
                             isMutedForPrayerTime.wrappedValue.toggle()
                             UserDefaultsManager.shared.updateMutedStatus(for: key, isMuted: isMutedForPrayerTime.wrappedValue)
-                            NotificationManager.shared.reschedule()
+                            NotificationManager.shared.reschedule(language: globalData.locale)
                         }) {
                             Image(systemName: isMutedForPrayerTime.wrappedValue ? "bell.slash" : "bell.badge")
                                 .font(.subheadline)

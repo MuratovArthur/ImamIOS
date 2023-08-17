@@ -50,8 +50,8 @@
 
 /* imam bar view */
 "imam" = "Имам";
-"online" = "Онлайн";
-"last-seen" = "был в сети %@ мин. назад";
+"online" = "онлайн";
+"last-seen" = "был в сети недавно";
 
 /* compass view */
 "qibla-search" = "Поиск Киблы";
