@@ -334,6 +334,7 @@ struct ContentView: View {
                         let decoder = JSONDecoder()
                         let response = try decoder.decode(PrayerTimeResponse.self, from: data)
                         completion(.success(response))
+                        shouldShowActivityIndicator = false
                     } catch {
                         if currentRetryAttempt < maxRetryAttempts {
                             currentRetryAttempt += 1
@@ -483,6 +484,7 @@ struct ContentView: View {
                 }
             }
         }
+        
     }
     
 }

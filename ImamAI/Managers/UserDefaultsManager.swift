@@ -21,9 +21,12 @@ class UserDefaultsManager {
     private let methodKey = "method"
     
     func getPrayerTimeMethod() -> Int? {
-        return UserDefaults.standard.integer(forKey: methodKey)
+        if UserDefaults.standard.object(forKey: methodKey) != nil {
+            return UserDefaults.standard.integer(forKey: methodKey)
+        }
+        return nil
     }
-    
+
     func setPrayerTimeMethod(_ method: Int) {
         UserDefaults.standard.set(method, forKey: methodKey)
     }
