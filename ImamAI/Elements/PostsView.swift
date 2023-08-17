@@ -102,8 +102,10 @@ struct PostsView: View {
                         loadPosts()
                     }
                 }
-                .onChange(of: globalData.appLanguage) { newValue in
-                    posts = []
+                .onChange(of: globalData.locale) { newValue in
+                    self.posts.removeAll()
+                    self.allPostsLoaded = false
+                    self.offset = 0
                     loadPosts()
                 }
             }else{
