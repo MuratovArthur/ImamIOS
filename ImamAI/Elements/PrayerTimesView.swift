@@ -9,12 +9,13 @@ struct PrayerTimesView: View {
 
     @EnvironmentObject private var globalData: GlobalData
     @State private var isMuted: [Bool] = UserDefaultsManager.shared.getIsMuted() ?? Array(repeating: false, count: 6)
+    @Binding var tabBarShouldBeHidden: Bool
 
     var body: some View {
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
                     NavigationLink(destination:
-                                    CitySearchView()
+                                    CitySearchView(tabBarShouldBeHidden: $tabBarShouldBeHidden)
                                         .environmentObject(globalData)
                     ) {
                         HStack {

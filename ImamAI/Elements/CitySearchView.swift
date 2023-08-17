@@ -1,10 +1,3 @@
-//
-//  LocationPickerView.swift
-//  ImamAI
-//
-//  Created by Nurali Rakhay on 14.08.2023.
-//
-
 import SwiftUI
 import MapKit
 
@@ -14,6 +7,7 @@ struct CitySearchView: View {
     @State private var selectedLocation: MKMapItem?
     @EnvironmentObject private var globalData: GlobalData
     @Environment(\.presentationMode) var presentationMode
+    @Binding var tabBarShouldBeHidden: Bool
     
     var body: some View {
         VStack {
@@ -21,13 +15,12 @@ struct CitySearchView: View {
                 presentationMode.wrappedValue.dismiss()
             }) {
                 Image(systemName: "chevron.left")
-                    .font(.title)
+                    .font(.title2)
                     .foregroundColor(Color.black)
-                
+
                 Spacer()
             }
             .padding(.leading, 16)
-            
             
             TextField("Search for a city", text: $searchText)
                 .padding()
@@ -38,11 +31,11 @@ struct CitySearchView: View {
             
             List(mapItems, id: \.self) { mapItem in
                 Button(action: {
-                    if selectedLocation == mapItem {
-                        selectedLocation = nil
-                    } else {
-                        selectedLocation = mapItem
-                    }
+                    let city = mapItem.placemark.name ?? "Almaty"
+                    let country = getCountryFromString(inputString: mapItem.placemark.title ?? "Kazakhstan")
+                    
+                    updateLocationData(city: city, country: country)
+                    presentationMode.wrappedValue.dismiss()
                 }) {
                     HStack {
                         VStack(alignment: .leading) {
@@ -66,32 +59,17 @@ struct CitySearchView: View {
             .listStyle(PlainListStyle())
             
             Spacer()
-            
-            Button(action: {
-                if let selectedLocation = selectedLocation {
-                    let city = selectedLocation.placemark.name ?? "Almaty"
-                    let country = getCountryFromString(inputString: selectedLocation.placemark.title ?? "Kazakhstan")
-                    
-                    updateLocationData(city: city, country: country)
-                }
-            }) {
-                Text("Save", bundle: globalData.bundle)
-                    .font(.headline)
-                    .padding(.vertical)
-                    .frame(maxWidth: .infinity)
-                    .background(Color(UIColor.black))
-                    .foregroundColor(Color.white)
-                    .cornerRadius(10)
-                    .padding(.horizontal, 16)
-            }
-            
-            Spacer()
         }
         .background(Color.white)
-        //        .navigationBarTitle("", displayMode: .inline)
-                .navigationBarBackButtonHidden(true) // Hide default back button
-        //        .navigationBarItems(leading: Image(systemName: "chevron.left")) // Set custom back button
+        .navigationBarBackButtonHidden(true)
+        .onAppear(){
+            tabBarShouldBeHidden = true
+        }
+        .onDisappear(){
+            tabBarShouldBeHidden = false
+        }
     }
+    
     
     private func searchCities() {
         let request = MKLocalSearch.Request()
@@ -138,8 +116,8 @@ struct CitySearchView: View {
 }
 
 
-struct CitySearchView_Previews: PreviewProvider {
-    static var previews: some View {
-        CitySearchView()
-    }
-}
+//struct CitySearchView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        CitySearchView()
+//    }
+//}
