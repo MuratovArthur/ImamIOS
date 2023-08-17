@@ -4,7 +4,6 @@ struct ImamNavBarView: View {
     @ObservedObject private var viewModel = ChatViewModel.shared
     @EnvironmentObject private var globalData: GlobalData
     @Binding var sentOneMessage: Bool
-    @State var randomInt = Int.random(in: 1...9)
     @Binding var showAlert: Bool
     
     var body: some View {
@@ -29,7 +28,7 @@ struct ImamNavBarView: View {
                             .foregroundColor(.blue)
                     } else {
                         let localized = NSLocalizedString("last-seen", bundle: globalData.bundle ?? Bundle.main, comment: "imam bar view")
-                        Text(String.localizedStringWithFormat(localized, String(randomInt)))
+                        Text(localized)
                             .font(.subheadline)
                             .foregroundColor(.gray)
                     }

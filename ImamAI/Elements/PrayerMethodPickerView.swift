@@ -45,7 +45,7 @@ struct PrayerMethodPickerView: View {
         } label: {
             Image(systemName: "gearshape")
                 .foregroundColor(.black)
-                .font(.system(size: 25))
+                .font(.system(size: 20))
         }
     }
 }

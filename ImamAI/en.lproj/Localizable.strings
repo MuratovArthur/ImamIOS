@@ -7,12 +7,12 @@
 */
 
 /* errors */
-"no-internet-suggestion" = "An error has occurred. Check your internet connection and try restarting.";
+"no-internet-suggestion" = "An error has occurred. Check your internet connection and try again.";
 "no-internet" = "No internet connection";
 
 /* alerts */
 "action-required" = "Action required";
-"internet-alert" = "To use all features, please grant permissions for location and notifications in your device settings.";
+"internet-alert" = "To access all features, please allow permissions for location and notifications in your device settings.";
 "open-settings" = "Open settings";
 "cancel" = "Cancel";
 
@@ -21,36 +21,36 @@
 
 /* chat preview */
 "personal-imam" = "Personal Imam";
-"imam-text" = "Welcome! I am your personal Imam. I can answer any questions about Islam, Koran, Islamic culture and history. What question interests you today?";
+"imam-text" = "Welcome! I am your personal Imam. I can answer any questions about Islam, Quran, Hadith, Islamic culture and history. What question interests you today?";
 "ask-question" = "Ask your question!";
 
 /* prayer times view */
-"prayer-time" = "Prayer time";
+"prayer-time" = "Prayer times";
 "Фаджр" = "Fajr";
 "Восход" = "Sunrise";
-"Зухр" = "Zuhr";
+"Зухр" = "Dhuhr";
 "Аср" = "Asr";
 "Магриб" = "Maghrib";
 "Иша" =  "Isha";
 "default-country" = "Kazakhstan";
 
 /* posts view */
-"to-read" = "To read";
+"to-read" = "Articles to read";
 "all-posts-loaded" = "All posts are loaded";
 "load-more" = "Load more";
 
 /* chat screen */
-"placeholder" = "Ask your question";
+"placeholder" = "Type your question";
 "delete-chat" = "Delete chat";
-"delete-question" = "Are you sure you want to delete this conversation?";
+"delete-question" = "Are you sure you want to delete this chat?";
 "delete" = "Delete";
 "cancel" = "Cancel";
 "imam-is-typing" = "Imam is typing";
 
 /* imam bar view */
 "imam" = "Imam";
-"online" = "Online";
-"last-seen" = "last seen %@ mins. ago";
+"online" = "online";
+"last-seen" = "last seen recently";
 
 /* compass view */
 "qibla-search" = "Qibla Finder";

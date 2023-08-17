@@ -14,6 +14,7 @@ struct PostsView: View {
     @State private var totalPosts: Int = 0
     @State private var selectedPost: Post?
     @State private var allPostsLoaded = false
+    @State private var postAreLoading = false
     @Binding var tabBarShouldBeHidden: Bool
     @EnvironmentObject private var globalData: GlobalData
     let maxDescriptionLength = 50
@@ -28,119 +29,98 @@ struct PostsView: View {
                 .padding(.horizontal)
                 .padding(.top)
             
-            ScrollView {
-                VStack(spacing: 8) {
-                    ForEach(posts) { post in
-                        NavigationLink(destination: PostDetailView(post: post, tabBarShouldBeHidden: $tabBarShouldBeHidden)) {
-                            HStack(spacing: 8) {
-//                                AsyncImage(
-//                                    url: URL(string: post.imageName),
-//                                    content: { image in
-//                                        image
-//                                            .resizable()
-//                                            .aspectRatio(contentMode: .fill)
-//                                            .frame(maxWidth: 150)
-//                                            .clipped()
-//                                    },
-//                                    placeholder: {
-//                                        ProgressView()
-//                                    }
-//                                )
-//
-                                WebImage(url: URL(string: post.imageName))
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(maxWidth: 170, maxHeight: 200)
-                                    .cornerRadius(10)
-                                    .clipped()
-////                                    .onSuccess { image, data, cacheType in
-////                                        // Success. The `image` is the downloaded image instance.
-////                                    }
-////                                    .onFailure { error in
-////                                        // Failure. Handle error here.
-////                                    }
-////                                    .onProgress { receivedSize, expectedSize in
-////                                        // Progress. Use this to update a progress view.
-////                                    }
-////                                    .placeholder {
-////                                        // Provide a placeholder until the image loads or fails to load.
-////                                        ProgressView()
-////                                            .padding()
-////                                    }
-//                                    .padding(.vertical, 16)
-
-
-                                
-                                VStack(alignment: .leading, spacing: 16) {
-                                    Text(post.title)
-                                        .font(.headline)
-                                        .foregroundColor(Color.black)
+            if postAreLoading == false {
+                ScrollView {
+                    VStack(spacing: 8) {
+                        ForEach(posts) { post in
+                            NavigationLink(destination: PostDetailView(post: post, tabBarShouldBeHidden: $tabBarShouldBeHidden)) {
+                                HStack(spacing: 8) {
+                                    WebImage(url: URL(string: post.imageName))
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(maxWidth: 170, maxHeight: 200)
+                                        .cornerRadius(10)
+                                        .clipped()
                                     
-                                    Text(post.description)
-                                        .font(.subheadline)
-                                        .foregroundColor(.secondary)
-                                        .lineLimit(2)
+                                    
+                                    
+                                    VStack(alignment: .leading, spacing: 16) {
+                                        Text(post.title)
+                                            .font(.headline)
+                                            .foregroundColor(Color.black)
+                                        
+                                        Text(post.description)
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
+                                            .lineLimit(2)
+                                    }
+                                    .padding()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .multilineTextAlignment(.leading)
                                 }
-                                .padding()
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .multilineTextAlignment(.leading)
+                                .frame(height: postHeight)
+                                .background(Color(UIColor.systemGray6))
+                                .cornerRadius(10)
+                                .clipped()
+                                .padding(.horizontal)
                             }
-                            .frame(height: postHeight)
-                            .background(Color(UIColor.systemGray6))
-                            .cornerRadius(10)
-                            .clipped()
-                            .padding(.horizontal)
+                        }
+                        if allPostsLoaded {
+                            Text("all-posts-loaded", bundle: globalData.bundle)
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                                .padding(.top, 5)
+                        } else {
+                            HStack {
+                                Spacer()
+                                Button(action: {
+                                    print("click on button")
+                                    if self.posts.count < self.totalPosts {
+                                        self.offset += 3
+                                        loadPosts()
+                                    } else {
+                                        allPostsLoaded = true
+                                    }
+                                    
+                                }) {
+                                    Text("load-more", bundle: globalData.bundle)
+                                        .font(.headline)
+                                        .foregroundColor(.black)
+                                        .padding()
+                                        .background(Color(UIColor.systemGray6))
+                                        .cornerRadius(10)
+                                }
+                                .padding(.horizontal)
+                                
+                            }
                         }
                     }
-                    if allPostsLoaded {
-                        Text("all-posts-loaded", bundle: globalData.bundle)
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                            .padding(.top, 5)
-                    } else {
-                        HStack {
-                            Spacer()
-                            Button(action: {
-                                print("click on button")
-                                if self.posts.count < self.totalPosts {
-                                    self.offset += 3
-                                    loadPosts()
-                                } else {
-                                    allPostsLoaded = true
-                                }
-                                
-                            }) {
-                                Text("load-more", bundle: globalData.bundle)
-                                    .font(.headline)
-                                    .foregroundColor(.black)
-                                    .padding()
-                                    .background(Color(UIColor.systemGray6))
-                                    .cornerRadius(10)
-                            }
-                            .padding(.horizontal)
-                            
-                        }
+                    .padding(.top, 8)
+                }
+                .onAppear {
+                    if self.posts.isEmpty {
+                        loadPosts()
                     }
                 }
-                .padding(.top, 8)
-            }
-            
-            .onAppear {
-                if self.posts.isEmpty {
+                .onChange(of: globalData.appLanguage) { newValue in
+                    posts = []
                     loadPosts()
                 }
+            }else{
+                ProgressView()
             }
-            
         }
     }
     
     // This method should be here
     private func loadPosts() {
+        postAreLoading = true
         print("loadPosts() called") // Check if this function is being called
         
-        let urlString = "https://fastapi-s53t.onrender.com/posts/get_posts?limit=3&offset=\(offset)"
+        let urlString = "https://railway-imamai-production.up.railway.app/posts/get_posts/\(globalData.locale)?limit=3&offset=\(offset)"
         guard let url = URL(string: urlString) else {
             print("Invalid URL")
+            postAreLoading = false
             return
         }
         
@@ -164,12 +144,15 @@ struct PostsView: View {
                     }
                 } catch let decodingError {
                     print("Decoding error:", decodingError)
+                    postAreLoading = false
                 }
 
             } else if let error = error {
                 print("Error: \(error.localizedDescription)")
+                postAreLoading = false
             }
         }.resume()
+        postAreLoading = false
     }
     
     

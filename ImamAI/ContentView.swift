@@ -375,7 +375,7 @@ struct ContentView: View {
                 self.isPrayerTimeReceived = true
                 
                 NotificationManager.shared.prayerTimes = arrayOfPrayerTimes
-                NotificationManager.shared.reschedule()
+                NotificationManager.shared.reschedule(language: globalData.locale)
                 
             case .failure(let error):
                 errorText = NSLocalizedString("no-internet-suggestion", bundle: globalData.bundle ?? Bundle.main, comment: "errors")
