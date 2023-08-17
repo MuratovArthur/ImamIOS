@@ -31,6 +31,7 @@ struct HomeHeaderView: View {
                         let locale = GlobalData.decideLocale(lang: language)
                         globalData.locale = locale
                         UserDefaultsManager.shared.setLanguage(locale)
+                        NotificationManager.shared.reschedule(language: globalData.locale)
                         print("Language switched to \(globalData.appLanguage.rawValue)")
                     } label: {
                         Text(language.rawValue)
