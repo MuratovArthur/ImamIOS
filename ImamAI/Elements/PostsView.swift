@@ -193,8 +193,6 @@ struct PostDetailView: View {
                     .frame(maxWidth: .infinity, maxHeight: 200)
                     .cornerRadius(10)
                     .clipped()
-////                    .placeholder(ProgressView().padding())
-////                    .padding(.vertical, 16)
 
                 
                 VStack(alignment: .leading) {

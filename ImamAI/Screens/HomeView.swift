@@ -26,7 +26,7 @@ struct HomeView: View {
                             
                             ImamChatPreview(selectedTab: $selectedTab)
                             
-                            PrayerTimesView(prayerTime: prayerTime, city: city)
+                            PrayerTimesView(prayerTime: prayerTime, city: city, tabBarShouldBeHidden: $tabBarShouldBeHidden)
                                 .environmentObject(globalData)
                             
                             PostsView(tabBarShouldBeHidden: $tabBarShouldBeHidden)
