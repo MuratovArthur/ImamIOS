@@ -72,7 +72,7 @@
 "turkey" = "Управление по делам религий, Турция";
 "russia" = "Духовное управление мусульман России";
 
-"header" = "Prayer times calculation method";
+"header" = "Метод расчета времени молитвы";
 
 /* locaion switch request */
 "mainText" = "Найдено новое ближайшее местоположение";
