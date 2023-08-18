@@ -24,6 +24,7 @@ struct CitySearchView: View {
             
             TextField("Search for a city", text: $searchText)
                 .padding()
+                .frame(height: 80)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .onChange(of: searchText) { _ in
                     searchCities()
@@ -62,6 +63,7 @@ struct CitySearchView: View {
             
             Spacer()
         }
+        .padding(.top, 10)
         .background(Color.white)
         .navigationBarBackButtonHidden(true)
         .onAppear(){
@@ -70,6 +72,13 @@ struct CitySearchView: View {
         .onDisappear(){
             tabBarShouldBeHidden = false
         }
+        .gesture(
+            DragGesture().onChanged { gesture in
+                if gesture.translation.width > 100 {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
+        )
     }
     
     
