@@ -174,62 +174,56 @@ struct ContentView: View {
         }
     }
     
+    private func updateLocationData(city: String, country: String, lat: Double, lon: Double) {
+        globalData.country = country
+        globalData.city = city
+        
+        UserDefaultsManager.shared.setCity(city)
+        UserDefaultsManager.shared.setCountry(country)
+        UserDefaultsManager.shared.setLocation(lat: lat, lon: lon)
+    }
+    
     func makeRequest() {
         print("making request")
         
-        var latitude = ""
-        var longitude = ""
+        var cityToUse = ""
+        var countryToUse = ""
         
         if !useAlmatyLocation {
             guard let location = locationManager.location else {
                 errorText = NSLocalizedString("no-internet-suggestion", bundle: globalData.bundle ?? Bundle.main, comment: "errors")
                 return
             }
-            latitude = String(location.coordinate.latitude)
-            longitude = String(location.coordinate.longitude)
+            
+            if let cityFromCache = UserDefaultsManager.shared.getCity(), let countryFromCache = UserDefaultsManager.shared.getCountry() {
+                cityToUse = cityFromCache
+                countryToUse = countryFromCache
+            } else {
+                getCityAndCountry(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude) { city, country in
+                    if let cityFromLocation = city, let countryFromLocation = country {
+                        cityToUse = cityFromLocation
+                        countryToUse = countryFromLocation
+                        
+                        updateLocationData(city: cityFromLocation, country: countryFromLocation, lat: location.coordinate.latitude, lon: location.coordinate.longitude)
+                    }
+                }
+            }
         } else {
-            latitude = "43.238293"
-            longitude = "76.945465"
+            if let cityFromCache = UserDefaultsManager.shared.getCity(), let countryFromCache = UserDefaultsManager.shared.getCountry() {
+                cityToUse = cityFromCache
+                countryToUse = countryFromCache
+            } else {
+                cityToUse = "Almaty"
+                countryToUse = "Kazakhstan"
+                
+                updateLocationData(city: "Almaty", country: "Kazakhstan", lat: 43.238293, lon: 76.945465)
+            }
         }
         
         guard !isPrayerTimeReceived && !isRequestInProgress else {
             print("Prayer times already received or request already in progress.")
             return
         }
-        
-//        let latFromDefaults = UserDefaultsManager.shared.getLocation().0
-//        let lonFromDefaults = UserDefaultsManager.shared.getLocation().1
-//
-//        if !useAlmatyLocation {
-//            if let latFromDefaults, let lonFromDefaults {
-//                latitude = String(latFromDefaults)
-//                longitude = String(lonFromDefaults)
-//            } else {
-//                guard let location = locationManager.location else {
-//                    errorText = NSLocalizedString("no-internet-suggestion", bundle: globalData.bundle ?? Bundle.main, comment: "errors")
-//                    return
-//                }
-//
-//                latitude = String(location.coordinate.latitude)
-//                longitude = String(location.coordinate.longitude)
-//            }
-//
-//
-//        } else {
-//            if let latFromDefaults, let lonFromDefaults {
-//                latitude = String(latFromDefaults)
-//                longitude = String(lonFromDefaults)
-//            } else {
-//                latitude = "43.238293"
-//                longitude = "76.945465"
-//
-//                UserDefaultsManager.shared.setLocation(lat: 43.238293, lon: 76.945465)
-//                UserDefaultsManager.shared.setCity("Almaty")
-//                UserDefaultsManager.shared.setCountry("Kazakhstan")
-//            }
-//        }
-        
-//        print(latitude, longitude)
         
         guard !isPrayerTimeReceived && !isRequestInProgress else {
             print("Prayer times already received or request already in progress.")
@@ -260,10 +254,16 @@ struct ContentView: View {
                     methodToUse += 1
                 }
                 
-                let urlString = "http://api.aladhan.com/v1/calendar/\(year)/\(month)?latitude=\(latitude)&longitude=\(longitude)&method=\(methodToUse)"
+                
+                
+//                let urlString = "http://api.aladhan.com/v1/calendar/\(year)/\(month)?latitude=\(latitude)&longitude=\(longitude)&method=\(methodToUse)"
+                let urlString = "http://api.aladhan.com/v1/calendarByAddress/\(year)/\(month)?address=\(cityToUse),\(countryToUse)&method=\(methodToUse)"
                 print(urlString)
+                
+                let encodedURLString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                
                     
-                guard let url = URL(string: urlString) else {
+                guard let url = URL(string: encodedURLString) else {
                     completion(.failure(.invalidURL))
                     return
                 }
