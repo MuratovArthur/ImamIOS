@@ -9,9 +9,9 @@ import Foundation
 
 enum Language: String, CaseIterable {
     case english = "English"
-    case russian = "Russian"
-    case kazakh = "Kazakh"
-    case arabic = "Arabic"
+    case arabic = "عربي"
+    case kazakh = "Қазақ"
+    case russian = "Русский"
 }
 
 class GlobalData: ObservableObject {
