@@ -31,6 +31,7 @@ struct ContentView: View {
     @StateObject var networkMonitor = NetworkMonitor()
     @State var errorText: String = ""
     @State var shouldShowActivityIndicator = false
+    @State var shouldShowLocationSheet = true
     
     @State private var translation: CGSize = .zero
     private let dragThreshold: CGFloat = 200
@@ -54,10 +55,22 @@ struct ContentView: View {
             VStack {
                 switch selectedTab {
                 case .home:
-                    HomeView(selectedTab: $selectedTab, prayerTime: $prayerTime, city: $city, tabBarShouldBeHidden: $tabBarShouldBeHidden, useAlmatyLocation: $useAlmatyLocation, shouldShowActivityIndicator: $shouldShowActivityIndicator)
-                        .environmentObject(scrollStore)
-                        .environmentObject(globalData)
-                        .navigationBarHidden(true)
+                    ZStack (alignment: .center) {
+                        if shouldShowLocationSheet {
+                            HomeView(selectedTab: $selectedTab, prayerTime: $prayerTime, city: $city, tabBarShouldBeHidden: $tabBarShouldBeHidden, useAlmatyLocation: $useAlmatyLocation, shouldShowActivityIndicator: $shouldShowActivityIndicator)
+                                .environmentObject(scrollStore)
+                                .environmentObject(globalData)
+                                .navigationBarHidden(true)
+                                .opacity(0.3)
+                            
+                            LocationSwitchView()
+                        } else {
+                            HomeView(selectedTab: $selectedTab, prayerTime: $prayerTime, city: $city, tabBarShouldBeHidden: $tabBarShouldBeHidden, useAlmatyLocation: $useAlmatyLocation, shouldShowActivityIndicator: $shouldShowActivityIndicator)
+                                .environmentObject(scrollStore)
+                                .environmentObject(globalData)
+                                .navigationBarHidden(true)
+                        }
+                    }
                 case .other:
                     ChatScreen(viewModel: ChatViewModel(), selectedTab: $selectedTab)
                             .navigationBarHidden(true)

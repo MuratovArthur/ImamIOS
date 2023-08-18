@@ -42,6 +42,7 @@
 		52FC92372A627796000F86CB /* AyahGreetingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FC92362A627796000F86CB /* AyahGreetingView.swift */; };
 		52FC923B2A62782D000F86CB /* ImamChatPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FC923A2A62782D000F86CB /* ImamChatPreview.swift */; };
 		52FF122C2A6A412F00D9816F /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FF122B2A6A412F00D9816F /* NotificationManager.swift */; };
+		5C17E3B42A8F269C00FBEB7B /* LocationSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C17E3B32A8F269C00FBEB7B /* LocationSwitchView.swift */; };
 		5C397C7D2A7A4A4E00F5AFA0 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C397C7C2A7A4A4E00F5AFA0 /* Extensions.swift */; };
 		5C397C812A7A54B600F5AFA0 /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C397C802A7A54B600F5AFA0 /* FeaturesView.swift */; };
 		5C397C832A7A58F600F5AFA0 /* BooksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C397C822A7A58F600F5AFA0 /* BooksView.swift */; };
@@ -90,6 +91,7 @@
 		52FC92362A627796000F86CB /* AyahGreetingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AyahGreetingView.swift; sourceTree = "<group>"; };
 		52FC923A2A62782D000F86CB /* ImamChatPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImamChatPreview.swift; sourceTree = "<group>"; };
 		52FF122B2A6A412F00D9816F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		5C17E3B32A8F269C00FBEB7B /* LocationSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSwitchView.swift; sourceTree = "<group>"; };
 		5C397C7C2A7A4A4E00F5AFA0 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		5C397C802A7A54B600F5AFA0 /* FeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesView.swift; sourceTree = "<group>"; };
 		5C397C822A7A58F600F5AFA0 /* BooksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooksView.swift; sourceTree = "<group>"; };
@@ -196,6 +198,7 @@
 				52AD2E812A65619B0053A52A /* ImamNavBarView.swift */,
 				5CC69B0B2A7B73310084DFDF /* HomeHeaderView.swift */,
 				5C483F3D2A8D32C7003CE9D3 /* PrayerMethodPickerView.swift */,
+				5C17E3B32A8F269C00FBEB7B /* LocationSwitchView.swift */,
 			);
 			path = Elements;
 			sourceTree = "<group>";
@@ -344,6 +347,7 @@
 				529403992A630F8700176CA5 /* ChatViewModel.swift in Sources */,
 				52F860C12A546F5A0032DE79 /* KeyboardResponder.swift in Sources */,
 				52F860D12A54996A0032DE79 /* Message.swift in Sources */,
+				5C17E3B42A8F269C00FBEB7B /* LocationSwitchView.swift in Sources */,
 				52DFC6B62A643E1500769257 /* CompassManager.swift in Sources */,
 				5CC69B0E2A7BA78F0084DFDF /* GlobalData.swift in Sources */,
 				52F860C92A54736B0032DE79 /* SceneDelegate.swift in Sources */,
