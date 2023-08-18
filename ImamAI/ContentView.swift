@@ -31,7 +31,9 @@ struct ContentView: View {
     @StateObject var networkMonitor = NetworkMonitor()
     @State var errorText: String = ""
     @State var shouldShowActivityIndicator = false
-    @State var shouldShowLocationSheet = true
+    @State var shouldShowLocationSheet = false
+    @State var usersCurrCity = ""
+    @State var usersCurrCountry = ""
     
     @State private var translation: CGSize = .zero
     private let dragThreshold: CGFloat = 200
@@ -63,7 +65,11 @@ struct ContentView: View {
                                 .navigationBarHidden(true)
                                 .opacity(0.3)
                             
-                            LocationSwitchView()
+                            HStack {
+                                Spacer()
+                                LocationSwitchView(usersCurrCity: $usersCurrCity, usersCurrCountry: $usersCurrCountry)
+                                Spacer()
+                            }
                         } else {
                             HomeView(selectedTab: $selectedTab, prayerTime: $prayerTime, city: $city, tabBarShouldBeHidden: $tabBarShouldBeHidden, useAlmatyLocation: $useAlmatyLocation, shouldShowActivityIndicator: $shouldShowActivityIndicator)
                                 .environmentObject(scrollStore)
@@ -218,6 +224,17 @@ struct ContentView: View {
             if let cityFromCache = UserDefaultsManager.shared.getCity(), let countryFromCache = UserDefaultsManager.shared.getCountry() {
                 cityToUse = cityFromCache
                 countryToUse = countryFromCache
+                
+                getCityAndCountry(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude) { city, country in
+                    if let city, let country {
+                        usersCurrCity = city
+                        usersCurrCountry = country
+                    }
+                    
+                    if city != cityToUse, country != countryToUse {
+                        shouldShowLocationSheet = true
+                    }
+                }
             } else {
                 getCityAndCountry(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude) { city, country in
                     if let cityFromLocation = city, let countryFromLocation = country {

@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct LocationSwitchView: View {
+    @EnvironmentObject private var globalData: GlobalData
+    @Binding var usersCurrCity: String
+    @Binding var usersCurrCountry: String
+    
     var body: some View {
         VStack(spacing: 20) {
             HStack(spacing: 12) {
@@ -16,9 +20,9 @@ struct LocationSwitchView: View {
                     .foregroundColor(.black)
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Astana")
+                    Text(usersCurrCity)
                         .font(.headline)
-                    Text("Kazakhstan")
+                    Text(usersCurrCountry)
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }
@@ -33,7 +37,7 @@ struct LocationSwitchView: View {
             }
             
             Button(action: {
-                // Action for switching location
+                updateLocationData(city: usersCurrCity, country: usersCurrCountry)
             }) {
                 Text("SWITCH TO LOCATION")
                     .font(.headline)
@@ -48,7 +52,7 @@ struct LocationSwitchView: View {
             }) {
                 Text("Close")
                     .font(.headline)
-                    .foregroundColor(.blue)
+                    .foregroundColor(Color.black)
             }
         }
         .padding()
@@ -57,10 +61,13 @@ struct LocationSwitchView: View {
         .shadow(radius: 10)
 
     }
-}
-
-struct LocationSwitchView_Previews: PreviewProvider {
-    static var previews: some View {
-        LocationSwitchView()
+    
+    private func updateLocationData(city: String, country: String) {
+        globalData.country = country
+        globalData.city = city
+        
+        UserDefaultsManager.shared.setCity(city)
+        UserDefaultsManager.shared.setCountry(country)
     }
 }
+
