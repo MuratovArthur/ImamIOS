@@ -33,8 +33,10 @@ struct CitySearchView: View {
                 Button(action: {
                     let city = mapItem.placemark.name ?? "Almaty"
                     let country = getCountryFromString(inputString: mapItem.placemark.title ?? "Kazakhstan")
+                    let lat = mapItem.placemark.coordinate.latitude
+                    let lon = mapItem.placemark.coordinate.longitude
                     
-                    updateLocationData(city: city, country: country)
+                    updateLocationData(city: city, country: country, lat: lat, lon: lon)
                     presentationMode.wrappedValue.dismiss()
                 }) {
                     HStack {
@@ -74,6 +76,7 @@ struct CitySearchView: View {
     private func searchCities() {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = searchText
+        request.resultTypes = .address
         let search = MKLocalSearch(request: request)
         
         search.start { response, error in
@@ -83,12 +86,13 @@ struct CitySearchView: View {
         }
     }
     
-    private func updateLocationData(city: String, country: String) {
+    private func updateLocationData(city: String, country: String, lat: Double, lon: Double) {
         globalData.country = country
         globalData.city = city
         
         UserDefaultsManager.shared.setCity(city)
         UserDefaultsManager.shared.setCountry(country)
+        UserDefaultsManager.shared.setLocation(lat: lat, lon: lon)
     }
     
     private func getCountryFromString(inputString: String) -> String {

@@ -174,22 +174,6 @@ struct ContentView: View {
         }
     }
     
-    func getDateComponents(from dateString: String) -> (Int, Int, Int)? {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd-MM-yyyy"
-            
-            if let date = dateFormatter.date(from: dateString) {
-                let calendar = Calendar.current
-                let components = calendar.dateComponents([.day, .month, .year], from: date)
-                
-                if let day = components.day, let month = components.month, let year = components.year {
-                    return (day, month, year)
-                }
-            }
-            
-            return nil
-        }
-    
     func makeRequest() {
         print("making request")
         
@@ -485,6 +469,22 @@ struct ContentView: View {
             }
         }
         
+    }
+    
+    func getDateComponents(from dateString: String) -> (Int, Int, Int)? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        
+        if let date = dateFormatter.date(from: dateString) {
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.day, .month, .year], from: date)
+            
+            if let day = components.day, let month = components.month, let year = components.year {
+                return (day, month, year)
+            }
+        }
+        
+        return nil
     }
     
 }
