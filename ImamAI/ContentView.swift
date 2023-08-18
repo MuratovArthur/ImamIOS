@@ -113,11 +113,18 @@ struct ContentView: View {
             }
         }
         .onChange(of: globalData.prayerTimeMethod, perform: { newValue in
-                    isPrayerTimeReceived = false
-                    isRequestInProgress = false
-                    shouldShowActivityIndicator = true
-                    makeRequestWithRetry(attempts: 5)
-                })
+            isPrayerTimeReceived = false
+            isRequestInProgress = false
+            shouldShowActivityIndicator = true
+            makeRequestWithRetry(attempts: 5)
+        })
+        
+        .onChange(of: globalData.city, perform: { newValue in
+            isPrayerTimeReceived = false
+            isRequestInProgress = false
+            shouldShowActivityIndicator = true
+            makeRequestWithRetry(attempts: 5)
+        })
         
         .onAppear {
             requestNotificationAuthorization()
