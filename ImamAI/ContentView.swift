@@ -35,6 +35,8 @@ struct ContentView: View {
     @State var usersCurrCity = ""
     @State var usersCurrCountry = ""
     
+    @State private var isFirstEntryAfterBackground = false
+    
     @State private var translation: CGSize = .zero
     private let dragThreshold: CGFloat = 200
     
@@ -67,7 +69,12 @@ struct ContentView: View {
                             
                             HStack {
                                 Spacer()
-                                LocationSwitchView(usersCurrCity: $usersCurrCity, usersCurrCountry: $usersCurrCountry)
+                                LocationSwitchView(usersCurrCity: $usersCurrCity, usersCurrCountry: $usersCurrCountry, shouldShowLocationSheet: $shouldShowLocationSheet)
+                                    .onTapGesture {
+                                        DispatchQueue.main.async {
+                                            shouldShowLocationSheet = false // Update the binding
+                                        }
+                                    }
                                 Spacer()
                             }
                         } else {
@@ -292,9 +299,14 @@ struct ContentView: View {
                 }
                 
                 
-                
+                var urlString = ""
 //                let urlString = "http://api.aladhan.com/v1/calendar/\(year)/\(month)?latitude=\(latitude)&longitude=\(longitude)&method=\(methodToUse)"
-                let urlString = "http://api.aladhan.com/v1/calendarByAddress/\(year)/\(month)?address=\(cityToUse),\(countryToUse)&method=\(methodToUse)"
+                if currentRetryAttempt == 3 {
+                    urlString = "http://api.aladhan.com/v1/calendarByAddress/2023/8?address=Almaty, Kazakhstan&method=2"
+                } else {
+                    urlString = "http://api.aladhan.com/v1/calendarByAddress/\(year)/\(month)?address=\(cityToUse),\(countryToUse)&method=\(methodToUse)"
+                }
+                
                 print(urlString)
                 
                 let encodedURLString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!

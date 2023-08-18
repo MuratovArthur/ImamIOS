@@ -140,6 +140,8 @@
 			children = (
 				5C483F3C2A8D2A62003CE9D3 /* Info.plist */,
 				528B40132A6C4A6F00E21DAE /* AppDelegate.swift */,
+				52F860C82A54736B0032DE79 /* SceneDelegate.swift */,
+				52FC92302A625F66000F86CB /* LoadingView.swift */,
 				525D14C22A52934700F040C8 /* ImamAIApp.swift */,
 				525D14C42A52934700F040C8 /* ContentView.swift */,
 				5CC69B0D2A7BA78F0084DFDF /* GlobalData.swift */,
@@ -169,7 +171,6 @@
 			children = (
 				52772F1C2A6BF25600AC9BF3 /* PersistanceManager.swift */,
 				52F860C22A546F720032DE79 /* ViewExtension.swift */,
-				52F860C82A54736B0032DE79 /* SceneDelegate.swift */,
 				52FC92282A625D55000F86CB /* ScrollPositionStore.swift */,
 				52F860C02A546F5A0032DE79 /* KeyboardResponder.swift */,
 				52FC922A2A625DB5000F86CB /* LocationManager.swift */,
@@ -217,7 +218,6 @@
 		52FC922F2A625EC2000F86CB /* Screens */ = {
 			isa = PBXGroup;
 			children = (
-				52FC92302A625F66000F86CB /* LoadingView.swift */,
 				525D14D12A52A00000F040C8 /* HomeView.swift */,
 				52F860C42A54714B0032DE79 /* ChatScreen.swift */,
 				525D14D32A52A00F00F040C8 /* CompassView.swift */,

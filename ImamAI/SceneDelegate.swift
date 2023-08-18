@@ -1,19 +1,23 @@
-////
-////  SceneDelegate.swift
-////  ChatViewTutorial
-////
-////  Created by Duy Bui on 2/2/20.
-////  Copyright © 2020 Duy Bui. All rights reserved.
-////
 //
+//  SceneDelegate.swift
+//  ChatViewTutorial
+//
+//  Created by Duy Bui on 2/2/20.
+//  Copyright © 2020 Duy Bui. All rights reserved.
+//
+
 //import UIKit
 //import SwiftUI
 //
 //class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //
 //    var window: UIWindow?
-//    var chatHelper = ChatHelper()
 //
+//    func sceneDidEnterBackground(_ scene: UIScene) {
+//        UserDefaults.standard.set(true, forKey: "AppWasInBackground")
+//        print("IN BACKGROUND")
+//    }
+
 //    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 //        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
 //        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
@@ -58,6 +62,6 @@
 //        // Use this method to save data, release shared resources, and store enough scene-specific state information
 //        // to restore the scene back to its current state.
 //    }
-//
-//
+
+
 //}

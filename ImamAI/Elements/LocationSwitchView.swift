@@ -11,6 +11,7 @@ struct LocationSwitchView: View {
     @EnvironmentObject private var globalData: GlobalData
     @Binding var usersCurrCity: String
     @Binding var usersCurrCountry: String
+    @Binding var shouldShowLocationSheet: Bool
     
     var body: some View {
         VStack(spacing: 20) {
@@ -31,15 +32,16 @@ struct LocationSwitchView: View {
             }
             
             HStack {
-                Text("A new nearest location is found")
+                Text(NSLocalizedString("mainText", bundle: globalData.bundle ?? Bundle.main, comment: "location switch request"))
                     .font(.body)
                 Spacer()
             }
             
             Button(action: {
                 updateLocationData(city: usersCurrCity, country: usersCurrCountry)
+                shouldShowLocationSheet = false
             }) {
-                Text("SWITCH TO LOCATION")
+                Text(NSLocalizedString("switch", bundle: globalData.bundle ?? Bundle.main, comment: "location switch request"))
                     .font(.headline)
                     .foregroundColor(.white)
                     .padding()
@@ -48,9 +50,9 @@ struct LocationSwitchView: View {
             }
             
             Button(action: {
-                // Action for closing
+                shouldShowLocationSheet = false
             }) {
-                Text("Close")
+                Text(NSLocalizedString("close", bundle: globalData.bundle ?? Bundle.main, comment: "location switch request"))
                     .font(.headline)
                     .foregroundColor(Color.black)
             }

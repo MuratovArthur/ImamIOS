@@ -54,3 +54,27 @@
 
 /* compass view */
 "qibla-search" = "Qibla Finder";
+
+/* methods */
+"shia" = "Shia Ithna-Ansari";
+"karachi" = "University of Islamic Sciences, Karachi";
+"northAmerica" = "Islamic Society of North America";
+"muslimWorldLeague" = "Muslim World League";
+"makkah" = "Umm Al-Qura University, Makkah";
+"egyptian" = "Egyptian General Authority of Survey";
+"tehran" = "Institute of Geophysics, University of Tehran";
+"gulf" = "Gulf Region";
+"kuwait" = "Kuwait";
+"qatar" = "Qatar";
+"singapore" = "Majlis Ugama Islam Singapura, Singapore";
+"france" = "Union Organization islamic de France";
+"turkey" = "Diyanet İşleri Başkanlığı, Turkey";
+"russia" = "Spiritual Administration of Muslims of Russia";
+
+"header" = "Намаз уақыттарын есептеу әдісі";
+
+/* locaion switch request */
+
+"mainText" = "A new nearest location is found";
+"switch" = "SWITCH TO LOCATION";
+"close" = "Close";
