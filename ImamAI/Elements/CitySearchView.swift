@@ -8,19 +8,20 @@ struct CitySearchView: View {
     @EnvironmentObject private var globalData: GlobalData
     @Environment(\.presentationMode) var presentationMode
     @Binding var tabBarShouldBeHidden: Bool
+    @Binding var suggestingNewLocation: Bool
     
     var body: some View {
         VStack {
-            Button(action: {
-                presentationMode.wrappedValue.dismiss()
-            }) {
-                Image(systemName: "chevron.left")
-                    .font(.title2)
-                    .foregroundColor(Color.black)
-
-                Spacer()
-            }
-            .padding(.leading, 16)
+//            Button(action: {
+//                presentationMode.wrappedValue.dismiss()
+//            }) {
+//                Image(systemName: "chevron.left")
+//                    .font(.title2)
+//                    .foregroundColor(Color.black)
+//
+//                Spacer()
+//            }
+//            .padding(.leading, 16)
             
             TextField("Search for a city", text: $searchText)
                 .padding()
@@ -65,7 +66,9 @@ struct CitySearchView: View {
         }
         .padding(.top, 10)
         .background(Color.white)
-        .navigationBarBackButtonHidden(true)
+        .navigationBarTitle(Text("city-search", bundle: globalData.bundle), displayMode: .inline)
+        
+        
         .onAppear(){
             tabBarShouldBeHidden = true
         }
@@ -102,6 +105,8 @@ struct CitySearchView: View {
         UserDefaultsManager.shared.setCity(city)
         UserDefaultsManager.shared.setCountry(country)
         UserDefaultsManager.shared.setLocation(lat: lat, lon: lon)
+        
+        suggestingNewLocation = false
     }
     
     private func getCountryFromString(inputString: String) -> String {

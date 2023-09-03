@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PrayerMethodPickerView: View {
     @EnvironmentObject private var globalData: GlobalData
+    @Binding var suggestingNewLocation: Bool
     
 //    let methods = ["Shia Ithna-Ansari",
 //                   "University of Islamic Sciences, Karachi",
@@ -60,6 +61,7 @@ struct PrayerMethodPickerView: View {
                     
                     globalData.prayerTimeMethod = index
                     UserDefaultsManager.shared.setPrayerTimeMethod(index)
+                    suggestingNewLocation = false
                 } label: {
                     Text(method)
                     Spacer()
@@ -85,8 +87,8 @@ struct PrayerMethodPickerView: View {
     }
 }
 
-struct PrayerMethodPickerView_Previews: PreviewProvider {
-    static var previews: some View {
-        PrayerMethodPickerView()
-    }
-}
+//struct PrayerMethodPickerView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PrayerMethodPickerView()
+//    }
+//}

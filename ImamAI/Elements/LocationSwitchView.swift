@@ -15,6 +15,12 @@ struct LocationSwitchView: View {
     
     var body: some View {
         VStack(spacing: 20) {
+            HStack {
+                Text(NSLocalizedString("mainText", bundle: globalData.bundle ?? Bundle.main, comment: "location switch request"))
+                    .font(.body)
+                Spacer()
+            }
+            
             HStack(spacing: 12) {
                 Image(systemName: "location")
                     .font(.title)
@@ -31,30 +37,28 @@ struct LocationSwitchView: View {
                 Spacer()
             }
             
-            HStack {
-                Text(NSLocalizedString("mainText", bundle: globalData.bundle ?? Bundle.main, comment: "location switch request"))
-                    .font(.body)
-                Spacer()
-            }
-            
             Button(action: {
                 updateLocationData(city: usersCurrCity, country: usersCurrCountry)
                 shouldShowLocationSheet = false
             }) {
                 Text(NSLocalizedString("switch", bundle: globalData.bundle ?? Bundle.main, comment: "location switch request"))
-                    .font(.headline)
+                    .tracking(2)  
+                    .font(.subheadline)
                     .foregroundColor(.white)
-                    .padding()
+                    .padding(8)
                     .background(Color.black)
                     .cornerRadius(10)
+                    
             }
+            .frame(maxWidth: .infinity) // Set the button's width to fill the available space
             
             Button(action: {
                 shouldShowLocationSheet = false
             }) {
                 Text(NSLocalizedString("close", bundle: globalData.bundle ?? Bundle.main, comment: "location switch request"))
-                    .font(.headline)
-                    .foregroundColor(Color.black)
+                    .font(.subheadline)
+                    .foregroundColor(Color.gray)
+                
             }
         }
         .padding()

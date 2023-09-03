@@ -117,7 +117,7 @@ struct PostsView: View {
     // This method should be here
     private func loadPosts() {
         postAreLoading = true
-        print("loadPosts() called") // Check if this function is being called
+//        print("loadPosts() called") // Check if this function is being called
         
         let urlString = "https://railway-imamai-production.up.railway.app/posts/get_posts/\(globalData.locale)?limit=3&offset=\(offset)"
         guard let url = URL(string: urlString) else {
@@ -129,10 +129,10 @@ struct PostsView: View {
         let request = URLRequest(url: url)
         
         URLSession.shared.dataTask(with: request) { data, response, error in
-            print("Received response from server") // Check if the server response is received
+//            print("Received response from server") // Check if the server response is received
             
             if let data = data {
-                print("Received data from server:", data)
+//                print("Received data from server:", data)
                 //                    if let responseString = String(data: data, encoding: .utf8) {
                 //                        print("Server Response: \(responseString)")
                 //                    } else {

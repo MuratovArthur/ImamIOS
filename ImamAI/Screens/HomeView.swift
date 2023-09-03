@@ -16,6 +16,7 @@ struct HomeView: View {
     @Binding var shouldShowActivityIndicator: Bool
     @State private var notificationAuthorizationStatus: UNAuthorizationStatus?
     @State private var showAlertForSettings = false
+    @Binding var suggestingNewLocation: Bool
     
     var body: some View {
         NavigationView {
@@ -29,14 +30,14 @@ struct HomeView: View {
                             
                             ZStack {
                                 if shouldShowActivityIndicator {
-                                    PrayerTimesView(prayerTime: prayerTime, city: city, tabBarShouldBeHidden: $tabBarShouldBeHidden)
+                                    PrayerTimesView(prayerTime: prayerTime, city: city, tabBarShouldBeHidden: $tabBarShouldBeHidden, suggestingNewLocation: $suggestingNewLocation)
                                         .environmentObject(globalData)
                                         .opacity(0.3)
                                     
                                     ProgressView()
                                         .progressViewStyle(CircularProgressViewStyle())
                                 } else {
-                                    PrayerTimesView(prayerTime: prayerTime, city: city, tabBarShouldBeHidden: $tabBarShouldBeHidden)
+                                    PrayerTimesView(prayerTime: prayerTime, city: city, tabBarShouldBeHidden: $tabBarShouldBeHidden, suggestingNewLocation: $suggestingNewLocation)
                                         .environmentObject(globalData)
                                 }
                             }
@@ -56,8 +57,8 @@ struct HomeView: View {
                         .onAppear {
                             checkPermissions()
                             print("HomeView appeared.")
-                            print("prayerTimes: \(String(describing: prayerTime))")
-                            print("city: \(city)")
+//                            print("prayerTimes: \(String(describing: prayerTime))")
+                            print("city: ", globalData.city)
                             scrollToBottom = true
                             scrollViewProxy.scrollTo(scrollPosition)
                         }

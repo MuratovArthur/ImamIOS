@@ -34,6 +34,7 @@ struct ContentView: View {
     @State var shouldShowLocationSheet = false
     @State var usersCurrCity = ""
     @State var usersCurrCountry = ""
+    @State var suggestingNewLocation = true
     
     @State private var isFirstEntryAfterBackground = false
     
@@ -61,7 +62,7 @@ struct ContentView: View {
                 case .home:
                     ZStack (alignment: .center) {
                         if shouldShowLocationSheet {
-                            HomeView(selectedTab: $selectedTab, prayerTime: $prayerTime, city: $city, tabBarShouldBeHidden: $tabBarShouldBeHidden, useAlmatyLocation: $useAlmatyLocation, shouldShowActivityIndicator: $shouldShowActivityIndicator)
+                            HomeView(selectedTab: $selectedTab, prayerTime: $prayerTime, city: $city, tabBarShouldBeHidden: $tabBarShouldBeHidden, useAlmatyLocation: $useAlmatyLocation, shouldShowActivityIndicator: $shouldShowActivityIndicator, suggestingNewLocation: $suggestingNewLocation)
                                 .environmentObject(scrollStore)
                                 .environmentObject(globalData)
                                 .navigationBarHidden(true)
@@ -78,7 +79,7 @@ struct ContentView: View {
                                 Spacer()
                             }
                         } else {
-                            HomeView(selectedTab: $selectedTab, prayerTime: $prayerTime, city: $city, tabBarShouldBeHidden: $tabBarShouldBeHidden, useAlmatyLocation: $useAlmatyLocation, shouldShowActivityIndicator: $shouldShowActivityIndicator)
+                            HomeView(selectedTab: $selectedTab, prayerTime: $prayerTime, city: $city, tabBarShouldBeHidden: $tabBarShouldBeHidden, useAlmatyLocation: $useAlmatyLocation, shouldShowActivityIndicator: $shouldShowActivityIndicator, suggestingNewLocation: $suggestingNewLocation)
                                 .environmentObject(scrollStore)
                                 .environmentObject(globalData)
                                 .navigationBarHidden(true)
@@ -145,6 +146,7 @@ struct ContentView: View {
             makeRequestWithRetry(attempts: 5)
         })
         
+      
         .onChange(of: globalData.city, perform: { newValue in
             isPrayerTimeReceived = false
             isRequestInProgress = false
@@ -208,6 +210,7 @@ struct ContentView: View {
     }
     
     private func updateLocationData(city: String, country: String, lat: Double, lon: Double) {
+        suggestingNewLocation = false
         globalData.country = country
         globalData.city = city
         
@@ -238,8 +241,10 @@ struct ContentView: View {
                         usersCurrCountry = country
                     }
                     
-                    if city != cityToUse, country != countryToUse {
-                        shouldShowLocationSheet = true
+                    if usersCurrCity != cityToUse || usersCurrCountry != countryToUse {
+                        if suggestingNewLocation{
+                            shouldShowLocationSheet = true
+                        }
                     }
                 }
             } else {
@@ -391,20 +396,57 @@ struct ContentView: View {
             return String(firstFive)
         }
 
+        let calendar = Calendar.current
+        let today = Date()
+        let day_index = Calendar.current.component(.day, from: Date())
+
         sendRequest { result in
             switch result {
             case .success(let response):
                 var arrayOfPrayerTimes = [PrayerTime]()
                 
-                for i in day..<response.data.count {
+                print("REsponse: ", response)
+                
+                for i in (day_index - 1)..<response.data.count {
                     let curr = response.data[i].timings
+
+                    // Print timings from response
+                    print("Response timings: \(curr)")
+
+                    // Calculate the date for the current iteration
+                    let offset = i - (day_index - 1)
+                    let dateForIteration = calendar.date(byAdding: .day, value: offset, to: today)!
+
+                    // Format the date as a string
+                    let formattedDate = dateFormatter.string(from: dateForIteration)
+
+                    // Print formatted date
+                    print("Formatted date: \(formattedDate)")
+
+                    // Remove the time zone from time strings
+                    let asrTimeWithoutTimeZone = curr.Asr.components(separatedBy: " ")[0]
+                    let ishaTimeWithoutTimeZone = curr.Isha.components(separatedBy: " ")[0]
+                    let sunriseTimeWithoutTimeZone = curr.Sunrise.components(separatedBy: " ")[0]
+                    let maghribTimeWithoutTimeZone = curr.Maghrib.components(separatedBy: " ")[0]
+                    let dhuhrTimeWithoutTimeZone = curr.Dhuhr.components(separatedBy: " ")[0]
+                    let fajrTimeWithoutTimeZone = curr.Fajr.components(separatedBy: " ")[0]
+
+                    // Print times without time zones
+                    print("Asr without timezone: \(asrTimeWithoutTimeZone)")
+                    print("Isha without timezone: \(ishaTimeWithoutTimeZone)")
+                    print("Sunrise without timezone: \(sunriseTimeWithoutTimeZone)")
+                    print("Maghrib without timezone: \(maghribTimeWithoutTimeZone)")
+                    print("Dhuhr without timezone: \(dhuhrTimeWithoutTimeZone)")
+                    print("Fajr without timezone: \(fajrTimeWithoutTimeZone)")
+
+                    let prayerTime = PrayerTime(date: formattedDate, cityName: globalData.city, asrTime: asrTimeWithoutTimeZone, ishaTime: ishaTimeWithoutTimeZone, sunriseTime: sunriseTimeWithoutTimeZone, maghribTime: maghribTimeWithoutTimeZone, dhuhrTime: dhuhrTimeWithoutTimeZone, fajrTime: fajrTimeWithoutTimeZone)
                     
-                    prayerTime = PrayerTime(date: formattedDate, cityName: city, asrTime: curr.Asr, ishaTime: curr.Isha, sunriseTime: curr.Sunrise, maghribTime: curr.Maghrib, dhuhrTime: curr.Dhuhr, fajrTime: curr.Fajr)
-                    
-                    if let prayerTime {
-                        arrayOfPrayerTimes.append(prayerTime)
-                    }
+                    // Print the prayerTime object
+                    print("PrayerTime object: \(prayerTime)")
+
+                    arrayOfPrayerTimes.append(prayerTime)
                 }
+
                 
                 let todayData = response.data[day - 1].timings
                 

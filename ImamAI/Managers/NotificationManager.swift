@@ -70,7 +70,7 @@ class NotificationManager {
                     if let error = error {
                         print("Error scheduling notification: \(error)")
                     } else {
-                        print("Notification scheduled: \(identifier)")
+                        print("Notification scheduled: \(identifier)", "Date: \(date)")
                     }
                 }
             } else {
@@ -83,150 +83,39 @@ class NotificationManager {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         print("All scheduled notifications have been unscheduled.")
         
-        for (index, time) in prayerTimes.enumerated() {
-            if language == "ru"{
-                if let date = dateFormatter.date(from: "\(time.date) \(time.fajrTime)"), !isMutedArray[0] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "Фаджр молитва в городе \(time.cityName)", identifier: "\(time.date)_fajr", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.sunriseTime)"), !isMutedArray[1] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "Восход в городе \(time.cityName)", identifier: "\(time.date)_sunrise", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.dhuhrTime)"), !isMutedArray[2] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "Зухр молитва в городе \(time.cityName)", identifier: "\(time.date)_dhuhr", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.asrTime)"), !isMutedArray[3] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "Аср молитва в городе \(time.cityName)", identifier: "\(time.date)_asr", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.maghribTime)"), !isMutedArray[4] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "Магриб молитва в городе \(time.cityName)", identifier: "\(time.date)_maghrib", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.ishaTime)"), !isMutedArray[5] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "Иша молитва в городе \(time.cityName)", identifier: "\(time.date)_isha", language: language)
-                }
-            }
-            else if language == "kk"{
-                if let date = dateFormatter.date(from: "\(time.date) \(time.fajrTime)"), !isMutedArray[0] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "\(time.cityName) қаласында таң намазы", identifier: "\(time.date)_fajr", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.sunriseTime)"), !isMutedArray[1] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "\(time.cityName) қаласында күн шықты", identifier: "\(time.date)_sunrise", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.dhuhrTime)"), !isMutedArray[2] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "\(time.cityName) қаласында бесін намазы", identifier: "\(time.date)_dhuhr", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.asrTime)"), !isMutedArray[3] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "\(time.cityName) қаласында екінті намазы", identifier: "\(time.date)_asr", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.maghribTime)"), !isMutedArray[4] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "\(time.cityName) қаласында ақшам намазы", identifier: "\(time.date)_maghrib", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.ishaTime)"), !isMutedArray[5] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "\(time.cityName) қаласында құптан намазы", identifier: "\(time.date)_isha", language: language)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Almaty")
+        
+        for (_, time) in prayerTimes.enumerated() {
+            print("TIME: ", time)
+            
+            let prayers = [
+                (time.fajrTime, "Fajr prayer in \(time.cityName)", "Фаджр молитва в городе \(time.cityName)", "\(time.cityName) қаласында таң намазы", "صلاة الفجر في \(time.cityName)", "\(time.date)_fajr"),
+                (time.sunriseTime, "Sunrise in \(time.cityName)", "Восход в городе \(time.cityName)", "\(time.cityName) қаласында күн шықты", "الشروق في \(time.cityName)", "\(time.date)_sunrise"),
+                (time.dhuhrTime, "Dhuhr prayer in \(time.cityName)", "Зухр молитва в городе \(time.cityName)", "\(time.cityName) қаласында бесін намазы", "صلاة الظهر في \(time.cityName)", "\(time.date)_dhuhr"),
+                (time.asrTime, "Asr prayer in \(time.cityName)", "Аср молитва в городе \(time.cityName)", "\(time.cityName) қаласында екінті намазы", "صلاة العصر في \(time.cityName)", "\(time.date)_asr"),
+                (time.maghribTime, "Maghrib prayer in \(time.cityName)", "Магриб молитва в городе \(time.cityName)", "\(time.cityName) қаласында ақшам намазы", "صلاة المغرب في \(time.cityName)", "\(time.date)_maghrib"),
+                (time.ishaTime, "Isha prayer in \(time.cityName)", "Иша молитва в городе \(time.cityName)", "\(time.cityName) қаласында құптан намазы", "صلاة العشاء في \(time.cityName)", "\(time.date)_isha")
+            ]
+            
+            for (index, prayer) in prayers.enumerated() {
+                if !isMutedArray[index],
+                   let date = dateFormatter.date(from: "\(time.date) \(prayer.0)") {
+                    var body = prayer.1
+                    if language == "ru" {
+                        body = prayer.2
+                    } else if language == "kk" {
+                        body = prayer.3
+                    } else if language == "ar" {
+                        body = prayer.4
+                    }
+                    NotificationManager.shared.scheduleNotification(at: date, body: body, identifier: prayer.5, language: language)
                 }
             }
-            else if language == "ar"{
-                if let date = dateFormatter.date(from: "\(time.date) \(time.fajrTime)"), !isMutedArray[0] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "صلاة الفجر في \(time.cityName)", identifier: "\(time.date)_fajr", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.sunriseTime)"), !isMutedArray[1] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "الشروق في \(time.cityName)", identifier: "\(time.date)_sunrise", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.dhuhrTime)"), !isMutedArray[2] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "صلاة الظهر في \(time.cityName)", identifier: "\(time.date)_dhuhr", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.asrTime)"), !isMutedArray[3] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "صلاة العصر في \(time.cityName)", identifier: "\(time.date)_asr", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.maghribTime)"), !isMutedArray[4] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "صلاة المغرب في \(time.cityName)", identifier: "\(time.date)_maghrib", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.ishaTime)"), !isMutedArray[5] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "صلاة العشاء في \(time.cityName)", identifier: "\(time.date)_isha", language: language)
-                }
-            }else{
-                if let date = dateFormatter.date(from: "\(time.date) \(time.fajrTime)"), !isMutedArray[0] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "Fajr prayer in \(time.cityName)", identifier: "\(time.date)_fajr", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.sunriseTime)"), !isMutedArray[1] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "Sunrise in \(time.cityName)", identifier: "\(time.date)_sunrise", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.dhuhrTime)"), !isMutedArray[2] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "Dhuhr prayer in \(time.cityName)", identifier: "\(time.date)_dhuhr", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.asrTime)"), !isMutedArray[3] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "Asr prayer in \(time.cityName)", identifier: "\(time.date)_asr", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.maghribTime)"), !isMutedArray[4] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "Maghrib prayer in \(time.cityName)", identifier: "\(time.date)_maghrib", language: language)
-                }
-                
-                if let date = dateFormatter.date(from: "\(time.date) \(time.ishaTime)"), !isMutedArray[5] {
-                    NotificationManager.shared.scheduleNotification(at: date, body: "Isha prayer in \(time.cityName)", identifier: "\(time.date)_isha", language: language)
-                }
-            }
-                    
         }
     }
-    
-//    func scheduleNotificationIfNeeded(prayerTime: String, isMuted: Bool, prayerTimes: [String: String]) {
-//        // Check if the notification is enabled (not muted)
-//        guard !isMuted else {
-//            // If muted, cancel any previously scheduled notifications for this prayer time
-//            cancelNotification(for: prayerTime)
-//            return
-//        }
-//
-//        // Get the date components for the prayer time using the prayerTimes parameter
-//        let prayerTimeComponents = prayerTimes[prayerTime]?.split(separator: ":")
-//            .compactMap { Int($0) }
-//            .suffix(2)
-//
-//        guard let hour = prayerTimeComponents?.first, let minute = prayerTimeComponents?.last else {
-//            return
-//        }
-//
-//        var dateComponents = DateComponents()
-//        dateComponents.hour = hour
-//        dateComponents.minute = minute
-//
-//        let content = UNMutableNotificationContent()
-//        content.title = "It's time to pray"
-//        content.body = prayerTime
-//        content.sound = .default
-//
-//        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-//        let request = UNNotificationRequest(identifier: prayerTime, content: content, trigger: trigger)
-//
-//        UNUserNotificationCenter.current().add(request) { error in
-//            if let error = error {
-//                print("Error scheduling notification for \(prayerTime): \(error.localizedDescription)")
-//            } else {
-//                let formattedHour = String(format: "%02d", dateComponents.hour ?? 0)
-//                let formattedMinute = String(format: "%02d", dateComponents.minute ?? 0)
-//                print("Notification scheduled for \(prayerTime) at \(formattedHour):\(formattedMinute)")
-//            }
-//        }
-//    }
-    
+
     
     func cancelNotification(for prayerTime: String) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [prayerTime])

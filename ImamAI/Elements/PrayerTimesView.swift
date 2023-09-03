@@ -10,25 +10,29 @@ struct PrayerTimesView: View {
     @EnvironmentObject private var globalData: GlobalData
     @State private var isMuted: [Bool] = UserDefaultsManager.shared.getIsMuted() ?? Array(repeating: false, count: 6)
     @Binding var tabBarShouldBeHidden: Bool
+    @Binding var suggestingNewLocation: Bool
+    
 
     var body: some View {
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
                     NavigationLink(destination:
-                                    CitySearchView(tabBarShouldBeHidden: $tabBarShouldBeHidden)
+                                    CitySearchView(tabBarShouldBeHidden: $tabBarShouldBeHidden, suggestingNewLocation: $suggestingNewLocation)
                                         .environmentObject(globalData)
+//                                        .navigationBarHidden(true)
                     ) {
                         HStack {
                             Image(systemName: "location")
                             Text("\(globalData.country), \(globalData.city)")
                                 .font(.subheadline)
+                                .multilineTextAlignment(.leading)
                         }
                     }
                     .foregroundColor(.black)
                     
                     Spacer()
                     
-                    PrayerMethodPickerView()
+                    PrayerMethodPickerView(suggestingNewLocation: $suggestingNewLocation)
                 }
                 .padding(.top, 16)
                 

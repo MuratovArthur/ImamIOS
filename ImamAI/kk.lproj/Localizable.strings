@@ -57,7 +57,7 @@
 
 /* methods */
 "shia" = "Шиит Итна-Ансари";
-"karachi" = "University of Islamic Sciences, Karachi";
+"karachi" = "Ислам ғылымдары университеті, Карачи";
 "northAmerica" = "Солтүстік Американың Ислам қоғамы";
 "muslimWorldLeague" = "Мұсылман әлемі лигасы";
 "makkah" = "Умм әл-Қура университеті, Мекке";
@@ -74,6 +74,8 @@
 "header" = "Намаз уақыттарын есептеу әдісі";
 
 /* locaion switch request */
-"mainText" = "Ең жақын жаңа орын табылды";
+"mainText" = "Ең жақын жаңа орын табылды: ";
 "switch" = "АУЫСТЫРУ";
 "close" = "Жабу";
+
+"city-search" = "Өз қалаңызды таңдаңыз";

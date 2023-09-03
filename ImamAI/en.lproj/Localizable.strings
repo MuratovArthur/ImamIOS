@@ -75,7 +75,9 @@
 
 /* locaion switch request */
 
-"mainText" = "A new nearest location is found";
+"mainText" = "A new nearest location is found: ";
 "switch" = "SWITCH TO LOCATION";
 "close" = "Close";
+
+"city-search" = "Choose your city";
 

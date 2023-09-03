@@ -77,3 +77,6 @@
 "mainText" = "تم العثور على أقرب موقع جديد";
 "switch" = "التبديل إلى الموقع";
 "close" = "يغلق";
+
+/* city search view */
+"city-search" = "اختر مدينتك";
